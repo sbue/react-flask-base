@@ -1,9 +1,68 @@
+import { stringify } from 'query-string';
+import * as Cookies from 'js-cookie';
+
+import { SERVER_URL } from 'config';
+
+
+export function url(uri, queryParams) {
+  const baseUrl = `${SERVER_URL}${uri}`;
+  return queryParams
+    ? `${baseUrl}?${stringify(queryParams)}`
+    : baseUrl;
+}
+
+export function get(url, kwargs = {}) {
+  const { ...options } = kwargs;
+  const defaults = {
+    credentials: 'include',
+    headers: {
+      ...{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    },
+    method: 'GET',
+  };
+  return request(url, _mergeOptions(defaults, options));
+}
+
+export function post(url, data, kwargs = {}) {
+  const { ...options } = kwargs;
+  const CSRFToken = Cookies.get('csrf_token');
+  const defaults = {
+    credentials: 'include',
+    headers: {
+      ...{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRFToken': CSRFToken,
+      },
+    },
+    method: 'POST',
+    body: JSON.stringify(data),
+  };
+  return request(url, _mergeOptions(defaults, options));
+}
+
+export function put(url, data, options = {}) {
+  return post(url, data, _setMethod(options, 'PUT'));
+}
+
+export function patch(url, data, options = {}) {
+  return post(url, data, _setMethod(options, 'PATCH'));
+}
+
+export function delete_(url, options = {}) {
+  return get(url, _setMethod(options, 'DELETE'));
+}
+
 
 export class ResponseError extends Error {
   public response: Response;
 
-  constructor(response: Response) {
-    super(response.statusText);
+  constructor(response: Response, responseText: string) {
+    const message = responseText ? responseText : response.statusText;
+    super(message);
     this.response = response;
   }
 }
@@ -14,7 +73,7 @@ export class ResponseError extends Error {
  *
  * @return {object}          The parsed JSON from the request
  */
-function parseJSON(response) {
+function _parseJSON(response: Response) {
   if (response.status === 204 || response.status === 205) {
     return null;
   }
@@ -28,14 +87,29 @@ function parseJSON(response) {
  *
  * @return {object|undefined} Returns either the response, or throws an error
  */
-function checkStatus(response) {
+async function _checkStatus(response: Response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
-
-  const error = new ResponseError(response.statusText);
+  const responseText = await response.text();
+  const error = new ResponseError(response, responseText);
   error.response = response;
   throw error;
+}
+
+function _mergeOptions(defaults, options) {
+  return {
+    ...defaults,
+    ...options,
+    headers: {
+      ...defaults.headers,
+      ...options.headers,
+    },
+  };
+}
+
+function _setMethod(options, method) {
+  return {...options, ...{ method }};
 }
 
 /**
@@ -48,6 +122,6 @@ function checkStatus(response) {
  */
 export default async function request(url: string, options?: RequestInit): Promise<{ } | { err: ResponseError }> {
   const fetchResponse = await fetch(url, options);
-  const response = await checkStatus(fetchResponse);
-  return parseJSON(response);
+  const response = await _checkStatus(fetchResponse);
+  return _parseJSON(response);
 }

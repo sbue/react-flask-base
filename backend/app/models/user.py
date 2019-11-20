@@ -4,7 +4,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .. import db, login_manager
+from .. import db
 
 
 class Permission:
@@ -87,8 +87,8 @@ class User(UserMixin, db.Model):
 
     def generate_confirmation_token(self, expiration=604800):
         """Generate a confirmation token to email a new user."""
-
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        # return s.dumps({'confirm': self.id})
         return s.dumps({'confirm': self.id})
 
     def generate_email_change_token(self, new_email, expiration=3600):
@@ -186,11 +186,3 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_admin(self):
         return False
-
-
-login_manager.anonymous_user = AnonymousUser
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))

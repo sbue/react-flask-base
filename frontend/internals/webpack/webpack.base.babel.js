@@ -6,6 +6,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const tsImportPluginFactory = require('ts-import-plugin');
 
 module.exports = options => ({
   mode: options.mode,
@@ -41,6 +42,17 @@ module.exports = options => ({
         test: /\.css$/,
         exclude: /node_modules/,
         use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          'style-loader',
+          // Translates CSS into CommonJS
+          'css-loader',
+          // Compiles Sass to CSS
+          'sass-loader',
+        ],
       },
       {
         // Preprocess 3rd party .css files located in node_modules
@@ -112,6 +124,20 @@ module.exports = options => ({
           },
         },
       },
+      {
+        test: /\.(jsx|tsx|js|ts)$/,
+        loader: 'ts-loader',
+        options: {
+          transpileOnly: true,
+          getCustomTransformers: () => ({
+            before: [ tsImportPluginFactory( /** options */) ]
+          }),
+          compilerOptions: {
+            module: 'es2015'
+          }
+        },
+        exclude: /node_modules/
+      },
     ],
   },
   plugins: options.plugins.concat([
@@ -122,6 +148,16 @@ module.exports = options => ({
       NODE_ENV: 'development',
     }),
     new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
+    new webpack.ContextReplacementPlugin(/^\.\/locale$/, context => {
+      if (!/\/moment\//.test(context.context)) { return }
+      // context needs to be modified in place
+      Object.assign(context, {
+        // include only CJK
+        regExp: /^\.\/(ja|ko|zh)/,
+        // point to the locale data folder relative to moment's src/lib/locale
+        request: '../../locale'
+      })
+    }),
   ]),
   resolve: {
     modules: ['node_modules', 'app'],

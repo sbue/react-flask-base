@@ -4,11 +4,9 @@ import subprocess
 
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager, Shell
-from redis import Redis
-from rq import Connection, Queue, Worker
 
 from app import create_app, db
-from app.models import Role, User
+from app.models.user import Role, User
 from config import Config
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
@@ -86,21 +84,6 @@ def setup_general():
             db.session.add(user)
             db.session.commit()
             print('Added administrator {}'.format(user.full_name()))
-
-
-@manager.command
-def run_worker():
-    """Initializes a slim rq task queue."""
-    listen = ['default']
-    conn = Redis(
-        host=app.config['RQ_DEFAULT_HOST'],
-        port=app.config['RQ_DEFAULT_PORT'],
-        db=0,
-        password=app.config['RQ_DEFAULT_PASSWORD'])
-
-    with Connection(conn):
-        worker = Worker(map(Queue, listen))
-        worker.work()
 
 
 @manager.command

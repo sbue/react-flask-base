@@ -1,19 +1,28 @@
 import os
 
 from flask import render_template
-from flask_mail import Message
 
 from app import create_app
-from app import mail
+
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
+from zappa.asynchronous import task
 
 
+@task
 def send_email(recipient, subject, template, **kwargs):
-    app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+    app = create_app(os.getenv("FLASK_CONFIG") or "default")
     with app.app_context():
-        msg = Message(
-            app.config['EMAIL_SUBJECT_PREFIX'] + ' ' + subject,
-            sender=app.config['EMAIL_SENDER'],
-            recipients=[recipient])
-        msg.body = render_template(template + '.txt', **kwargs)
-        msg.html = render_template(template + '.html', **kwargs)
-        mail.send(msg)
+        message = Mail(
+            from_email=app.config["EMAIL_SENDER"],
+            to_emails=[recipient],
+            subject=f"{app.config['EMAIL_SUBJECT_PREFIX']} {subject}",
+            html_content=render_template(f"{template}.html", **kwargs))
+        sg = SendGridAPIClient(os.environ.get("SENDGRID_API_KEY"))
+        response = sg.send(message)
+        response_msg = f"[{response.status_code}] {response.body}"
+        if response.status_code > 300:
+            app.logger.error(response_msg)
+        else:
+            app.logger.info(response_msg)

@@ -1,29 +1,33 @@
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import React from 'react';
+import { Row, Col } from 'antd';
+import icon from 'images/icon-512x512.png';
+import './style.scss';
+import { SITE_NAME } from 'config';
 
-import A from './A';
-import Img from './Img';
-import NavBar from './NavBar';
-import HeaderLink from './HeaderLink';
-import Banner from './banner.jpg';
-import messages from './messages';
+import { useSelector } from 'react-redux';
+import { selectIsAuthenticated } from 'security/reducer';
 
-function Header() {
+
+export default function Header() {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   return (
-    <div>
-      <A href="https://www.reactboilerplate.com/">
-        <Img src={Banner} alt="react-boilerplate - Logo" />
-      </A>
-      <NavBar>
-        <HeaderLink to="/">
-          <FormattedMessage {...messages.home} />
-        </HeaderLink>
-        <HeaderLink to="/features">
-          <FormattedMessage {...messages.features} />
-        </HeaderLink>
-      </NavBar>
+    <div id="header">
+      <Row>
+        <Col id="logo" xs={24} sm={24} md={7} lg={7} xl={7} xxl={6}>
+          <a href="/">
+            <img src={icon} height="32px" />
+            <h5>{SITE_NAME}</h5>
+          </a>
+        </Col>
+        <Col id="menu" xs={0} sm={0} md={17} lg={17} xl={17} xxl={18}>
+          {isAuthenticated ? <div>
+            <a href="/logout">Logout</a>
+          </div> : <div>
+            <a href="/sign-up">Sign Up</a>
+            <a href="/login">Login</a>
+          </div>}
+        </Col>
+      </Row>
     </div>
   );
 }
-
-export default Header;

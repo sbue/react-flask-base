@@ -4,9 +4,11 @@
 
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
+import { loadingBarReducer } from 'react-redux-loading-bar';
+import formReducer from 'redux-form/es/reducer';
 
+import securityReducer from 'security/reducer';
 import history from 'utils/history';
-import globalReducer from 'containers/App/reducer';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
 
 /**
@@ -14,8 +16,11 @@ import languageProviderReducer from 'containers/LanguageProvider/reducer';
  */
 export default function createReducer(injectedReducers = {}) {
   const rootReducer = combineReducers({
-    global: globalReducer,
     language: languageProviderReducer,
+    loadingBar: loadingBarReducer,
+    security: securityReducer,
+    // flash: flashReducer,
+    form: formReducer,
     router: connectRouter(history),
     ...injectedReducers,
   });

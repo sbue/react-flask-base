@@ -6,15 +6,22 @@ import { applyMiddleware, createStore } from 'redux';
 import { routerMiddleware } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
-import { InjectedStore, ApplicationRootState } from 'types';
+import { InjectedStore } from './types';
 import { History } from 'history';
+import { RootState } from './containers/App/types';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { loadingBarMiddleware } from 'react-redux-loading-bar';
 
-export default function configureStore(initialState: ApplicationRootState | {} = {}, history: History) {
+export default function configureStore(initialState: RootState | {} = {}, history: History) {
   const reduxSagaMonitorOptions = {};
   const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions);
 
-  const middlewares = [sagaMiddleware, routerMiddleware(history)];
+  const middlewares = [
+    sagaMiddleware,
+    routerMiddleware(history),
+    loadingBarMiddleware({ promiseTypeSuffixes: ['REQUEST', 'FULFILL'] }),
+    // flashClearMiddleware,
+  ];
 
   let enhancer = applyMiddleware(...middlewares);
 
@@ -47,6 +54,7 @@ export default function configureStore(initialState: ApplicationRootState | {} =
   store.injectedReducers = {}; // Reducer registry
   store.injectedSagas = {}; // Saga registry
 
+
   // Make reducers hot reloadable, see http://mxs.is/googmo
   /* istanbul ignore next */
   if (module.hot) {
@@ -57,4 +65,3 @@ export default function configureStore(initialState: ApplicationRootState | {} =
 
   return store;
 }
-

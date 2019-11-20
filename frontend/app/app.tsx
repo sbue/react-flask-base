@@ -16,9 +16,11 @@ import { ConnectedRouter } from 'connected-react-router';
 import FontFaceObserver from 'fontfaceobserver';
 import history from 'utils/history';
 import 'sanitize.css/sanitize.css';
+import 'antd/dist/antd.css';
 
 // Import root app
-import App from 'containers/App';
+import App from 'components/App';
+// import App from 'containers/App/index';
 
 // Import Language Provider
 import LanguageProvider from 'containers/LanguageProvider';
@@ -61,10 +63,10 @@ const render = (messages: any, Component = App) => {
 };
 
 if (module.hot) {
-  module.hot.accept(['./i18n', './containers/App'], () => {
+  module.hot.accept(['./i18n', './components/App'], () => {
     ReactDOM.unmountComponentAtNode(MOUNT_NODE);
     // tslint:disable-next-line:max-line-length
-    const App = require('./containers/App').default; // https://github.com/webpack/webpack-dev-server/issues/100
+    const App = require('./components/App').default; // https://github.com/webpack/webpack-dev-server/issues/100
     render(translationMessages, App);
   });
 }

@@ -1,0 +1,53 @@
+@font-face {
+  font-family: Lato, Avenir, -apple-system, system-ui, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-style: normal;
+}
+
+#header {
+  max-width: 1200px;
+  width: 100%;
+  margin: 20px auto 0;
+  padding: 0 24px;
+  position: relative;
+
+  div.ant-row {
+    position: relative;
+    height: 64px;
+    display: block;
+
+    #logo {
+      height: 100%;
+
+      img {
+        margin-right: 16px;
+        height: 36px;
+        line-height: 64px;
+      }
+
+      h5 {
+        line-height: 64px;
+        font-family: Lato, Avenir, -apple-system, system-ui, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+        font-size: 19px;
+        display: inline-block;
+        margin: 0;
+        vertical-align: middle;
+      }
+    }
+
+    #menu {
+      height: 64px;
+      a {
+        color: #314659;
+        line-height: 64px;
+        font-family: Lato, Avenir, -apple-system, system-ui, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+        font-size: 16px;
+        float: right;
+        text-decoration: none;
+        margin-right: 25px;
+      }
+      a:hover {
+        color: rgb(25, 142, 251);
+      }
+    }
+  }
+}

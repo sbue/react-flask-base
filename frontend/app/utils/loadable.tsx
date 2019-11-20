@@ -9,7 +9,7 @@ const loadable = <T extends React.ComponentType<any>>(
 ) => {
   const LazyComponent = lazy(importFunc);
 
-  return (props: React.ComponentProps<T>): JSX.Element => (
+  return (props: any) => (
     <Suspense fallback={fallback}>
       <LazyComponent {...props} />
     </Suspense>
