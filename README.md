@@ -10,6 +10,7 @@ WIP
     * Set up virtualenv. For example, `virtualenv venv; source venv/bin/activate`
       * This project supports latest version of python 3.6. I'm using `3.6.8`. Later versions may have issues on our deployment framework (Zappa) which deploys to AWS Lambda.
     * `pip install -r requirements.txt`
+    * `pip install -r dev-requirements.txt`
     * Set up .env file
       ```
       FLASK_CONFIG=development
