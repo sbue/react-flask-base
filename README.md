@@ -11,9 +11,9 @@ WIP
       * This project supports latest version of python 3.6. I'm using `3.6.8`. Later versions may have issues on our deployment framework (Zappa) which deploys to AWS Lambda.
     * `pip install -r requirements.txt`
     * `pip install -r dev-requirements.txt`
-    * Set up .env file
+    * Set up `config.env` file
       ```
-      FLASK_CONFIG=default # (can be `default`, `development`, `staging`, and `production`. `default` resolves to `development`)
+      FLASK_CONFIG=default
       DATABASE_URL=data-dev.sqlite	
       ADMIN_EMAIL=flask-base-admin@example.com
       ADMIN_PASSWORD=password
@@ -28,6 +28,7 @@ WIP
       DB_ENDPOINT=<YOUR_DB_ENDPOINT>
       DB_PORT=5432
       ```
+      * `FLASK_CONFIG` can be `default`, `development`, `staging`, and `production`. `default` resolves to `development`
     * `python manage.py recreate_db`
     * `python manage.py setup_dev`
   * Running locally: `python manage.py runserver`
