@@ -2,22 +2,18 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { logout } from 'security/actions';
 import SecurityApi from 'security/api';
-import history from 'utils/history';
+// import {ROUTES, getPath} from 'routes';
+import {goTo} from 'utils/history';
+import {flashInfo} from 'components/Flash';
 
 // worker Saga: will be fired on logout.REQUEST actions
-function* logoutSaga(action) {
-  let redirectPath = '';
+function* logoutSaga() {
   try {
     yield call(SecurityApi.logout);
-    yield put(logout.success());
-    redirectPath = '/';
-  } catch (error) {
-    yield put(logout.failure(error.message));
   } finally {
+    yield flashInfo('You\'ve logged out');
     yield put(logout.fulfill());
-    if (!!redirectPath) {
-      yield call(() => history.push(redirectPath));
-    }
+    yield call(goTo('/'));
   }
 }
 

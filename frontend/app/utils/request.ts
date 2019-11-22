@@ -1,18 +1,37 @@
-import { stringify } from 'query-string';
 import * as Cookies from 'js-cookie';
+import {CSRF_ACCESS_TOKEN_KEY, CSRF_REFRESH_TOKEN_KEY} from 'utils/constants';
 
 import { SERVER_URL } from 'config';
+import {authUrl} from 'api';
 
 
-export function url(uri, queryParams) {
-  const baseUrl = `${SERVER_URL}${uri}`;
-  return queryParams
-    ? `${baseUrl}?${stringify(queryParams)}`
-    : baseUrl;
+
+
+// See: https://cdn-media-1.freecodecamp.org/images/1*5vWZxAH-ffLyThTCwTp9ww.png
+export async function privateRequest(f: any) {  // TODO: add better typing
+  try {
+    return await f();
+  } catch (error) {
+    if (error.response.status === 401) {
+      try {
+        await post(authUrl('/refresh-access-token', {}), {},
+          {requiresRefresh: true});
+        return await f();
+      } catch (refreshError) {
+        throw refreshError;
+      }
+    } else {
+      throw error;
+    }
+  }
 }
 
 export function get(url, kwargs = {}) {
   const { ...options } = kwargs;
+  const requiresAuth = url.startsWith(SERVER_URL);
+  const csrfHeader = requiresAuth ? {
+    'X-CSRF-Token': Cookies.get(CSRF_ACCESS_TOKEN_KEY),
+  } : {};
   const defaults = {
     credentials: 'include',
     headers: {
@@ -20,23 +39,30 @@ export function get(url, kwargs = {}) {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
+      ...csrfHeader,
     },
     method: 'GET',
   };
   return request(url, _mergeOptions(defaults, options));
 }
 
-export function post(url, data, kwargs = {}) {
-  const { ...options } = kwargs;
-  const CSRFToken = Cookies.get('csrf_token');
+export function post(url, data, kwargs = {requiresRefresh: false}) {
+  const { requiresRefresh, ...options } = kwargs;
+  const requiresAuth = url.startsWith(SERVER_URL);
+  const csrfHeader = (requiresAuth || requiresRefresh) ? {
+    'X-CSRF-Token': (requiresRefresh ?
+      Cookies.get(CSRF_REFRESH_TOKEN_KEY) :
+      Cookies.get(CSRF_ACCESS_TOKEN_KEY)
+    ),
+  } : {};
   const defaults = {
     credentials: 'include',
     headers: {
       ...{
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-CSRFToken': CSRFToken,
       },
+      ...csrfHeader,
     },
     method: 'POST',
     body: JSON.stringify(data),
@@ -92,9 +118,7 @@ async function _checkStatus(response: Response) {
     return response;
   }
   const responseText = await response.text();
-  const error = new ResponseError(response, responseText);
-  error.response = response;
-  throw error;
+  throw new ResponseError(response, responseText);
 }
 
 function _mergeOptions(defaults, options) {

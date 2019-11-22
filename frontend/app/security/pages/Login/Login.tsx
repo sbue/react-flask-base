@@ -44,6 +44,7 @@ export default function Login() {
       <PageHeader
         style={{
           border: '1px solid rgb(235, 237, 240)',
+          marginBottom: "20px",
         }}
         title="Login"
         subTitle="Please login to get started"

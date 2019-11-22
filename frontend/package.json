@@ -100,7 +100,6 @@
     "react-redux-loading-bar": "^4.5.0",
     "react-router-dom": "5.0.1",
     "redux": "4.0.4",
-    "redux-form": "^8.2.6",
     "redux-saga": "1.0.5",
     "redux-saga-routines": "^3.2.1",
     "reselect": "4.0.0",

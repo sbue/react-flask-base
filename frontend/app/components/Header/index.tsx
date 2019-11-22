@@ -1,11 +1,14 @@
 import React from 'react';
-import { Row, Col } from 'antd';
+import {useSelector} from 'react-redux';
+import {Col, Row} from 'antd';
+
+import {SITE_NAME} from 'config';
+// import {ROUTES} from 'routes';
+import {selectIsAuthenticated} from 'security/reducer';
+import A from 'components/A';
+
 import icon from 'images/icon-512x512.png';
 import './style.scss';
-import { SITE_NAME } from 'config';
-
-import { useSelector } from 'react-redux';
-import { selectIsAuthenticated } from 'security/reducer';
 
 
 export default function Header() {
@@ -14,17 +17,17 @@ export default function Header() {
     <div id="header">
       <Row>
         <Col id="logo" xs={24} sm={24} md={7} lg={7} xl={7} xxl={6}>
-          <a href="/">
+          <A route={'/'}>
             <img src={icon} height="32px" />
             <h5>{SITE_NAME}</h5>
-          </a>
+          </A>
         </Col>
         <Col id="menu" xs={0} sm={0} md={17} lg={17} xl={17} xxl={18}>
           {isAuthenticated ? <div>
-            <a href="/logout">Logout</a>
+            <A route={'/logout'}>Logout</A>
           </div> : <div>
-            <a href="/sign-up">Sign Up</a>
-            <a href="/login">Login</a>
+            <A route={'/sign-up'}>Sign Up</A>
+            <A route={'/login'}>Login</A>
           </div>}
         </Col>
       </Row>

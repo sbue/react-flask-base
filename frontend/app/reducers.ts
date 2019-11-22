@@ -5,7 +5,6 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import { loadingBarReducer } from 'react-redux-loading-bar';
-import formReducer from 'redux-form/es/reducer';
 
 import securityReducer from 'security/reducer';
 import history from 'utils/history';
@@ -19,8 +18,6 @@ export default function createReducer(injectedReducers = {}) {
     language: languageProviderReducer,
     loadingBar: loadingBarReducer,
     security: securityReducer,
-    // flash: flashReducer,
-    form: formReducer,
     router: connectRouter(history),
     ...injectedReducers,
   });

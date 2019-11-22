@@ -1,12 +1,13 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import startCase from 'lodash/startCase';
+import { compile } from 'path-to-regexp';
 
+import history from 'utils/history';
 import { Home, NotFound } from 'site/pages';
 import { SignUp, Login, Logout } from 'security/pages';
 import { PrivateRoute, PublicRoute, RestrictedPublicRoute } from 'components/Routes';
 
-import startCase from 'lodash/startCase';
-import { compile } from 'path-to-regexp';
 
 
 /**
@@ -128,6 +129,10 @@ const cachedRoutes = routes.map((route) => {
   return <RouteComponent exact path={path} component={component} key={path} />;
 });
 cachedRoutes.push(<Route component={NotFound} key="*" />);
+
+export function getPath(routeKey: string) {
+  return ROUTE_MAP[routeKey].path;
+}
 
 export default () => (
   <Switch>

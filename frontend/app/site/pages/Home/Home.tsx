@@ -10,7 +10,7 @@
  */
 
 import React from 'react';
-import { PageHeader } from 'antd';
+import { PageHeader, Skeleton } from 'antd';
 
 import { useSelector } from 'react-redux';
 import { selectSecurity } from 'security/reducer';
@@ -28,6 +28,9 @@ export default function HomePage() {
         title={`Howdy ${userGreeting}`}
         subTitle="Welcome to our application"
       />
+      <Skeleton />
+      <Skeleton />
+      <Skeleton />
     </div>
   );
 }

@@ -14,7 +14,7 @@ import { signUp } from 'security/actions';
 import reducer, { selectSecurity } from 'security/reducer';
 import saga from 'security/sagas/signUp';
 
-import { Input, Button, PageHeader } from 'antd';
+import { Input, Button, PageHeader, Form, Icon } from 'antd';
 
 const key = 'security';
 
@@ -48,32 +48,47 @@ export default function SignUp() {
       <PageHeader
         style={{
           border: '1px solid rgb(235, 237, 240)',
+          marginBottom: "20px",
         }}
-        onBack={() => null}
         title="Sign Up"
-        subTitle="Sign up to get started!"
+        subTitle="Let's get started"
       />
-      <form>
-        <label>
-          <p>Email</p>
-          <Input ref={emailInput} type="email" name="email" />
-        </label>
-        <label>
-          <p>First Name</p>
-          <Input ref={firstNameInput} type="text" name="firstName" />
-        </label>
-        <label>
-          <p>Last Name</p>
-          <Input ref={lastNameInput} type="text" name="lastName" />
-        </label>
-        <label>
-          <p>Password</p>
-          <Input ref={passwordInput} type="password" name="password" autoComplete="on" />
-        </label>
-        <Button type="primary" size="large" htmlType="submit" onClick={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
+        <Form.Item>
+          <Input
+            ref={firstNameInput}
+            type="text"
+            placeholder="First Name"
+          />
+        </Form.Item>
+        <Form.Item>
+          <Input
+            ref={lastNameInput}
+            type="text"
+            placeholder="Last Name"
+          />
+        </Form.Item>
+        <Form.Item>
+          <Input
+            ref={emailInput}
+            type="email"
+            prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+            placeholder="Email"
+          />
+        </Form.Item>
+        <Form.Item>
+          <Input
+            ref={passwordInput}
+            type="password"
+            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+            placeholder="Password"
+            autoComplete="on"
+          />
+        </Form.Item>
+        <Button type="primary" size="default" htmlType="submit">
           Sign Up
         </Button>
-      </form>
-      </div>
+      </Form>
+    </div>
   );
 }

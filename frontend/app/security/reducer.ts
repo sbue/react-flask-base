@@ -26,6 +26,7 @@ export default function(state: ContainerState = initialState,
       return {
         ...state,
         isAuthenticating: true,
+        // TODO: Add "user: payload.user,"
       };
 
     case login.SUCCESS:
@@ -37,13 +38,12 @@ export default function(state: ContainerState = initialState,
       };
 
     case login.FAILURE:
-    case logout.SUCCESS:
-    case logout.FAILURE:
     case logout.FULFILL:
     case resetPassword.FAILURE:
       return {
         ...state,
         isAuthenticated: false,
+        user: initialState.user,
       };
 
     case login.FULFILL:

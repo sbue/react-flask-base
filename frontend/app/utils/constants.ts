@@ -10,7 +10,5 @@ export const WARNING = 'WARNING';
 export const INFO = 'INFO';
 export const DEBUG = 'DEBUG';
 
-// export const COOKIES_DAYS_TO_EXPIRATION = 30;
-//
-// export const JWT_ACCESS_COOKIE_NAME = 'access_token_cookie';
-// export const JWT_REFRESH_COOKIE_NAME = 'access_token_cookie';
+export const CSRF_ACCESS_TOKEN_KEY = 'csrf_access_token';
+export const CSRF_REFRESH_TOKEN_KEY = 'csrf_refresh_token';

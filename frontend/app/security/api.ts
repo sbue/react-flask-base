@@ -2,42 +2,25 @@ import {
   delete_,
   get,
   post,
-  url,
+  privateRequest,
 } from 'utils/request';
-import api from 'api';
-
-
-const PREFIX = 'auth';  // good if prefix is "auth"
-
-function authUrl(uri, queryParams) {
-  return url(`${PREFIX}${uri}`, queryParams);
-}
-
-function authV1(uri, queryParams) {
-  return api(`${PREFIX}${uri}`, queryParams);
-}
+import {authUrl} from 'api';
 
 export default class Auth {
-
-
-  public static refreshAccessToken() {
-    return post(authV1('/refresh-access-token', {}), {});
-  }
-
   // /**
   //  * @param {string} password
   //  * @param {string} newPassword
   //  * @param {string} confirmNewPassword
   //  */
   // static changePassword({ password, newPassword, confirmNewPassword }) {
-  //   return post(authV1('/change-password'), { password, newPassword, confirmNewPassword })
+  //   return post(authUrl('/change-password'), { password, newPassword, confirmNewPassword })
   // }
   //
   // /**
   //  * @param {string} token The user's auth token
   //  */
   // static checkAuthToken(token) {
-  //   return get(authV1('/check-auth-token'), { token })
+  //   return get(authUrl('/check-auth-token'), { token })
   // }
   //
   // /**
@@ -52,18 +35,19 @@ export default class Auth {
    * @param {string} password
    */
   public static login({ email, password }) {
-    return post(authV1('/login', {}), { email, password });
+    return post(authUrl('/login', {}), { email, password });
   }
 
   public static logout() {
-    return delete_(authV1('/logout', {}), {});
+    const f = () => delete_(authUrl('/logout', {}), {});
+    return privateRequest(f);
   }
 
   // /**
   //  * @param {string} email
   //  */
   // static resendConfirmationEmail(email) {
-  //   return post(authV1('/resend-confirmation-email'), { email })
+  //   return post(authUrl('/resend-confirmation-email'), { email })
   // }
   //
   // /**
@@ -84,7 +68,7 @@ export default class Auth {
    * @param {string} payload.password
    */
   public static signUp(payload) {
-    return post(authV1('/sign-up', {}), payload);
+    return post(authUrl('/sign-up', {}), payload);
   }
 
   // /**
@@ -92,6 +76,6 @@ export default class Auth {
   //  * @param {object} payload Any modified fields to be updated
   //  */
   // static updateProfile(user, payload) {
-  //   return patch(authV1(`/users/${user.id}`), payload)
+  //   return patch(authUrl(`/users/${user.id}`), payload)
   // }
 }
