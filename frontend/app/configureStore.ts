@@ -8,11 +8,11 @@ import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
 import { InjectedStore } from './types';
 import { History } from 'history';
-import { RootState } from './containers/App/types';
+import { ApplicationRootState } from 'types';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { loadingBarMiddleware } from 'react-redux-loading-bar';
 
-export default function configureStore(initialState: RootState | {} = {}, history: History) {
+export default function configureStore(initialState: ApplicationRootState | {} = {}, history: History) {
   const reduxSagaMonitorOptions = {};
   const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions);
 

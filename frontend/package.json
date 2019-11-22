@@ -64,7 +64,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "cat 'Removed pre-commit linting script!'"
+      "pre-commit": "echo 'Removed pre-commit linting script!'"
     }
   },
   "resolutions": {
