@@ -8,6 +8,7 @@ WIP
 * Backend (`cd backend`)
   * Setup:
     * Set up virtualenv. For example, `virtualenv venv; source venv/bin/activate`
+      * This project supports latest version of python 3.6. I'm using `3.6.8`. Later versions may break.
     * `pip install -r requirements.txt`
     * Set up .env file
       ```
