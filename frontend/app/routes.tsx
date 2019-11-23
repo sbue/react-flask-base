@@ -3,37 +3,17 @@ import { Route, Switch } from 'react-router-dom';
 import startCase from 'lodash/startCase';
 import { compile } from 'path-to-regexp';
 
-import history from 'utils/history';
 import { Home, NotFound } from 'site/pages';
 import { SignUp, Login, Logout } from 'security/pages';
 import { PrivateRoute, PublicRoute, RestrictedPublicRoute } from 'components/Routes';
+import {PATHS} from 'config';
 
-
-
-/**
- * ROUTES: The canonical store of frontend routes. Routes throughout the system
- * should be referenced using these constants
- *
- * Both keys and values are component class names
- */
-export const ROUTES = {
-  // Contact: 'Contact',
-  // ForgotPassword: 'ForgotPassword',
-  Home: 'Home',
-  Login: 'Login',
-  Logout: 'Logout',
-  // PendingConfirmation: 'PendingConfirmation',
-  // ResendConfirmation: 'ResendConfirmation',
-  // ResetPassword: 'ResetPassword',
-  SignUp: 'SignUp',
-};
 
 /**
  * route details
  *
  * list of objects with keys:
  *  - key: component class name
- *  - path: the path for the component (in react router notation)
  *  - component: The component to use
  *  - routeComponent: optional, AnonymousRoute, ProtectedRoute or Route (default: Route)
  *  - label: optional, label to use for links (default: startCase(key))
@@ -41,27 +21,23 @@ export const ROUTES = {
 const routes = [
   // {
   //   key: ROUTES.ForgotPassword,
-  //   path: '/login/forgot-password',
   //   component: ForgotPassword,
   //   routeComponent: AnonymousRoute,
   //   label: 'Forgot password?',
   // },
   {
-    key: ROUTES.Home,
-    path: '/',
+    key: 'Home',
     component: Home,
     routeComponent: PublicRoute,
   },
   {
-    key: ROUTES.Login,
-    path: '/login',
+    key: 'Login',
     component: Login,
     routeComponent: RestrictedPublicRoute,
     label: 'Login',
   },
   {
-    key: ROUTES.Logout,
-    path: '/logout',
+    key: 'Logout',
     component: Logout,
     routeComponent: PrivateRoute,
     label: 'Logout',
@@ -88,8 +64,7 @@ const routes = [
   //   label: 'Reset Password',
   // },
   {
-    key: ROUTES.SignUp,
-    path: '/sign-up',
+    key: 'SignUp',
     component: SignUp,
     routeComponent: RestrictedPublicRoute,
     label: 'Sign Up',
@@ -101,7 +76,8 @@ const routes = [
  */
 export const ROUTE_MAP = {};
 routes.forEach((route) => {
-  const { component, key, label, path, routeComponent } = route;
+  const { component, key, label, routeComponent } = route;
+  const path = PATHS[key];
 
   if (!component) {
     throw new Error(`component was not specified for the ${key} route!`);

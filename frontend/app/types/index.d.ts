@@ -1,6 +1,6 @@
 import { Reducer, Store } from 'redux';
 import { RouterState } from 'connected-react-router';
-import { ContainerState as LanguageProviderState } from 'containers/LanguageProvider/types';
+import { ContainerState as LanguageProviderState } from 'components/LanguageProvider/types';
 import { ContainerState as HomeState } from 'site/pages/Home/types';
 import { ContainerState as SecurityState } from 'security/types';
 

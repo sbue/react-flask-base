@@ -31,6 +31,20 @@ def refresh_access_token():
     return resp, 200
 
 
+@auth.route('/check-auth')
+@login_required
+def check_auth(current_user):
+    resp = jsonify({
+        'user': {
+            'firstName': current_user.first_name.title(),
+            'lastName': current_user.last_name.title(),
+            'email': current_user.email,
+        },
+        'isAdmin': current_user.is_admin(),
+    })
+    return resp, 200
+
+
 @auth.route('/login', methods=['POST'])
 def login():
     """Log in an existing user."""
@@ -52,8 +66,7 @@ def login():
         elif user.password_hash is None or not user.verify_password(password):
             return Response("Incorrect password.", 400)
         else:
-            import datetime
-            access_token = jwt.create_access_token(identity=user.id, expires_delta=datetime.timedelta(seconds=3))
+            access_token = jwt.create_access_token(identity=user.id)
             refresh_token = jwt.create_refresh_token(identity=user.id)
             resp = jsonify({
                 'user': {
@@ -61,6 +74,7 @@ def login():
                     'lastName': user.last_name.title(),
                     'email': user.email,
                 },
+                'isAdmin': user.is_admin(),
             })
             jwt.set_access_cookies(resp, access_token)
             jwt.set_refresh_cookies(resp, refresh_token)
@@ -109,6 +123,7 @@ def sign_up():
                     'lastName': user.last_name,
                     'email': user.email,
                 },
+                'isAdmin': user.is_admin(),
             })
             jwt.set_access_cookies(resp, access_token)
             jwt.set_refresh_cookies(resp, refresh_token)

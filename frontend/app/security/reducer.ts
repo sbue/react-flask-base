@@ -1,6 +1,7 @@
 import { ContainerState, ContainerActions } from './types';
 import {
   changePassword,
+  checkAuth,
   login,
   logout,
   resetPassword,
@@ -14,6 +15,7 @@ export const initialState = {
     lastName: '',
     email: '',
   },
+  isAdmin: false,
 };
 
 export default function(state: ContainerState = initialState,
@@ -26,20 +28,25 @@ export default function(state: ContainerState = initialState,
       return {
         ...state,
         isAuthenticating: true,
-        // TODO: Add "user: payload.user,"
       };
 
+    case checkAuth.SUCCESS:
     case login.SUCCESS:
-    case resetPassword.SUCCESS:
+    case signUp.SUCCESS:
       return {
         ...state,
         isAuthenticated: true,
-        user: payload.user,
+        user: {
+          ...state.user,
+          ...payload.user,
+        },
+        isAdmin: payload.isAdmin,
       };
 
     case login.FAILURE:
     case logout.FULFILL:
     case resetPassword.FAILURE:
+    case signUp.FAILURE:
       return {
         ...state,
         isAuthenticated: false,
@@ -54,21 +61,6 @@ export default function(state: ContainerState = initialState,
         isAuthenticating: false,
       };
 
-    case changePassword.SUCCESS:
-      return {
-        ...state,
-      };
-
-    case signUp.SUCCESS:
-      return {
-        ...state,
-        isAuthenticated: true,
-        user: {
-          ...state.user,
-          ...payload.user,
-        },
-      };
-
     default:
       return state;
   }
@@ -76,3 +68,4 @@ export default function(state: ContainerState = initialState,
 
 export const selectSecurity = (state) => state.security;
 export const selectIsAuthenticated = (state) => state.security.isAuthenticated;
+export const selectIsAdmin = (state) => state.security.isAdmin;

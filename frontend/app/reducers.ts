@@ -8,19 +8,17 @@ import { loadingBarReducer } from 'react-redux-loading-bar';
 
 import securityReducer from 'security/reducer';
 import history from 'utils/history';
-import languageProviderReducer from 'containers/LanguageProvider/reducer';
+import languageProviderReducer from 'components/LanguageProvider/reducer';
 
 /**
  * Merges the main reducer with the router state and dynamically injected reducers
  */
 export default function createReducer(injectedReducers = {}) {
-  const rootReducer = combineReducers({
+  return combineReducers({
     language: languageProviderReducer,
     loadingBar: loadingBarReducer,
     security: securityReducer,
     router: connectRouter(history),
     ...injectedReducers,
   });
-
-  return rootReducer;
 }

@@ -2,27 +2,22 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { login } from 'security/actions';
 import SecurityApi from 'security/api';
-// import {ROUTES, getPath} from 'routes';
+import {PATHS} from 'config';
 import {goTo} from 'utils/history';
 import { flashSuccess, flashError } from 'components/Flash';
 
 // worker Saga: will be fired on login.REQUEST actions
 function* loginSaga(action) {
-  let routeKey = '';
   try {
-    const responseData = yield call(SecurityApi.login, action.payload);
-    const user = responseData.user;
-    yield put(login.success({user}));
-    routeKey = '/'; // ROUTES.Home; // TODO: add pending confirmation
+    const {user, isAdmin} = yield call(SecurityApi.login, action.payload);
+    yield put(login.success({user, isAdmin}));
     yield flashSuccess('You have been successfully logged in.');
+    yield call(goTo(PATHS.Home));  // TODO: add pending confirmation
   } catch (error) {
     yield put(login.failure(error.message));
     yield flashError(error.message);
   } finally {
     yield put(login.fulfill());
-    if (!!routeKey) {
-      yield call(goTo(routeKey));
-    }
   }
 }
 

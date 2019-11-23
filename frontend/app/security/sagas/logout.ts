@@ -2,9 +2,9 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { logout } from 'security/actions';
 import SecurityApi from 'security/api';
-// import {ROUTES, getPath} from 'routes';
 import {goTo} from 'utils/history';
 import {flashInfo} from 'components/Flash';
+import {PATHS} from 'config';
 
 // worker Saga: will be fired on logout.REQUEST actions
 function* logoutSaga() {
@@ -13,7 +13,7 @@ function* logoutSaga() {
   } finally {
     yield flashInfo('You\'ve logged out');
     yield put(logout.fulfill());
-    yield call(goTo('/'));
+    yield call(goTo(PATHS.Home));
   }
 }
 

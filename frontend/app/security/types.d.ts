@@ -12,6 +12,7 @@ interface SecurityState {
     lastName: string;
     email: string;
   };
+  isAdmin: boolean;
 }
 
 /* --- ACTIONS --- */

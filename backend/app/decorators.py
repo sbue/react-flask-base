@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import abort
-from flask_jwt_extended import (get_jwt_identity as get_current_user_email,
+from flask_jwt_extended import (get_jwt_identity as get_current_user_id,
                                 jwt_required)
 
 from app.models.user import User, Permission
@@ -10,8 +10,8 @@ def login_required(f):
     @jwt_required
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        current_user_email = get_current_user_email()
-        current_user = User.query.filter_by(email=current_user_email).first()
+        current_user_id = get_current_user_id()
+        current_user = User.query.filter_by(id=current_user_id).first()
         if current_user is not None:
             if "current_user" in f.__code__.co_varnames:
                 return f(*args, current_user=current_user, **kwargs)

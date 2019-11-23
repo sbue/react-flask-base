@@ -5,8 +5,6 @@ import { SERVER_URL } from 'config';
 import {authUrl} from 'api';
 
 
-
-
 // See: https://cdn-media-1.freecodecamp.org/images/1*5vWZxAH-ffLyThTCwTp9ww.png
 export async function privateRequest(f: any) {  // TODO: add better typing
   try {

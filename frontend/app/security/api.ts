@@ -16,13 +16,11 @@ export default class Auth {
   //   return post(authUrl('/change-password'), { password, newPassword, confirmNewPassword })
   // }
   //
-  // /**
-  //  * @param {string} token The user's auth token
-  //  */
-  // static checkAuthToken(token) {
-  //   return get(authUrl('/check-auth-token'), { token })
-  // }
-  //
+
+  static checkAuth() {
+    return get(authUrl('/check-auth', {}), {})
+  }
+
   // /**
   //  * @param {string} email
   //  */

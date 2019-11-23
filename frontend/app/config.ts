@@ -14,3 +14,15 @@ export const SITE_NAME = 'Flask React Base';
 export const COPYRIGHT = 'Flask React Base';
 
 export const HIGHLIGHT_LANGUAGES = ['javascript', 'json', 'python', 'scss', 'yaml'];
+
+
+export const PATHS = {
+  // ForgotPassword: '/forgot-password',
+  Home: '/',
+  Login: '/login',
+  Logout: '/logout',
+  // PendingConfirmation: '/pending-confirmation',
+  // ResendConfirmation: '/resend-confirmation',
+  // ResetPassword: '/reset-password',
+  SignUp: '/sign-up',
+};

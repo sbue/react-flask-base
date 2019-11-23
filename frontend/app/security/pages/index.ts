@@ -6,3 +6,4 @@ export { default as Logout } from './Logout';
 export { default as SignUp } from './SignUp';
 // export { default as ResendConfirmation } from './ResendConfirmation';
 // export { default as ResetPassword } from './ResetPassword';
+export { default as CheckAuth } from './CheckAuth';
