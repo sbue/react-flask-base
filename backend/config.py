@@ -1,5 +1,15 @@
 import os
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+# TODO: this won't work in AWS Lambda
+if os.path.exists('config.env'):
+    print('Importing environment from .env file')
+    for line in open('config.env'):
+        var = line.strip().split('=')
+        if len(var) == 2:
+            os.environ[var[0]] = var[1].replace("\"", "")
+
 
 class Config:
     APP_NAME = os.getenv("APP_NAME", "Flask-Base")
@@ -35,14 +45,11 @@ class Config:
         pass
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-
 class DevelopmentConfig(Config):
     DEBUG = True
     ASSETS_DEBUG = True
-    SQLALCHEMY_DATABASE_URI = f"sqlite:///" \
-                              f"{os.path.join(basedir, 'data-dev.sqlite')}"
+    SQLALCHEMY_DATABASE_URI = \
+        f"sqlite:///{os.path.join(basedir, 'data-dev.sqlite')}"
     JWT_COOKIE_SECURE = False
 
     @classmethod
