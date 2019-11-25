@@ -3,6 +3,7 @@ import { RouterState } from 'connected-react-router';
 import { ContainerState as LanguageProviderState } from 'components/LanguageProvider/types';
 import { ContainerState as HomeState } from 'site/pages/Home/types';
 import { ContainerState as SecurityState } from 'security/types';
+import { ContainerState as AdminState } from 'admin/types';
 
 // interface AppState {
 //   readonly loading: boolean;
@@ -38,6 +39,7 @@ export interface ApplicationRootState {
   readonly language: LanguageProviderState;
   readonly home: HomeState;
   readonly security: SecurityState;
+  readonly admin: AdminState;
   // for testing purposes
   readonly test: any;
 }

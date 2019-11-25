@@ -7,14 +7,17 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import PageContent from 'components/PageContent';
 import messages from './messages';
 
 export default function NotFound() {
   return (
-    <article>
-      <h1>
-        <FormattedMessage {...messages.header} />
-      </h1>
-    </article>
+    <PageContent>
+      <article>
+        <h1>
+          <FormattedMessage {...messages.header} />
+        </h1>
+      </article>
+    </PageContent>
   );
 }

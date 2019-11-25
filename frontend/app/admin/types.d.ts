@@ -3,15 +3,16 @@ import * as actions from './actions';
 
 /* --- STATE --- */
 
-interface SecurityState {
-  isAuthenticated: boolean;
-  isAuthenticating: boolean;
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
-  isAdmin: boolean;
+interface UserObject {
+  key: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  role: string,
+}
+
+interface AdminState {
+  users: Array<UserObject>,
 }
 
 /* --- ACTIONS --- */
@@ -20,7 +21,7 @@ type AppActions = ActionType<typeof actions>;
 
 /* --- EXPORTS --- */
 
-type ContainerState = SecurityState;
+type ContainerState = AdminState;
 type ContainerActions = AppActions;
 
 export { ContainerState, ContainerActions };

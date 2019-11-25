@@ -3,7 +3,6 @@ import {useSelector} from 'react-redux';
 import {Col, Row} from 'antd';
 
 import {SITE_NAME} from 'config';
-// import {ROUTES} from 'routes';
 import {selectIsAuthenticated, selectIsAdmin} from 'security/reducer';
 import A from 'components/A';
 import {PATHS} from 'config';
@@ -27,8 +26,12 @@ export default function Header() {
         </Col>
         <Col id="menu" xs={0} sm={0} md={17} lg={17} xl={17} xxl={18}>
           {isAuthenticated ? <div>
-            {isAdmin && <a><Tag color="red">Admin</Tag></a>}
+            {isAdmin && <span>
+              <Tag color="red">Admin</Tag>
+            </span>}
             <A route={PATHS.Logout}>Logout</A>
+            <A route={PATHS.Settings}>Settings</A>
+            {isAdmin && <A route={PATHS.AdminDashboard}>Dashboard</A>}
           </div> : <div>
             <A route={PATHS.SignUp}>Sign Up</A>
             <A route={PATHS.Login}>Login</A>

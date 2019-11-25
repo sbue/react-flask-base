@@ -10,17 +10,17 @@
  */
 
 import React from 'react';
-import { PageHeader, Skeleton } from 'antd';
+import {PageHeader, Skeleton} from 'antd';
 
-import { useSelector } from 'react-redux';
-import { selectSecurity } from 'security/reducer';
-
+import {useSelector} from 'react-redux';
+import {selectSecurity} from 'security/reducer';
+import PageContent from 'components/PageContent';
 
 export default function HomePage() {
   const security = useSelector(selectSecurity);
   const userGreeting = security.user.firstName ? security.user.firstName : '🌍';
   return (
-    <div>
+    <PageContent>
       <PageHeader
         style={{
           border: '1px solid rgb(235, 237, 240)',
@@ -31,6 +31,6 @@ export default function HomePage() {
       <Skeleton />
       <Skeleton />
       <Skeleton />
-    </div>
+    </PageContent>
   );
 }

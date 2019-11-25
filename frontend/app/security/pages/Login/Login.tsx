@@ -4,22 +4,24 @@
  * This is the login page
  */
 
-import React, { useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useRef} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
 
-import { useInjectReducer } from 'utils/injectReducer';
-import { useInjectSaga } from 'utils/injectSaga';
-import { login } from 'security/actions';
-import reducer, { selectSecurity } from 'security/reducer';
+import {useInjectReducer} from 'utils/injectReducer';
+import {useInjectSaga} from 'utils/injectSaga';
+import {login} from 'security/actions';
+import reducer from 'security/reducer';
+import {selectLoading} from 'reducers';
 import saga from 'security/sagas/login';
+import PageContent from 'components/PageContent';
 
-import { Input, Button, PageHeader, Form, Icon } from 'antd';
 
 const key = 'security';
 
 export default function Login() {
   const dispatch = useDispatch();
-  const security = useSelector(selectSecurity);
+  const isLoading = useSelector(selectLoading) == 1;
 
   const emailInput: any = useRef(null);
   const passwordInput: any = useRef(null);
@@ -40,37 +42,39 @@ export default function Login() {
   useInjectSaga({ key: key, saga: saga });
 
   return (
-    <div>
-      <PageHeader
-        style={{
-          border: '1px solid rgb(235, 237, 240)',
-          marginBottom: "20px",
-        }}
-        title="Login"
-        subTitle="Please login to get started"
-      />
-      <Form onSubmit={handleSubmit}>
-        <Form.Item>
-          <Input
-            ref={emailInput}
-            type="email"
-            prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="Email"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Input
-            ref={passwordInput}
-            type="password"
-            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="Password"
-            autoComplete="on"
-          />
-        </Form.Item>
-        <Button type="primary" size="default" htmlType="submit">
-          Login
-        </Button>
-      </Form>
-    </div>
+    <PageContent>
+      <Spin tip="Loading..." spinning={isLoading}>
+        <PageHeader
+          style={{
+            border: '1px solid rgb(235, 237, 240)',
+            marginBottom: "20px",
+          }}
+          title="Login"
+          subTitle="Please login to get started"
+        />
+        <Form onSubmit={handleSubmit}>
+          <Form.Item>
+            <Input
+              ref={emailInput}
+              type="email"
+              prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="Email"
+            />
+          </Form.Item>
+          <Form.Item>
+            <Input
+              ref={passwordInput}
+              type="password"
+              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="Password"
+              autoComplete="on"
+            />
+          </Form.Item>
+          <Button type="primary" size="default" htmlType="submit">
+            Login
+          </Button>
+        </Form>
+      </Spin>
+    </PageContent>
   );
 }

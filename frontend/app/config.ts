@@ -25,4 +25,7 @@ export const PATHS = {
   // ResendConfirmation: '/resend-confirmation',
   // ResetPassword: '/reset-password',
   SignUp: '/sign-up',
+  Settings: '/settings',
+  AdminDashboard: '/admin/dashboard',
+  ManageUsers: '/admin/users',
 };

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectIsAuthenticated } from 'security/reducer';
+import { selectIsAuthenticated, selectIsAdmin } from 'security/reducer';
 import history from 'utils/history';
 import {PATHS} from 'config';
 
@@ -32,6 +32,20 @@ export const PrivateRoute = ({component: Component, ...rest}) => {
   useEffect(() => {
     if (!isAuthenticated) {
       history.push(PATHS.Login);
+    }
+  }, []);
+  return (
+    <Route {...rest} render={props => (
+      <Component {...props} />
+    )} />
+  );
+};
+
+export const AdminRoute = ({component: Component, ...rest}) => {
+  const isAdmin = useSelector(selectIsAdmin);
+  useEffect(() => {
+    if (!isAdmin) {
+      history.push(PATHS.Home);
     }
   }, []);
   return (

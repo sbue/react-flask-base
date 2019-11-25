@@ -5,9 +5,12 @@ export function apiUrl(uri, queryParams) {
   return _url(`/${uri}`, queryParams);
 }
 
-const AUTH_PREFIX = 'auth';
 export function authUrl(uri, queryParams) {
-  return apiUrl(`${AUTH_PREFIX}${uri}`, queryParams);
+  return apiUrl(`auth${uri}`, queryParams);
+}
+
+export function adminUrl(uri, queryParams) {
+  return apiUrl(`admin${uri}`, queryParams);
 }
 
 export function _url(uri, queryParams) {

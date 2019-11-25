@@ -6,7 +6,6 @@ import {CSRF_ACCESS_TOKEN_KEY, CSRF_REFRESH_TOKEN_KEY} from 'utils/constants';
 import Routes from 'routes';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import PageContent from 'components/PageContent';
 import {CheckAuth} from 'security/pages';
 
 import GlobalStyle from 'global-styles';
@@ -22,9 +21,7 @@ export default function App() {
       {checkingAuth && <CheckAuth />}
       <Header/>
       <main>
-        <PageContent>
-          <Routes />
-        </PageContent>
+        <Routes />
       </main>
       <Footer />
       <GlobalStyle/>

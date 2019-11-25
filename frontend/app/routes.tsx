@@ -5,7 +5,8 @@ import { compile } from 'path-to-regexp';
 
 import { Home, NotFound } from 'site/pages';
 import { SignUp, Login, Logout } from 'security/pages';
-import { PrivateRoute, PublicRoute, RestrictedPublicRoute } from 'components/Routes';
+import { AdminDashboard, ManageUsers } from 'admin/pages';
+import { PrivateRoute, PublicRoute, RestrictedPublicRoute, AdminRoute } from 'components/Routes';
 import {PATHS} from 'config';
 
 
@@ -14,34 +15,47 @@ import {PATHS} from 'config';
  *
  * list of objects with keys:
  *  - key: component class name
+ *  - path: the path for the component (in react router notation)
  *  - component: The component to use
  *  - routeComponent: optional, AnonymousRoute, ProtectedRoute or Route (default: Route)
  *  - label: optional, label to use for links (default: startCase(key))
  */
 const routes = [
-  // {
-  //   key: ROUTES.ForgotPassword,
-  //   component: ForgotPassword,
-  //   routeComponent: AnonymousRoute,
-  //   label: 'Forgot password?',
-  // },
   {
     key: 'Home',
+    path: PATHS.Home,
     component: Home,
     routeComponent: PublicRoute,
   },
+  // AUTH
   {
     key: 'Login',
+    path: PATHS.Login,
     component: Login,
     routeComponent: RestrictedPublicRoute,
     label: 'Login',
   },
   {
     key: 'Logout',
+    path: PATHS.Logout,
     component: Logout,
     routeComponent: PrivateRoute,
     label: 'Logout',
   },
+  {
+    key: 'SignUp',
+    path: PATHS.SignUp,
+    component: SignUp,
+    routeComponent: RestrictedPublicRoute,
+    label: 'Sign Up',
+  },
+  // {
+  //   key: ROUTES.ForgotPassword,
+  //   path: '/login/forgot-password',
+  //   component: ForgotPassword,
+  //   routeComponent: AnonymousRoute,
+  //   label: 'Forgot password?',
+  // },
   // {
   //   key: ROUTES.PendingConfirmation,
   //   path: '/sign-up/pending-confirm-email',
@@ -63,11 +77,20 @@ const routes = [
   //   routeComponent: AnonymousRoute,
   //   label: 'Reset Password',
   // },
+  // ADMIN
   {
-    key: 'SignUp',
-    component: SignUp,
-    routeComponent: RestrictedPublicRoute,
-    label: 'Sign Up',
+    key: 'AdminDashboard',
+    path: PATHS.AdminDashboard,
+    component: AdminDashboard,
+    routeComponent: AdminRoute,
+    label: 'Admin Dashboard',
+  },
+  {
+    key: 'ManageUsers',
+    path: PATHS.ManageUsers,
+    component: ManageUsers,
+    routeComponent: AdminRoute,
+    label: 'Manage Users',
   },
 ];
 
@@ -76,8 +99,7 @@ const routes = [
  */
 export const ROUTE_MAP = {};
 routes.forEach((route) => {
-  const { component, key, label, routeComponent } = route;
-  const path = PATHS[key];
+  const { component, key, label, path, routeComponent } = route;
 
   if (!component) {
     throw new Error(`component was not specified for the ${key} route!`);

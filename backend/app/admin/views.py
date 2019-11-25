@@ -1,16 +1,7 @@
-from flask import (
-    Blueprint,
-    abort,
-    flash,
-    redirect,
-    render_template,
-    request,
-    url_for,
-)
-from flask_login import current_user, login_required
+from flask import (Blueprint, jsonify)
 
 from app import db
-# from app.decorators import admin_required
+from app.decorators import admin_required
 # from app.email import send_email
 from app.models.user import Role, User
 
@@ -78,15 +69,18 @@ admin = Blueprint('admin', __name__)
 #     return render_template('admin/new_user.html', form=form)
 #
 #
-# @admin.route('/users')
-# @login_required
-# @admin_required
-# def registered_users():
-#     """View all registered users."""
-#     users = User.query.all()
-#     roles = Role.query.all()
-#     return render_template(
-#         'admin/registered_users.html', users=users, roles=roles)
+@admin.route('/fetch-users')
+@admin_required
+def fetch_users():
+    """View all registered users."""
+    users = User.query.all()
+    resp = jsonify([{
+        "firstName": user.first_name,
+        "lastName": user.last_name,
+        "email": user.email,
+        "role": user.role.name,
+    } for user in users])
+    return resp, 200
 #
 #
 # @admin.route('/user/<int:user_id>')
