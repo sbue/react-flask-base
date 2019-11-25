@@ -29,6 +29,7 @@ WIP
       DB_PORT=5432
       ```
       * `FLASK_CONFIG` can be `default`, `development`, `staging`, and `production`. `default` resolves to `development`
+      * DB configs are only necessary for production environments
     * `python manage.py recreate_db`
     * `python manage.py setup_dev`
   * Running locally: `python manage.py runserver`
