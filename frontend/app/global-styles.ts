@@ -27,6 +27,9 @@ const GlobalStyle = createGlobalStyle`
     font-family: Lato, Avenir, -apple-system, system-ui, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     line-height: 1.5em;
   }
+  .ant-page-header {
+    background-color: white;
+  }
 `;
 
 export default GlobalStyle;

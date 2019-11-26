@@ -22,7 +22,7 @@ export default function CheckAuth() {
   useInjectSaga({ key: key, saga: saga });
 
   useEffect(() => {
-    dispatch(checkAuth.request());
+    dispatch(checkAuth.trigger());
   }, []);
 
   return null;

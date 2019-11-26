@@ -1,34 +1,30 @@
 import json
 from operator import itemgetter
-from urllib.parse import urlencode
 
+from flask import Blueprint, jsonify, request, Response, abort, url_for, current_app
 import flask_jwt_extended as jwt
-from flask import Blueprint, current_app, jsonify, request, Response
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema
 
 from app import db
 from app.decorators import login_required
 from app.email import send_email
 from app.models.user import User
+from app.auth.fields import name_field, email_field, password_field
+from app.auth.utils import authenticate, get_current_user, validate_request
 
 auth = Blueprint('auth', __name__)
-
-name_field = fields.Str(required=True, validate=validate.Length(min=2, max=50))
-email_field = fields.Email(required=True, validate=validate.Length(min=4, max=250))
-password_field = fields.Str(required=True, validate=validate.Length(min=8, max=250))
 
 
 @auth.route('/refresh-access-token', methods=['POST'])
 @jwt.jwt_refresh_token_required
 def refresh_access_token():
-    user_id = jwt.get_jwt_identity()
-    user = User.query.filter_by(id=user_id).first()
-    if user is None:
-        return Response("UNAUTHORIZED", 401)
-    access_token = jwt.create_access_token(identity=user_id)
-    resp = jsonify({})
-    jwt.set_access_cookies(resp, access_token)
-    return resp, 200
+    user = get_current_user()
+    if user:
+        access_token = jwt.create_access_token(identity=user.id)
+        resp = jsonify({})
+        jwt.set_access_cookies(resp, access_token)
+        return resp, 200
+    abort(404)
 
 
 @auth.route('/check-auth')
@@ -51,34 +47,19 @@ def login():
     class LoginSchema(Schema):
         email = email_field
         password = password_field
-    schema = LoginSchema()
-    if not request.data:
-        return Response("Invalid request", 200)
-    data = json.loads(request.data)
-    validation_errors = schema.validate(data)
-    if validation_errors:
-        return Response(str(validation_errors), 400)
-    else:
+    try:
+        data = validate_request(request, LoginSchema)
         email, password = itemgetter('email', 'password')(data)
         user = User.query.filter_by(email=email).first()
         if user is None:
-            return Response("No matching user for email.", 400)
+            raise ValueError("No matching user for email.")
         elif user.password_hash is None or not user.verify_password(password):
-            return Response("Incorrect password.", 400)
+            raise ValueError("Incorrect password.")
         else:
-            access_token = jwt.create_access_token(identity=user.id)
-            refresh_token = jwt.create_refresh_token(identity=user.id)
-            resp = jsonify({
-                'user': {
-                    'firstName': user.first_name.title(),
-                    'lastName': user.last_name.title(),
-                    'email': user.email,
-                },
-                'isAdmin': user.is_admin(),
-            })
-            jwt.set_access_cookies(resp, access_token)
-            jwt.set_refresh_cookies(resp, refresh_token)
+            resp = authenticate(user)
             return resp, 200
+    except ValueError as e:
+        return Response(str(e), 400)
 
 
 @auth.route('/sign-up', methods=['POST'])
@@ -89,24 +70,15 @@ def sign_up():
         last_name = name_field
         email = email_field
         password = password_field
-    schema = RegisterSchema()
-    if not request.data:
-        return Response("Invalid request", 200)
-    data = json.loads(request.data)
-    validation_errors = schema.validate(data)
-    if validation_errors:
-        return Response(str(validation_errors), 400)
-    else:
-        email, password = itemgetter('email', 'password')(data)
-        user_exists = User.query.filter_by(email=email).first() is not None
-        if user_exists:
-            return Response("Email already in use", 400)
+    try:
+        data = validate_request(request, RegisterSchema)
+        if User.query.filter_by(email=data["email"]).first() is not None:
+            raise ValueError("Email already in use.")
         else:
             user = User(**data)
-            confirmation_token = user.generate_confirmation_token().decode()
-            confirm_link = f"{current_app.config['FRONTEND_URL']}" \
-                           f"/confirm-email?" \
-                           f"{urlencode({'token': confirmation_token})}"
+            token = user.generate_confirmation_token().decode()
+            confirm_link = current_app.config['FRONTEND_URL'] + \
+                f"/confirm-email/{token}"
             send_email(recipient=user.email,
                        subject='Confirm Your Account',
                        template='account/email/confirm',
@@ -114,20 +86,10 @@ def sign_up():
                        confirm_link=confirm_link)
             db.session.add(user)
             db.session.commit()
-            import datetime  # TODO: remove me
-            access_token = jwt.create_access_token(identity=user.id, expires_delta=datetime.timedelta(seconds=5))
-            refresh_token = jwt.create_refresh_token(identity=user.id  )
-            resp = jsonify({
-                'user': {
-                    'firstName': user.first_name,
-                    'lastName': user.last_name,
-                    'email': user.email,
-                },
-                'isAdmin': user.is_admin(),
-            })
-            jwt.set_access_cookies(resp, access_token)
-            jwt.set_refresh_cookies(resp, refresh_token)
+            resp = authenticate(user)
             return resp, 200
+    except ValueError as e:
+        return Response(str(e), 400)
 
 
 # Endpoint for revoking the current users access token
@@ -151,7 +113,62 @@ def confirm_email(token, current_user):
         return Response("The confirmation link is invalid or has expired.", 400)
 
 
-@auth.route("/protected")
+@auth.route('/reset-password', methods=['POST'])
+def reset_password_request():
+    """Respond to existing user's request to reset their password."""
+    class ResetPasswordSchema(Schema):
+        email = email_field
+    try:
+        data = validate_request(request, ResetPasswordSchema)
+        user = User.query.filter_by(email=data["email"]).first()
+        if not user:
+            raise ValueError("No matching user for email.")
+        else:
+            token = user.generate_password_reset_token().decode()
+            reset_link = current_app.config["FRONTEND_URL"] + \
+                f"/login/reset-password/{token}"
+            send_email(recipient=user.email,
+                       subject="Reset Your Password",
+                       template="account/email/reset_password",
+                       user=user,
+                       reset_link=reset_link,
+                       next=request.args.get('next'))
+    except ValueError as e:
+        return Response(str(e), 400)
+
+
+@auth.route('/reset-password/<token>', methods=['POST'])
+def reset_password(token):
+    """Reset an existing user's password."""
+    class ResetPasswordSchema(Schema):
+        password = password_field
+    try:
+        data = validate_request(request, ResetPasswordSchema)
+        user = User.reset_password(token, data["password"])
+        if not user:
+            raise ValueError("The password reset link is invalid or has expired")
+        else:
+            resp = authenticate(user)
+            return resp, 200
+    except ValueError as e:
+        return Response(str(e), 400)
+
+
+@auth.route('/manage/change-password', methods=['POST'])
 @login_required
-def protected():
-    return Response("Nice!", 200)
+def change_password(current_user):
+    """Change an existing user's password."""
+    class ChangePasswordSchema(Schema):
+        old_password = password_field
+        new_password = password_field
+    try:
+        data = validate_request(request, ChangePasswordSchema)
+        if current_user.verify_password(data["old_password"]):
+            current_user.password = data["new_password"]
+            db.session.add(current_user)
+            db.session.commit()
+            return jsonify({}), 200
+        else:
+            raise ValueError("Original password is invalid.")
+    except ValueError as e:
+        return Response(str(e), 400)

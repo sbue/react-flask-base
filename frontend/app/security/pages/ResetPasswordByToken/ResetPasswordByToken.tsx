@@ -2,24 +2,22 @@ import React, {useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
 
-import {PATHS} from 'config';
+import {selectIsLoading} from 'reducers';
 import {useInjectReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
-import {selectIsLoading} from 'reducers';
 import PageContent from 'components/PageContent';
-import A from 'components/A';
 
-import {login} from 'security/actions';
+import {resetPasswordByToken} from 'security/actions';
 import reducer from 'security/reducer';
-import saga from 'security/sagas/login';
+import saga from 'security/sagas/resetPasswordByToken';
+
 
 const key = 'security';
 
-export default function Login() {
+export default function ResetPasswordByToken(props) {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
-  const emailInput: any = useRef(null);
   const passwordInput: any = useRef(null);
 
   // Not gonna declare event types here. No need. any is fine
@@ -28,10 +26,10 @@ export default function Login() {
       evt.preventDefault();
     }
     const payload = {
-      email: emailInput.current.state.value,
       password: passwordInput.current.state.value,
+      token: props.match.params.token,
     };
-    dispatch(login.request(payload));
+    dispatch(resetPasswordByToken.request(payload));
   };
 
   useInjectReducer({ key: key, reducer: reducer });
@@ -45,18 +43,10 @@ export default function Login() {
             border: '1px solid rgb(235, 237, 240)',
             marginBottom: "20px",
           }}
-          title="Login"
-          subTitle="Please login to get started"
+          title="Reset Password"
+          subTitle="Please enter a new password"
         />
         <Form onSubmit={handleSubmit}>
-          <Form.Item>
-            <Input
-              ref={emailInput}
-              type="email"
-              prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Email"
-            />
-          </Form.Item>
           <Form.Item>
             <Input
               ref={passwordInput}
@@ -67,11 +57,8 @@ export default function Login() {
             />
           </Form.Item>
           <Button type="primary" size="default" htmlType="submit">
-            Login
+            Reset password
           </Button>
-          <A route={PATHS.ForgotPassword}  style={{marginLeft: "20px"}}>
-            Forgot password?
-          </A>
         </Form>
       </Spin>
     </PageContent>

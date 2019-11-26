@@ -26,7 +26,8 @@
     "strictFunctionTypes": false,
     "pretty": true,
     "removeComments": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "downlevelIteration": true
   },
   "include": ["app/**/*", "internals/templates/**/*"],
   "exclude": ["node_modules"]

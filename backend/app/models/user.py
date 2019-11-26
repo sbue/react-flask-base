@@ -136,19 +136,22 @@ class User(UserMixin, db.Model):
         db.session.commit()
         return True
 
-    def reset_password(self, token, new_password):
+    @staticmethod
+    def reset_password(token, new_password):
         """Verify the new password for this user."""
-        s = Serializer(current_app.config['SECRET_KEY'])
+        s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token)
         except (BadSignature, SignatureExpired):
-            return False
-        if data.get('reset') != self.id:
-            return False
-        self.password = new_password
-        db.session.add(self)
+            return None
+        user_id = data.get("reset")
+        user = User.query.filter_by(id=user_id).first()
+        if user is None:
+            return None
+        user.password = new_password
+        db.session.add(user)
         db.session.commit()
-        return True
+        return user
 
     @staticmethod
     def generate_fake(count=100, **kwargs):

@@ -1,4 +1,4 @@
-from flask import (Blueprint, jsonify)
+from flask import (Blueprint, jsonify, abort)
 
 from app import db
 from app.decorators import admin_required
@@ -69,18 +69,30 @@ admin = Blueprint('admin', __name__)
 #     return render_template('admin/new_user.html', form=form)
 #
 #
-@admin.route('/fetch-users')
+@admin.route('/users')
 @admin_required
 def fetch_users():
     """View all registered users."""
     users = User.query.all()
-    resp = jsonify([{
-        "firstName": user.first_name,
-        "lastName": user.last_name,
+    resp = jsonify({user.id: {
+        "name": user.full_name(),
         "email": user.email,
         "role": user.role.name,
-    } for user in users])
+    } for user in users})
     return resp, 200
+
+
+@admin.route('/user/<int:user_id>/delete', methods=['DELETE'])
+@admin_required
+def delete_user(user_id):
+    """Request deletion of a user's account."""
+    user = User.query.filter_by(id=user_id).first()
+    if user is None:
+        abort(404)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({}), 200
+
 #
 #
 # @admin.route('/user/<int:user_id>')
@@ -137,15 +149,6 @@ def fetch_users():
 #     return render_template('admin/manage_user.html', user=user, form=form)
 #
 #
-# @admin.route('/user/<int:user_id>/delete')
-# @login_required
-# @admin_required
-# def delete_user_request(user_id):
-#     """Request deletion of a user's account."""
-#     user = User.query.filter_by(id=user_id).first()
-#     if user is None:
-#         abort(404)
-#     return render_template('admin/manage_user.html', user=user)
 #
 #
 # @admin.route('/user/<int:user_id>/_delete')

@@ -1,8 +1,10 @@
 import { createBrowserHistory } from 'history';
+import { compile } from 'path-to-regexp';
+
 const history = createBrowserHistory();
 
-export function goTo(path) {
-  return () => history.push(path);
-}
+export const goTo = (path: string, params: object = {}) => {
+  return () => history.push(compile(path)(params));
+};
 
 export default history;

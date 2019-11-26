@@ -25,4 +25,4 @@ export default function createReducer(injectedReducers = {}) {
   });
 }
 
-export const selectLoading = (state) => state.loadingBar.default;
+export const selectIsLoading = (state) => (state.loadingBar.default === 1);

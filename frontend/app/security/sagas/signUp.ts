@@ -6,20 +6,19 @@ import {flashError} from 'components/Flash';
 import {PATHS} from 'config';
 import {goTo} from 'utils/history';
 
-// worker Saga: will be fired on signUp.REQUEST actions
 function* signUpSaga(action) {
   try {
     const {user, isAdmin} = yield call(SecurityApi.signUp, action.payload);
     yield put(signUp.success({ user, isAdmin })); // TODO: Add Pending Confirmation
     yield call(goTo(PATHS.Home));
   } catch (error) {
-    yield put(signUp.failure(error.message));
+    yield put(signUp.failure());
     yield flashError(error.message);
   } finally {
     yield put(signUp.fulfill());
   }
 }
 
-export default function* signUpSagaRoot() {
+export default function* saga() {
   yield takeLatest(signUp.REQUEST, signUpSaga);
 }

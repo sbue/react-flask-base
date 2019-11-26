@@ -1,7 +1,8 @@
 import { ContainerState, ContainerActions } from './types';
-import {fetchUsers} from 'admin/actions';
+import {fetchUsers, deleteUser} from 'admin/actions';
 export const initialState = {
-  users: [],
+  users: {},
+  stale: false,
 };
 
 export default function(state: ContainerState = initialState,
@@ -12,10 +13,16 @@ export default function(state: ContainerState = initialState,
       return {
         ...state,
         users: payload.users,
+        stale: false,
+      };
+    case deleteUser.SUCCESS:
+      return {
+        ...state,
+        stale: true,
       };
     default:
       return state;
   }
 }
 
-export const selectUsers = (state) => state.admin.users;
+export const selectAdmin = (state) => state.admin;

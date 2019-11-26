@@ -6,60 +6,53 @@ import {
   logout,
   resetPassword,
   signUp,
+  resetPasswordByToken,
 } from 'security/actions';
+import {SITE_NAME} from 'config';
+
+const StoreKey = `${SITE_NAME}/securityState`;
+
 export const initialState = {
   isAuthenticated: false,
-  isAuthenticating: false,
+  isAdmin: false,
+  isConfirmedByEmail: false,
   user: {
     firstName: '',
     lastName: '',
     email: '',
   },
-  isAdmin: false,
 };
 
-export default function(state: ContainerState = initialState,
+const localStore = localStorage.getItem(StoreKey);
+const startState = localStore ? JSON.parse(localStore) : initialState;
+
+export default function(state: ContainerState = startState,
                         action: ContainerActions) {
   const { type, payload } = action;
   switch (type) {
-    case login.REQUEST:
-    case resetPassword.REQUEST:
-    case signUp.REQUEST:
-      return {
-        ...state,
-        isAuthenticating: true,
-      };
-
     case checkAuth.SUCCESS:
+    case resetPasswordByToken.SUCCESS:
     case login.SUCCESS:
     case signUp.SUCCESS:
-      return {
+      const newState = {
         ...state,
         isAuthenticated: true,
+        isAdmin: payload.isAdmin,
         user: {
           ...state.user,
           ...payload.user,
         },
-        isAdmin: payload.isAdmin,
       };
+      localStorage.setItem(StoreKey, JSON.stringify(newState));
+      return newState;
 
+    case checkAuth.FAILURE:
     case login.FAILURE:
     case logout.FULFILL:
     case resetPassword.FAILURE:
     case signUp.FAILURE:
-      return {
-        ...state,
-        isAuthenticated: false,
-        user: initialState.user,
-      };
-
-    case login.FULFILL:
-    case resetPassword.FULFILL:
-    case signUp.FULFILL:
-      return {
-        ...state,
-        isAuthenticating: false,
-      };
+      localStorage.removeItem(StoreKey);
+      return initialState;
 
     default:
       return state;
@@ -69,3 +62,4 @@ export default function(state: ContainerState = initialState,
 export const selectSecurity = (state) => state.security;
 export const selectIsAuthenticated = (state) => state.security.isAuthenticated;
 export const selectIsAdmin = (state) => state.security.isAdmin;
+export const selectIsConfirmedByEmail = (state) => state.security.isConfirmedByEmail;

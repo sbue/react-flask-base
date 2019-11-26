@@ -1,12 +1,10 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {Col, Row} from 'antd';
+import {Col, Row, Tag} from 'antd';
 
-import {SITE_NAME} from 'config';
+import {SITE_NAME, PATHS} from 'config';
 import {selectIsAuthenticated, selectIsAdmin} from 'security/reducer';
 import A from 'components/A';
-import {PATHS} from 'config';
-import {Tag} from 'antd';
 
 import icon from 'images/icon-512x512.png';
 import './style.scss';

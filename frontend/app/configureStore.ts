@@ -20,7 +20,6 @@ export default function configureStore(initialState: ApplicationRootState | {} =
     sagaMiddleware,
     routerMiddleware(history),
     loadingBarMiddleware({ promiseTypeSuffixes: ['REQUEST', 'FULFILL'] }),
-    // flashClearMiddleware,
   ];
 
   let enhancer = applyMiddleware(...middlewares);

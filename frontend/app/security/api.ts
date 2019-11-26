@@ -18,16 +18,17 @@ export default class Auth {
   //
 
   static checkAuth() {
-    return get(authUrl('/check-auth', {}), {})
+    const f = () => get(authUrl('/check-auth', {}), {})
+    return privateRequest(f);
   }
 
-  // /**
-  //  * @param {string} email
-  //  */
-  // static forgotPassword({ email }) {
-  //   return post(authUrl('/reset'), { email })
-  // }
-  //
+  /**
+   * @param {string} email
+   */
+  static forgotPassword({ email }) {
+    return post(authUrl('/reset-password', {}), { email })
+  }
+
   /**
    * @param {string} email The username or email to authenticate
    * @param {string} password
@@ -48,14 +49,13 @@ export default class Auth {
   //   return post(authUrl('/resend-confirmation-email'), { email })
   // }
   //
-  // /**
-  //  * @param {string} token The reset token from the URL
-  //  * @param {string} newPassword
-  //  * @param {string} confirmNewPassword
-  //  */
-  // static resetPassword(token, { newPassword, confirmNewPassword }) {
-  //   return post(authUrl(`/reset/${token}`), { newPassword, confirmNewPassword })
-  // }
+  /**
+   * @param {string} token The reset token from the URL
+   * @param {string} password
+   */
+  static resetPasswordByToken({ token, password }) {
+    return post(authUrl(`/reset-password/${token}`, {}), { password })
+  }
 
   /**
    * @param {Object} payload The user details

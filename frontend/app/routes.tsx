@@ -1,12 +1,11 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import startCase from 'lodash/startCase';
-import { compile } from 'path-to-regexp';
 
 import { Home, NotFound } from 'site/pages';
-import { SignUp, Login, Logout } from 'security/pages';
-import { AdminDashboard, ManageUsers } from 'admin/pages';
-import { PrivateRoute, PublicRoute, RestrictedPublicRoute, AdminRoute } from 'components/Routes';
+import { SignUp, Login, Logout, ForgotPassword, ResetPasswordByToken, PendingConfirmation } from 'security/pages';
+import { AdminDashboard, ManageUsers, ManageUser } from 'admin/pages';
+import { PrivateRoute, PublicRoute, RestrictedPublicRoute, AdminRoute, UnconfirmedEmailRoute } from 'components/Routes';
 import {PATHS} from 'config';
 
 
@@ -49,20 +48,20 @@ const routes = [
     routeComponent: RestrictedPublicRoute,
     label: 'Sign Up',
   },
-  // {
-  //   key: ROUTES.ForgotPassword,
-  //   path: '/login/forgot-password',
-  //   component: ForgotPassword,
-  //   routeComponent: AnonymousRoute,
-  //   label: 'Forgot password?',
-  // },
-  // {
-  //   key: ROUTES.PendingConfirmation,
-  //   path: '/sign-up/pending-confirm-email',
-  //   component: PendingConfirmation,
-  //   routeComponent: AnonymousRoute,
-  //   label: 'Pending Confirm Email',
-  // },
+  {
+    key: 'ForgotPassword',
+    path: PATHS.ForgotPassword,
+    component: ForgotPassword,
+    routeComponent: RestrictedPublicRoute,
+    label: 'Forgot password?',
+  },
+  {
+    key: 'PendingConfirmation',
+    path: PATHS.PendingConfirmation,
+    component: PendingConfirmation,
+    routeComponent: UnconfirmedEmailRoute,
+    label: 'Pending Confirm Email',
+  },
   // {
   //   key: ROUTES.ResendConfirmation,
   //   path: '/sign-up/resend-confirmation-email',
@@ -70,13 +69,13 @@ const routes = [
   //   routeComponent: AnonymousRoute,
   //   label: 'Resend Confirmation Email',
   // },
-  // {
-  //   key: ROUTES.ResetPassword,
-  //   path: '/login/reset-password/:token',
-  //   component: ResetPassword,
-  //   routeComponent: AnonymousRoute,
-  //   label: 'Reset Password',
-  // },
+  {
+    key: 'ResetPasswordByToken',
+    path: PATHS.ResetPasswordByToken,
+    component: ResetPasswordByToken,
+    routeComponent: RestrictedPublicRoute,
+    label: 'Reset Password By Token',
+  },
   // ADMIN
   {
     key: 'AdminDashboard',
@@ -91,6 +90,13 @@ const routes = [
     component: ManageUsers,
     routeComponent: AdminRoute,
     label: 'Manage Users',
+  },
+  {
+    key: 'ManageUser',
+    path: PATHS.ManageUser,
+    component: ManageUser,
+    routeComponent: AdminRoute,
+    label: 'Manage User',
   },
 ];
 
@@ -110,7 +116,6 @@ routes.forEach((route) => {
 
   ROUTE_MAP[key] = {
     path,
-    toPath: compile(path),
     component,
     routeComponent: routeComponent || Route,
     label: label || startCase(key),

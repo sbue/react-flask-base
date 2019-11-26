@@ -32,6 +32,12 @@ export interface InjectSagaParams {
   mode?: string | undefined;
 }
 
+export interface InjectMultipleSagasParams {
+  key: keyof ApplicationRootState;
+  sagas: Array<() => IterableIterator<any>>;
+  mode?: string | undefined;
+}
+
 // Your root reducer type, which is your redux state types also
 export interface ApplicationRootState {
   readonly router: RouterState;

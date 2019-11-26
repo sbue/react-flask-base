@@ -14,14 +14,14 @@ import {useInjectSaga} from 'utils/injectSaga';
 import {signUp} from 'security/actions';
 import reducer from 'security/reducer';
 import saga from 'security/sagas/signUp';
-import {selectLoading} from 'reducers';
+import {selectIsLoading} from 'reducers';
 import PageContent from 'components/PageContent';
 
 const key = 'security';
 
 export default function SignUp() {
   const dispatch = useDispatch();
-  const isLoading = useSelector(selectLoading) == 1;
+  const isLoading = useSelector(selectIsLoading);
 
   const emailInput: any = useRef(null);
   const firstNameInput: any = useRef(null);
@@ -33,13 +33,13 @@ export default function SignUp() {
     if (evt !== undefined && evt.preventDefault) {
       evt.preventDefault();
     }
-    const currentFormValue = {
+    const payload = {
       email: emailInput.current.state.value,
       first_name: firstNameInput.current.state.value,
       last_name: lastNameInput.current.state.value,
       password: passwordInput.current.state.value,
     };
-    dispatch(signUp.request(currentFormValue));
+    dispatch(signUp.request(payload));
   };
 
   useInjectReducer({ key: key, reducer: reducer });

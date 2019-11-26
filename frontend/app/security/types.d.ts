@@ -5,13 +5,12 @@ import * as actions from './actions';
 
 interface SecurityState {
   isAuthenticated: boolean;
-  isAuthenticating: boolean;
+  isAdmin: boolean;
   user: {
     firstName: string;
     lastName: string;
     email: string;
   };
-  isAdmin: boolean;
 }
 
 /* --- ACTIONS --- */

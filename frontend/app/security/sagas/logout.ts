@@ -6,7 +6,6 @@ import {goTo} from 'utils/history';
 import {flashInfo} from 'components/Flash';
 import {PATHS} from 'config';
 
-// worker Saga: will be fired on logout.REQUEST actions
 function* logoutSaga() {
   try {
     yield call(SecurityApi.logout);
@@ -17,6 +16,6 @@ function* logoutSaga() {
   }
 }
 
-export default function* logoutSagaRoot() {
+export default function* saga() {
   yield takeLatest(logout.REQUEST, logoutSaga);
 }

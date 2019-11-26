@@ -4,15 +4,14 @@ import * as actions from './actions';
 /* --- STATE --- */
 
 interface UserObject {
-  key: string,
-  firstName: string,
-  lastName: string,
+  name: string,
   email: string,
   role: string,
 }
 
 interface AdminState {
-  users: Array<UserObject>,
+  users: Record<string, UserObject>,
+  stale: boolean,
 }
 
 /* --- ACTIONS --- */

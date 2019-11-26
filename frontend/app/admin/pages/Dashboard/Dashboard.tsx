@@ -61,8 +61,19 @@ export default function Dashboard() {
             <Card style={{ margin: "10px" }}>
               <Meta
                 avatar={<Icon type="user-add" style={{ fontSize: '32px', color: '#08c' }} />}
-                title="Invite new "
-                description="Create a new user account"
+                title="Invite New User "
+                description="Invite a new user by email"
+              />
+            </Card>
+          </A>
+        </Col>
+        <Col xs={24} sm={22} md={12} lg={12} xl={12} xxl={12}>
+          <A route={PATHS.Home}>
+            <Card style={{ margin: "10px" }}>
+              <Meta
+                avatar={<Icon type="user-add" style={{ fontSize: '32px', color: '#08c' }} />}
+                title="Create Invitation Link"
+                description="Create sign-up link"
               />
             </Card>
           </A>

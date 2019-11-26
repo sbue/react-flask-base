@@ -3,7 +3,7 @@ import hoistNonReactStatics from 'hoist-non-react-statics';
 import { useStore } from 'react-redux';
 
 import { getInjectors } from './sagaInjectors';
-import { InjectSagaParams, InjectedStore } from 'types';
+import { InjectSagaParams, InjectMultipleSagasParams, InjectedStore } from 'types';
 
 /**
  * Dynamically injects a saga, passes component's props as saga arguments
@@ -66,4 +66,14 @@ const useInjectSaga = ({ key, saga, mode }: InjectSagaParams) => {
   }, []);
 };
 
-export { useInjectSaga };
+function* _combineGenerators(generators: Array<(() => IterableIterator<any>)>) {
+  for(let i = 0; i < generators.length; i++){
+    yield* generators[i]();
+  }
+}
+
+const useInjectMultipleSagas = ({ key, sagas, mode }: InjectMultipleSagasParams) => {
+  return useInjectSaga({key, saga: () => _combineGenerators(sagas), mode});
+};
+
+export { useInjectSaga, useInjectMultipleSagas };
