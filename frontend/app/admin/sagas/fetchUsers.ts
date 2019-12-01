@@ -1,10 +1,11 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
+import _ from 'lodash';
 
 import { fetchUsers } from 'admin/actions';
 import AdminApi from 'admin/api';
 import {flashError} from "components/Flash";
 
-export function* fetchUsersSaga() {
+function* sagaWorker() {
   try {
     const users = yield call(AdminApi.fetchUsers);
     yield put(fetchUsers.success({users}))
@@ -17,5 +18,5 @@ export function* fetchUsersSaga() {
 }
 
 export default function* saga() {
-  yield takeLatest(fetchUsers.REQUEST, fetchUsersSaga);
+  yield takeLatest(fetchUsers.REQUEST, sagaWorker);
 }

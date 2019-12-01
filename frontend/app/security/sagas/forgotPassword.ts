@@ -4,7 +4,7 @@ import { forgotPassword } from 'security/actions';
 import SecurityApi from 'security/api';
 import { flashSuccess, flashError } from 'components/Flash';
 
-function* forgotPasswordSaga(action) {
+function* sagaWorker(action) {
   try {
     const {email} = action.payload;
     yield call(SecurityApi.forgotPassword, {email});
@@ -19,5 +19,5 @@ function* forgotPasswordSaga(action) {
 }
 
 export default function* saga() {
-  yield takeLatest(forgotPassword.REQUEST, forgotPasswordSaga);
+  yield takeLatest(forgotPassword.REQUEST, sagaWorker);
 }

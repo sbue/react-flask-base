@@ -6,7 +6,7 @@ import {SITE_NAME, PATHS} from 'config';
 import {selectIsAuthenticated, selectIsAdmin} from 'security/reducer';
 import A from 'components/A';
 
-import icon from 'images/icon-512x512.png';
+import icon from 'assets/images/icon-512x512.png';
 import './style.scss';
 
 
@@ -25,7 +25,7 @@ export default function Header() {
         <Col id="menu" xs={0} sm={0} md={17} lg={17} xl={17} xxl={18}>
           {isAuthenticated ? <div>
             {isAdmin && <span>
-              <Tag color="red">Admin</Tag>
+              <Tag color="purple">Admin</Tag>
             </span>}
             <A route={PATHS.Logout}>Logout</A>
             <A route={PATHS.Settings}>Settings</A>

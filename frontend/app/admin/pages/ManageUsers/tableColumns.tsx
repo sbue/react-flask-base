@@ -1,6 +1,6 @@
 import React from 'react';
-import {Tag} from 'antd';
-import RoleTag from './roleTag';
+import {Tag, Icon} from 'antd';
+import {RoleTag, VerifiedEmailIcon} from './Tags';
 
 import A from 'components/A';
 import {PATHS} from 'config';
@@ -25,10 +25,21 @@ export const columns = [
   {
     title: 'Role',
     dataIndex: 'role',
+    // align: 'center',
     // sorter: (a, b) => a.role.localeCompare(b.role),
     // sortDirections: ['descend', 'ascend'],
     render: (role: string) => (
       <RoleTag role={role} />
     ),
+  },
+  {
+    title: 'Verified Email',
+    dataIndex: 'verifiedEmail',
+    align: "center",
+    // sorter: (a, b) => a.role.localeCompare(b.role),
+    // sortDirections: ['descend', 'ascend'],
+    render: (verifiedEmail: boolean) => (
+      <VerifiedEmailIcon verifiedEmail={verifiedEmail} />
+    )
   }
 ];

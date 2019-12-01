@@ -6,11 +6,10 @@ import * as actions from './actions';
 interface SecurityState {
   isAuthenticated: boolean;
   isAdmin: boolean;
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
+  verifiedEmail: boolean;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
 /* --- ACTIONS --- */

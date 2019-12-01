@@ -17,13 +17,12 @@ export const HIGHLIGHT_LANGUAGES = ['javascript', 'json', 'python', 'scss', 'yam
 
 
 export const PATHS = {
-  // ForgotPassword: '/forgot-password',
   Home: '/',
   Login: '/login',
   Logout: '/logout',
   PendingConfirmation: '/sign-up/pending-confirm-email',
-  // ResendConfirmation: '/resend-confirmation',
-  ResetPasswordByToken: '/login/reset-password/:token',
+  ConfirmEmail: '/sign-up/pending-confirm-email/:token',
+  ResetPassword: '/login/reset-password/:token',
   ForgotPassword: '/login/forgot-password',
   SignUp: '/sign-up',
   Settings: '/settings',

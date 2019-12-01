@@ -6,11 +6,11 @@ import {flashError} from 'components/Flash';
 import {PATHS} from 'config';
 import {goTo} from 'utils/history';
 
-function* signUpSaga(action) {
+function* sagaWorker(action) {
   try {
-    const {user, isAdmin} = yield call(SecurityApi.signUp, action.payload);
-    yield put(signUp.success({ user, isAdmin })); // TODO: Add Pending Confirmation
-    yield call(goTo(PATHS.Home));
+    const response = yield call(SecurityApi.signUp, action.payload);
+    yield put(signUp.success(response));
+    yield call(goTo(response.verifiedEmail ? PATHS.Home : PATHS.PendingConfirmation));
   } catch (error) {
     yield put(signUp.failure());
     yield flashError(error.message);
@@ -20,5 +20,5 @@ function* signUpSaga(action) {
 }
 
 export default function* saga() {
-  yield takeLatest(signUp.REQUEST, signUpSaga);
+  yield takeLatest(signUp.REQUEST, sagaWorker);
 }

@@ -6,7 +6,7 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager, Shell
 
 from app import create_app, db
-from app.models.user import Role, User
+from app.models.user import User, Role
 from config import Config
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
@@ -15,7 +15,7 @@ migrate = Migrate(app, db)
 
 
 def make_shell_context():
-    return dict(app=app, db=db, User=User, Role=Role)
+    return dict(app=app, db=db, User=User)
 
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
@@ -71,19 +71,18 @@ def setup_prod():
 def setup_general():
     """Runs the set-up needed for both local development and production.
        Also sets up first admin user."""
-    Role.insert_roles()
-    admin_query = Role.query.filter_by(name='Administrator')
-    if admin_query.first() is not None:
-        if User.query.filter_by(email=Config.ADMIN_EMAIL).first() is None:
-            user = User(
-                first_name='Admin',
-                last_name='Account',
-                password=Config.ADMIN_PASSWORD,
-                confirmed=True,
-                email=Config.ADMIN_EMAIL)
-            db.session.add(user)
-            db.session.commit()
-            print('Added administrator {}'.format(user.full_name()))
+    if User.query.filter_by(email=Config.ADMIN_EMAIL).first() is None:
+        user = User(
+            role=Role.ADMIN,
+            first_name='Admin',
+            last_name='Account',
+            password=Config.ADMIN_PASSWORD,
+            email=Config.ADMIN_EMAIL,
+            verified_email=True,
+        )
+        db.session.add(user)
+        db.session.commit()
+        print('Added administrator {}'.format(user.full_name()))
 
 
 @manager.command

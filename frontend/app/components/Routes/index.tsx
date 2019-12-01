@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectIsAuthenticated, selectIsAdmin, selectIsConfirmedByEmail } from 'security/reducer';
+import { selectIsAuthenticated, selectIsAdmin, selectVerifiedEmail } from 'security/reducer';
 import history from 'utils/history';
 import {PATHS} from 'config';
 
 export const PublicRoute = ({component: Component, ...rest}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const isConfirmedByEmail = useSelector(selectIsConfirmedByEmail);
+  const verifiedEmail = useSelector(selectVerifiedEmail);
   useEffect(() => {
-    if (isAuthenticated && !isConfirmedByEmail) {
+    if (isAuthenticated && !verifiedEmail) {
       history.push(PATHS.PendingConfirmation);
     }
   }, []);
@@ -21,12 +21,12 @@ export const PublicRoute = ({component: Component, ...rest}) => {
 };
 
 export const RestrictedPublicRoute = ({component: Component, ...rest}) => {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const isConfirmedByEmail = useSelector(selectIsConfirmedByEmail);
+  const isAuthenticated = useSelector(selectVerifiedEmail);
+  const verifiedEmail = useSelector(selectVerifiedEmail);
   useEffect(() => {
-    if (isAuthenticated && isConfirmedByEmail) {
+    if (isAuthenticated && verifiedEmail) {
       history.push(PATHS.Home);
-    } else if (isAuthenticated && !isConfirmedByEmail) {
+    } else if (isAuthenticated && !verifiedEmail) {
       history.push(PATHS.PendingConfirmation);
     }
   }, []);
@@ -39,9 +39,9 @@ export const RestrictedPublicRoute = ({component: Component, ...rest}) => {
 
 export const UnconfirmedEmailRoute = ({component: Component, ...rest}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const isConfirmedByEmail = useSelector(selectIsConfirmedByEmail);
+  const verifiedEmail = useSelector(selectVerifiedEmail);
   useEffect(() => {
-    if (!(isAuthenticated && !isConfirmedByEmail)) {
+    if (!(isAuthenticated && !verifiedEmail)) {
       history.push(PATHS.Home);
     }
   }, []);
@@ -54,11 +54,12 @@ export const UnconfirmedEmailRoute = ({component: Component, ...rest}) => {
 
 export const PrivateRoute = ({component: Component, ...rest}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const isConfirmedByEmail = useSelector(selectIsConfirmedByEmail);
+  const verifiedEmail = useSelector(selectVerifiedEmail);
+  const pathIsLogout = history.location.pathname == PATHS.Logout;
   useEffect(() => {
     if (!isAuthenticated) {
       history.push(PATHS.Login);
-    } else if (!isConfirmedByEmail) {
+    } else if (!verifiedEmail && !pathIsLogout) {
       history.push(PATHS.PendingConfirmation);
     }
   }, []);
@@ -72,11 +73,11 @@ export const PrivateRoute = ({component: Component, ...rest}) => {
 export const AdminRoute = ({component: Component, ...rest}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const isAdmin = useSelector(selectIsAdmin);
-  const isConfirmedByEmail = useSelector(selectIsConfirmedByEmail);
+  const verifiedEmail = useSelector(selectVerifiedEmail);
   useEffect(() => {
     if (!(isAuthenticated && isAdmin)) {
       history.push(PATHS.Home);
-    } else if (!isConfirmedByEmail) {
+    } else if (!verifiedEmail) {
       history.push(PATHS.PendingConfirmation);
     }
   }, []);

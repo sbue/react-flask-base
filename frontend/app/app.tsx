@@ -26,7 +26,7 @@ import App from 'components/App';
 import LanguageProvider from 'components/LanguageProvider';
 
 // Load the favicon and the .htaccess file
-import '!file-loader?name=[name].[ext]!./images/favicon.ico';
+import '!file-loader?name=[name].[ext]!./assets/images/favicon.ico';
 import 'file-loader?name=.htaccess!./.htaccess';
 
 import configureStore from './configureStore';

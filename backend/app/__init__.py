@@ -23,15 +23,15 @@ def create_app(config):
     config_name = config
 
     if not isinstance(config, str):
-        config_name = os.getenv("FLASK_CONFIG", "default")
+        config_name = os.getenv('FLASK_CONFIG', 'default')
 
     app.config.from_object(Config[config_name])
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # not using sqlalchemy event system, hence disabling it
 
     Config[config_name].init_app(app)
 
-    CORS(app, resources={r"/*": {"origins": app.config["FRONTEND_URL"]}},
+    CORS(app, resources={r'/*': {'origins': app.config['FRONTEND_URL']}},
          supports_credentials=True)
 
     # Set up extensions
@@ -47,7 +47,7 @@ def create_app(config):
     logger.setLevel(logging.INFO)
 
     # Configure SSL if platform supports it
-    if not app.debug and not app.testing and not app.config["SSL_DISABLE"]:
+    if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
         from flask_sslify import SSLify
         SSLify(app)
 

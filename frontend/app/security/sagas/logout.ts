@@ -6,7 +6,7 @@ import {goTo} from 'utils/history';
 import {flashInfo} from 'components/Flash';
 import {PATHS} from 'config';
 
-function* logoutSaga() {
+function* sagaWorker() {
   try {
     yield call(SecurityApi.logout);
   } finally {
@@ -17,5 +17,5 @@ function* logoutSaga() {
 }
 
 export default function* saga() {
-  yield takeLatest(logout.REQUEST, logoutSaga);
+  yield takeLatest(logout.REQUEST, sagaWorker);
 }

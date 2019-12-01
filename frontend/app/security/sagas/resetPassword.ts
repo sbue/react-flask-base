@@ -1,25 +1,25 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import { resetPasswordByToken } from 'security/actions';
+import { resetPassword } from 'security/actions';
 import SecurityApi from 'security/api';
 import {goTo} from 'utils/history';
 import {flashSuccess, flashError} from 'components/Flash';
 import {PATHS} from 'config';
 
-function* resetPasswordByTokenSaga(action) {
+function* sagaWorker(action) {
   try {
-    const {user, isAdmin} = yield call(SecurityApi.resetPasswordByToken, action.payload);
-    yield put(resetPasswordByToken.success({user, isAdmin}));
+    const response = yield call(SecurityApi.resetPassword, action.payload);
+    yield put(resetPassword.success(response));
     yield flashSuccess('Your password has been updated.');
     yield call(goTo(PATHS.Home));
   } catch (error) {
-    yield put(resetPasswordByToken.failure());
+    yield put(resetPassword.failure());
     yield flashError(error.message);
   } finally {
-    yield put(resetPasswordByToken.fulfill());
+    yield put(resetPassword.fulfill());
   }
 }
 
 export default function* saga() {
-  yield takeLatest(resetPasswordByToken.REQUEST, resetPasswordByTokenSaga);
+  yield takeLatest(resetPassword.REQUEST, sagaWorker);
 }

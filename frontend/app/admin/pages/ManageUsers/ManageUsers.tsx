@@ -28,7 +28,14 @@ export default function ManageUsers() {
   const adminState = useSelector(selectAdmin);
   const tableData = _.toArray(
     _.mapValues(adminState.users, (value, key) => {
-      return {...value, key}
+      const {email, role, verifiedEmail} = value;
+      return {
+        key,
+        email,
+        role,
+        verifiedEmail,
+        name: `${value.firstName} ${value.lastName}`,
+      }
     })
   );
   const isLoading = useSelector(selectIsLoading);

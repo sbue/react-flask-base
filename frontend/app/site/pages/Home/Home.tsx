@@ -13,12 +13,12 @@ import React from 'react';
 import {PageHeader, Skeleton} from 'antd';
 
 import {useSelector} from 'react-redux';
-import {selectSecurity} from 'security/reducer';
+import {selectFirstName} from 'security/reducer';
 import PageContent from 'components/PageContent';
 
 export default function HomePage() {
-  const security = useSelector(selectSecurity);
-  const userGreeting = security.user.firstName ? security.user.firstName : '🌍';
+  const security = useSelector(selectFirstName);
+  const userGreeting = security.firstName ? security.firstName : '🌍';
   return (
     <PageContent>
       <PageHeader

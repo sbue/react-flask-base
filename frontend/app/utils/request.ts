@@ -27,7 +27,7 @@ export async function privateRequest(f: any) {  // TODO: add better typing
 export function get(url, kwargs = {}) {
   const { ...options } = kwargs;
   const requiresAuth = url.startsWith(SERVER_URL);
-  const csrfHeader = requiresAuth ? {
+  const CSRFHeader = requiresAuth ? {
     'X-CSRF-Token': Cookies.get(CSRF_ACCESS_TOKEN_KEY),
   } : {};
   const defaults = {
@@ -37,7 +37,7 @@ export function get(url, kwargs = {}) {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      ...csrfHeader,
+      ...CSRFHeader,
     },
     method: 'GET',
   };
@@ -47,7 +47,7 @@ export function get(url, kwargs = {}) {
 export function post(url, data, kwargs = {requiresRefresh: false}) {
   const { requiresRefresh, ...options } = kwargs;
   const requiresAuth = url.startsWith(SERVER_URL);
-  const csrfHeader = (requiresAuth || requiresRefresh) ? {
+  const CSRFHeader = (requiresAuth || requiresRefresh) ? {
     'X-CSRF-Token': (requiresRefresh ?
       Cookies.get(CSRF_REFRESH_TOKEN_KEY) :
       Cookies.get(CSRF_ACCESS_TOKEN_KEY)
@@ -60,7 +60,7 @@ export function post(url, data, kwargs = {requiresRefresh: false}) {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      ...csrfHeader,
+      ...CSRFHeader,
     },
     method: 'POST',
     body: JSON.stringify(data),
@@ -93,7 +93,7 @@ export class ResponseError extends Error {
 /**
  * Parses the JSON returned by a network request
  *
- * @param  {object} response A response from a network request
+ * @param  {object} response      A response from a network request
  *
  * @return {object}          The parsed JSON from the request
  */
@@ -137,12 +137,14 @@ function _setMethod(options, method) {
 /**
  * Requests a URL, returning a promise
  *
- * @param  {string} url       The URL we want to request
- * @param  {object} [options] The options we want to pass to "fetch"
+ * @param  {string} url           The URL we want to request
+ * @param  {object} [options]     The options we want to pass to "fetch"
  *
  * @return {object}           The response data
  */
-export default async function request(url: string, options?: RequestInit): Promise<{ } | { err: ResponseError }> {
+export default async function request(
+  url: string, options?: RequestInit): Promise<{ } | { err: ResponseError }> {
+
   const fetchResponse = await fetch(url, options);
   const response = await _checkStatus(fetchResponse);
   return _parseJSON(response);

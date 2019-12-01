@@ -6,12 +6,12 @@ import {PATHS} from 'config';
 import {goTo} from 'utils/history';
 import { flashSuccess, flashError } from 'components/Flash';
 
-function* loginSaga(action) {
+function* sagaWorker(action) {
   try {
-    const {user, isAdmin, emailConfirmed} = yield call(SecurityApi.login, action.payload);
-    yield put(login.success({user, isAdmin}));
+    const response = yield call(SecurityApi.login, action.payload);
+    yield put(login.success(response));
     yield flashSuccess('You have been successfully logged in.');
-    yield call(goTo(PATHS.Home));  // TODO: add pending confirmation
+    yield call(goTo(response.verifiedEmail ? PATHS.Home : PATHS.PendingConfirmation));
   } catch (error) {
     yield put(login.failure());
     yield flashError(error.message);
@@ -21,5 +21,5 @@ function* loginSaga(action) {
 }
 
 export default function* saga() {
-  yield takeLatest(login.REQUEST, loginSaga);
+  yield takeLatest(login.REQUEST, sagaWorker);
 }

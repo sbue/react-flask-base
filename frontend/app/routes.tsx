@@ -3,9 +3,11 @@ import { Route, Switch } from 'react-router-dom';
 import startCase from 'lodash/startCase';
 
 import { Home, NotFound } from 'site/pages';
-import { SignUp, Login, Logout, ForgotPassword, ResetPasswordByToken, PendingConfirmation } from 'security/pages';
+import { SignUp, Login, Logout, ForgotPassword, ResetPassword,
+  PendingConfirmation, ConfirmEmail } from 'security/pages';
 import { AdminDashboard, ManageUsers, ManageUser } from 'admin/pages';
-import { PrivateRoute, PublicRoute, RestrictedPublicRoute, AdminRoute, UnconfirmedEmailRoute } from 'components/Routes';
+import { PrivateRoute, PublicRoute, RestrictedPublicRoute,
+  AdminRoute, UnconfirmedEmailRoute } from 'components/Routes';
 import {PATHS} from 'config';
 
 
@@ -62,6 +64,13 @@ const routes = [
     routeComponent: UnconfirmedEmailRoute,
     label: 'Pending Confirm Email',
   },
+  {
+    key: 'ConfirmEmail',
+    path: PATHS.ConfirmEmail,
+    component: ConfirmEmail,
+    routeComponent: UnconfirmedEmailRoute,
+    label: 'Confirm Email',
+  },
   // {
   //   key: ROUTES.ResendConfirmation,
   //   path: '/sign-up/resend-confirmation-email',
@@ -70,11 +79,11 @@ const routes = [
   //   label: 'Resend Confirmation Email',
   // },
   {
-    key: 'ResetPasswordByToken',
-    path: PATHS.ResetPasswordByToken,
-    component: ResetPasswordByToken,
+    key: 'ResetPassword',
+    path: PATHS.ResetPassword,
+    component: ResetPassword,
     routeComponent: RestrictedPublicRoute,
-    label: 'Reset Password By Token',
+    label: 'Reset Password',
   },
   // ADMIN
   {

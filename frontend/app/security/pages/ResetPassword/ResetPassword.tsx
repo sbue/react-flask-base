@@ -7,14 +7,14 @@ import {useInjectReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
 import PageContent from 'components/PageContent';
 
-import {resetPasswordByToken} from 'security/actions';
+import {resetPassword} from 'security/actions';
 import reducer from 'security/reducer';
-import saga from 'security/sagas/resetPasswordByToken';
+import saga from 'security/sagas/resetPassword';
 
 
 const key = 'security';
 
-export default function ResetPasswordByToken(props) {
+export default function ResetPassword(props) {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
@@ -29,7 +29,7 @@ export default function ResetPasswordByToken(props) {
       password: passwordInput.current.state.value,
       token: props.match.params.token,
     };
-    dispatch(resetPasswordByToken.request(payload));
+    dispatch(resetPassword.request(payload));
   };
 
   useInjectReducer({ key: key, reducer: reducer });

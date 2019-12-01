@@ -7,8 +7,9 @@ import {useInjectSaga} from 'utils/injectSaga';
 import {selectIsLoading} from 'reducers';
 import PageContent from 'components/PageContent';
 
-import reducer from 'security/reducer';
-import saga from 'security/sagas/login';
+import reducer, {selectEmail} from 'security/reducer';
+import {resendConfirmationEmail} from 'security/actions';
+import saga from 'security/sagas/resendConfirmation';
 
 const key = 'security';
 
@@ -16,6 +17,7 @@ export default function PendingConfirmation() {
 
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
+  const email = useSelector(selectEmail);
 
   useInjectReducer({ key: key, reducer: reducer });
   useInjectSaga({ key: key, saga: saga });
@@ -33,7 +35,9 @@ export default function PendingConfirmation() {
         />
         <h4>Thanks for signing up!</h4>
         <p>Please check your email to confirm your email address and login.</p>
-        <Button type="primary">Resend confirmation email</Button>
+        <Button type="primary" onClick={() => dispatch(resendConfirmationEmail.request({email}))}>
+          Resend confirmation email
+        </Button>
       </Spin>
     </PageContent>
   )

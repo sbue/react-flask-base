@@ -12,10 +12,10 @@ if os.path.exists('config.env'):
 
 
 class Config:
-    APP_NAME = os.getenv("APP_NAME", "Flask-Base")
-    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    APP_NAME = os.getenv('APP_NAME', 'Flask-Base')
+    FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
 
-    for secret_key in ["SECRET_KEY", "JWT_SECRET_KEY"]:
+    for secret_key in ['SECRET_KEY', 'JWT_SECRET_KEY']:
         if os.getenv(secret_key):
             SECRET_KEY = os.getenv(secret_key)
         else:
@@ -23,21 +23,21 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
     # Email
-    SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-    MAIL_DEFAULT_SENDER = os.getenv("MAIL_DEFAULT_SENDER")
+    SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
 
     # Analytics
     GOOGLE_ANALYTICS_ID = os.getenv("GOOGLE_ANALYTICS_ID", "")
     SEGMENT_API_KEY = os.getenv("SEGMENT_API_KEY", "")
 
     # Admin account
-    ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "password")
-    ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@example.com")
+    ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'password')
+    ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@example.com')
     EMAIL_SUBJECT_PREFIX = "[{}]".format(APP_NAME)
     EMAIL_SENDER = "{app_name} Admin <{email}>".format(
         app_name=APP_NAME, email=MAIL_DEFAULT_SENDER)
 
-    JWT_TOKEN_LOCATION = ["cookies"]
+    JWT_TOKEN_LOCATION = ['cookies']
     JWT_COOKIE_SECURE = True
 
     @staticmethod
@@ -51,6 +51,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = \
         f"sqlite:///{os.path.join(basedir, 'data-dev.sqlite')}"
     JWT_COOKIE_SECURE = False
+    SEND_EMAIL_IN_DEV = os.getenv('SEND_EMAIL_IN_DEV', 'False') == 'True'
 
     @classmethod
     def init_app(cls, app):

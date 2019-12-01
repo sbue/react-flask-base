@@ -7,9 +7,9 @@ import {flashError, flashSuccess} from 'components/Flash';
 import { deleteUser } from 'admin/actions';
 import AdminApi from 'admin/api';
 
-export function* deleteUserSaga(action) {
+function* sagaWorker(action) {
   try {
-    const users = yield call(AdminApi.deleteUserByID, action.payload.userID);
+    const users = yield call(AdminApi.deleteUser, action.payload.userID);
     yield put(deleteUser.success({users}));
     yield flashSuccess(`Successfully deleted user ${action.payload.name}.`);
     yield call(goTo(PATHS.ManageUsers));
@@ -22,5 +22,5 @@ export function* deleteUserSaga(action) {
 }
 
 export default function* saga() {
-  yield takeLatest(deleteUser.REQUEST, deleteUserSaga);
+  yield takeLatest(deleteUser.REQUEST, sagaWorker);
 }

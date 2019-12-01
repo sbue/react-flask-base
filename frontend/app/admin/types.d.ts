@@ -4,9 +4,11 @@ import * as actions from './actions';
 /* --- STATE --- */
 
 interface UserObject {
-  name: string,
+  firstName: string,
+  lastName: string,
   email: string,
   role: string,
+  verifiedEmail: boolean,
 }
 
 interface AdminState {

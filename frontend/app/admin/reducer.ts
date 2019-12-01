@@ -1,5 +1,5 @@
 import { ContainerState, ContainerActions } from './types';
-import {fetchUsers, deleteUser} from 'admin/actions';
+import {fetchUsers, deleteUser, updateUser} from 'admin/actions';
 export const initialState = {
   users: {},
   stale: false,
@@ -19,6 +19,12 @@ export default function(state: ContainerState = initialState,
       return {
         ...state,
         stale: true,
+      };
+    case updateUser.SUCCESS:
+      const {userID, user} = action.payload;
+      return {
+        ...state,
+        users: {...state.users, ...{[userID]: user}},
       };
     default:
       return state;

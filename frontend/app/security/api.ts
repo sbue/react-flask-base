@@ -42,19 +42,25 @@ export default class Auth {
     return privateRequest(f);
   }
 
-  // /**
-  //  * @param {string} email
-  //  */
-  // static resendConfirmationEmail(email) {
-  //   return post(authUrl('/resend-confirmation-email'), { email })
-  // }
-  //
+  static resendConfirmationEmail() {
+    const f = () => post(authUrl('/resend-confirm-email', {}), {});
+    return privateRequest(f);
+  }
+
   /**
    * @param {string} token The reset token from the URL
    * @param {string} password
    */
-  static resetPasswordByToken({ token, password }) {
+  static resetPassword({ token, password }) {
     return post(authUrl(`/reset-password/${token}`, {}), { password })
+  }
+
+  /**
+   * @param {string} token The confirm token from the URL
+   */
+  static confirmEmail({ token }) {
+    const f = () => post(authUrl(`/verify-email/${token}`, {}), {});
+    return privateRequest(f);
   }
 
   /**
