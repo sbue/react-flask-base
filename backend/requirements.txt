@@ -13,6 +13,7 @@ Click==7.0
 decorator==4.4.0
 docutils==0.15.2
 durationpy==0.5
+Faker==2.0.4
 Flask==1.1.1
 Flask-Compress==1.4.0
 Flask-Cors==3.0.8
@@ -22,6 +23,7 @@ Flask-Mail==0.9.1
 Flask-Migrate==2.5.2
 Flask-Script==2.0.6
 Flask-SQLAlchemy==2.4.1
+Flask-SSLify==0.1.5
 future==0.16.0
 hjson==3.0.1
 idna==2.8
