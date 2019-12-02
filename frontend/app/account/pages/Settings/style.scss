@@ -1,0 +1,24 @@
+
+table.custom {
+  border-collapse: collapse;
+  width: 100%;
+  display: table;
+  border-spacing: 2px;
+  border-color: gray;
+  box-sizing: border-box;
+  table-layout: auto;
+}
+
+table.custom * td, th {
+  border: 1px solid;
+  text-align: left;
+  padding: 8px;
+}
+
+.ant-descriptions-title {
+  margin-left: 6px;
+}
+
+.ant-descriptions-title + button {
+  margin-left: 16px;
+}

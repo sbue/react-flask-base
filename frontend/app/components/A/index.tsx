@@ -1,5 +1,6 @@
 import React, {ReactNode} from 'react';
 import {goTo} from 'utils/history';
+import {compile} from "path-to-regexp";
 
 interface AProps {
   route: string;
@@ -11,7 +12,7 @@ interface AProps {
 export default function A(props: AProps) {
   const onClick = goTo(props.route, props.params);
   return (
-    <a onClick={onClick} {...props} >
+    <a href={compile(props.route)(props.params)} onClick={onClick} {...props} >
       {props.children}
     </a>
   );

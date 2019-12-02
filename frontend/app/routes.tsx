@@ -6,6 +6,7 @@ import { Home, NotFound } from 'site/pages';
 import { SignUp, Login, Logout, ForgotPassword, ResetPassword,
   PendingConfirmation, ConfirmEmail } from 'security/pages';
 import { AdminDashboard, ManageUsers, ManageUser } from 'admin/pages';
+import { AccountSettings } from 'account/pages';
 import { PrivateRoute, PublicRoute, RestrictedPublicRoute,
   AdminRoute, UnconfirmedEmailRoute } from 'components/Routes';
 import {PATHS} from 'config';
@@ -71,19 +72,19 @@ const routes = [
     routeComponent: UnconfirmedEmailRoute,
     label: 'Confirm Email',
   },
-  // {
-  //   key: ROUTES.ResendConfirmation,
-  //   path: '/sign-up/resend-confirmation-email',
-  //   component: ResendConfirmation,
-  //   routeComponent: AnonymousRoute,
-  //   label: 'Resend Confirmation Email',
-  // },
   {
     key: 'ResetPassword',
     path: PATHS.ResetPassword,
     component: ResetPassword,
     routeComponent: RestrictedPublicRoute,
     label: 'Reset Password',
+  },
+  // ACCOUNT
+  {
+    key: 'Settings',
+    path: PATHS.Settings,
+    routeComponent: PrivateRoute,
+    component: AccountSettings,
   },
   // ADMIN
   {

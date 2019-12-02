@@ -1,17 +1,20 @@
 import { ContainerState, ContainerActions } from './types';
-import { changePassword, checkAuth, confirmEmail, login, logout,
+import { checkAuth, confirmEmail, login, logout,
   resetPassword, signUp} from 'security/actions';
 import {SITE_NAME} from 'config';
 
 const StoreKey = `${SITE_NAME}/securityState`;
 
-export const initialState = {
+export const initialState: ContainerState = {
   isAuthenticated: false,
-  isAdmin: false,
-  verifiedEmail: false,
-  firstName: '',
-  lastName: '',
-  email: '',
+  user: {
+    userID: '',
+    role: 'Anonymous',
+    verifiedEmail: false,
+    firstName: '',
+    lastName: '',
+    email: '',
+  }
 };
 
 const localStore = localStorage.getItem(StoreKey);
@@ -26,10 +29,9 @@ export default function(state: ContainerState = startState,
     case resetPassword.SUCCESS:
     case login.SUCCESS:
     case signUp.SUCCESS:
-      console.log(payload);
       newState = {
         ...state,
-        ...payload,
+        user: payload,
         isAuthenticated: true,
       };
       localStorage.setItem(StoreKey, JSON.stringify(newState));
@@ -56,8 +58,9 @@ export default function(state: ContainerState = startState,
   }
 }
 
-export const selectFirstName = (state) => state.security.firstName;
-export const selectEmail = (state) => state.security.email;
+export const selectUser = (state) => state.security.user;
+export const selectFirstName = (state) => state.security.user.firstName;
+export const selectEmail = (state) => state.security.user.email;
 export const selectIsAuthenticated = (state) => state.security.isAuthenticated;
-export const selectIsAdmin = (state) => state.security.isAdmin;
-export const selectVerifiedEmail = (state) => state.security.verifiedEmail;
+export const selectIsAdmin = (state) => state.security.user.role === 'Admin';
+export const selectVerifiedEmail = (state) => state.security.user.verifiedEmail;

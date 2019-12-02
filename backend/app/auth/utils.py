@@ -5,12 +5,15 @@ from app.utils import to_camel_case
 
 
 def authenticate_payload(user):
-    data = [('first_name', user.first_name.title()),
-            ('last_name', user.last_name.title()),
-            ('email', user.email),
-            ('is_admin', user.is_admin()),
-            ('verified_email', user.verified_email)]
-    return jsonify(to_camel_case({k: v for (k, v) in data}))
+    data = {
+        'userID': user.id,
+        'role': user.role.value,
+        'verified_email': user.verified_email,
+        'first_name': user.first_name.title(),
+        'last_name': user.last_name.title(),
+        'email': user.email,
+    }
+    return jsonify(to_camel_case(data))
 
 
 def authenticate(user):

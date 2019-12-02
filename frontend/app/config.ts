@@ -25,7 +25,7 @@ export const PATHS = {
   ResetPassword: '/login/reset-password/:token',
   ForgotPassword: '/login/forgot-password',
   SignUp: '/sign-up',
-  Settings: '/settings',
+  Settings: '/account/settings',
   AdminDashboard: '/admin/dashboard',
   ManageUsers: '/admin/users',
   ManageUser: '/admin/users/:userID',

@@ -105,7 +105,7 @@ def update_user(user_id):
         first_name = fields.Str(required=False, validate=name_validate)
         last_name = fields.Str(required=False, validate=name_validate)
         email = fields.Email(required=False, validate=email_validate)
-        role = fields.Str(required=False, validate=validate.OneOf(Role.get_all()))
+        role = fields.Str(required=False, validate=validate.OneOf(Role.get_private_roles()))
         verified_email = fields.Boolean(required=False)
     try:
         user = User.query.filter_by(id=user_id).first()

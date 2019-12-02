@@ -16,7 +16,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: Lato, Avenir, -apple-system, system-ui, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   }
 
-  #app {
+  body {
     background-color: #fafafa;
     min-height: 100%;
     min-width: 100%;

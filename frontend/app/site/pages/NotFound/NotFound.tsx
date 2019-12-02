@@ -4,20 +4,24 @@
  * This is the page we show when the user visits a url that doesn't have a route
  */
 
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import React from 'react';
+import {PageHeader, Skeleton} from 'antd';
 
 import PageContent from 'components/PageContent';
-import messages from './messages';
 
 export default function NotFound() {
   return (
     <PageContent>
-      <article>
-        <h1>
-          <FormattedMessage {...messages.header} />
-        </h1>
-      </article>
+      <PageHeader
+        style={{
+          border: '1px solid rgb(235, 237, 240)',
+        }}
+        title={`404 Page Not Found`}
+        subTitle=""
+      />
+      <Skeleton />
+      <Skeleton />
+      <Skeleton />
     </PageContent>
   );
 }

@@ -15,7 +15,7 @@ import saga from 'security/sagas/logout';
 
 const key = 'security';
 
-export default function Login() {
+export default function Logout() {
   const dispatch = useDispatch();
 
   useInjectReducer({ key: key, reducer: reducer });

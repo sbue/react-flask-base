@@ -1,6 +1,6 @@
 from enum import Enum
 from flask import current_app
-from flask_login import AnonymousUserMixin, UserMixin
+from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -10,11 +10,12 @@ from .. import db
 
 
 class Role(Enum):
+    ANONYMOUS = 'Anonymous'
     ADMIN = 'Admin'
     USER = 'User'
 
     @staticmethod
-    def get_all():  # Returns string names, ie ["Admin"...]
+    def get_private_roles():  # Returns string names, ie ["Admin"...]
         return [role.value for role in Role]
 
 
@@ -145,11 +146,3 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User \'%s\'>' % self.full_name()
-
-
-class AnonymousUser(AnonymousUserMixin):
-    def can(self, _):
-        return False
-
-    def is_admin(self):
-        return False

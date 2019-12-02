@@ -1,9 +1,3 @@
-/*
- * Logout
- *
- * This is the logout component
- */
-
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 

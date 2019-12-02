@@ -1,9 +1,3 @@
-/*
- * Logout
- *
- * This is the logout component
- */
-
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {PageHeader, Spin, Popconfirm, Button, Icon,
@@ -71,23 +65,31 @@ export default function ManageUser(props) {
       if (newVal !== val && !changes) setChanges(true);
     }
   };
-  const verified: boolean = (!user ? false :
-      verifiedEmail == null ? user.verifiedEmail : verifiedEmail
-  );
   const verifiedEmailOnClick = () => {
-    setVerifiedEmail(!verified);
-    if (verifiedEmail !== user.verifiedEmail && !changes) setChanges(true);
+    setVerifiedEmail(!(verifiedEmail != null ? verifiedEmail : user.verifiedEmail));
+    setChanges(true);
   };
-  const payload = {
-    data: {
-      first_name: firstName,
-      last_name: lastName,
-      email: email,
-      role: role,
-      verified_email: verifiedEmail,
-    },
-    userID: userID,
-    name,
+  const saveChanges = () => {
+    const payload = {
+      data: {
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        role: role,
+        verified_email: verifiedEmail,
+      },
+      userID: userID,
+      name,
+    };
+    dispatch(updateUser.request(payload));
+    // Reset all values
+    setEditing(false);
+    setFirstName(null);
+    setLastName(null);
+    setEmail(null);
+    setRole(null);
+    setVerifiedEmail(null);
+    setChanges(false);
   };
 
   return (
@@ -104,31 +106,32 @@ export default function ManageUser(props) {
         <Descriptions title="" column={1} bordered style={{margin: "25px 5px"}}>
           <Descriptions.Item label="First Name">
             {user && <Text editable={editable(user.firstName, setFirstName)}>
-              {firstName == null ? user.firstName : firstName}
+              {(editing && firstName != null) ? firstName : user.firstName}
             </Text>}
           </Descriptions.Item>
           <Descriptions.Item label="Last Name">
             {user && <Text editable={editable(user.lastName, setLastName)}>
-              {lastName == null ? user.lastName : lastName}
+              {(editing && lastName != null) ? lastName : user.lastName}
             </Text>}
           </Descriptions.Item>
           <Descriptions.Item label="Email">
             {user && <Text editable={editable(user.email, setEmail)}>
-              {email == null ? user.email : email}
+              {(editing && email != null) ? email : user.email}
             </Text>}
           </Descriptions.Item>
           <Descriptions.Item label="Role">
-            {user && <Text editable={editable(user.role, setRole)}>
-              {role == null ? user.role : role}
-            </Text>}
+            {user && (editing ?
+              <Text editable={editable(user.role, setRole)}>
+                {role == null ? user.role : role}
+              </Text> : <RoleTag role={user.role} />)}
           </Descriptions.Item>
           <Descriptions.Item label="Verified Email">
-            {user && <div>
-              {editing ? <Checkbox checked={verified}
-                                   style={{marginRight: "8px"}}
-                                   onClick={() => verifiedEmailOnClick()} /> :
-                <VerifiedEmailIcon verifiedEmail={verified} />}
-            </div>}
+            {user && (editing ?
+              <Checkbox checked={verifiedEmail == null ? user.verifiedEmail : verifiedEmail}
+                        style={{marginRight: "8px"}}
+                        onClick={() => verifiedEmailOnClick()} /> :
+              <VerifiedEmailIcon verifiedEmail={user.verifiedEmail} />
+            )}
           </Descriptions.Item>
         </Descriptions>
         <Popconfirm
@@ -143,7 +146,7 @@ export default function ManageUser(props) {
         >
           <Button type="danger" style={{marginRight: "8px"}}>Delete</Button>
         </Popconfirm>
-        {(editing && changes) ? <Button type="primary" onClick={() => dispatch(updateUser.request(payload))}>
+        {(editing && changes) ? <Button type="primary" onClick={() => saveChanges()}>
           Save
         </Button> : <Button type={editing ? "primary" : "ghost"} onClick={() => setEditing(!editing)}>
           {!editing ? "Edit" : "View Only"}

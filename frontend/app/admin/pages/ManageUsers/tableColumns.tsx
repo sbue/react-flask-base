@@ -5,6 +5,7 @@ import {RoleTag, VerifiedEmailIcon} from './Tags';
 import A from 'components/A';
 import {PATHS} from 'config';
 
+const center: 'center' = 'center';  // hack to fix typing issue
 export const columns = [
   {
     title: 'Name',
@@ -35,7 +36,7 @@ export const columns = [
   {
     title: 'Verified Email',
     dataIndex: 'verifiedEmail',
-    align: "center",
+    align: center,
     // sorter: (a, b) => a.role.localeCompare(b.role),
     // sortDirections: ['descend', 'ascend'],
     render: (verifiedEmail: boolean) => (

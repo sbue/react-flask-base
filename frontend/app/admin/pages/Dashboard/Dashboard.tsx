@@ -1,9 +1,3 @@
-/*
- * Logout
- *
- * This is the logout component
- */
-
 import React from 'react';
 import {Card, Col, Icon, PageHeader, Row} from 'antd';
 
