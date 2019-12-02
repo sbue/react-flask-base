@@ -43,7 +43,7 @@ export default function Login() {
         <PageHeader
           style={{
             border: '1px solid rgb(235, 237, 240)',
-            marginBottom: "20px",
+            marginBottom: '20px',
           }}
           title="Login"
           subTitle="Please login to get started"
@@ -69,7 +69,7 @@ export default function Login() {
           <Button type="primary" size="default" htmlType="submit">
             Login
           </Button>
-          <A route={PATHS.ForgotPassword}  style={{marginLeft: "20px"}}>
+          <A route={PATHS.ForgotPassword}  style={{marginLeft: '20px'}}>
             Forgot password?
           </A>
         </Form>

@@ -9,7 +9,7 @@ export default function Footer() {
       <Row type="flex" justify="center">
         <Col xs={18} sm={18} md={10} lg={10} xl={10} xxl={8}>
           <Divider />
-          <span style={{paddingBottom: "25px"}}>
+          <span style={{paddingBottom: '25px'}}>
             Copyright {new Date().getFullYear()} {COPYRIGHT}
           </span>
         </Col>

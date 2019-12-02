@@ -67,8 +67,8 @@ const useInjectSaga = ({ key, saga, mode }: InjectSagaParams) => {
 };
 
 function* _combineGenerators(generators: Array<(() => IterableIterator<any>)>) {
-  for(let i = 0; i < generators.length; i++){
-    yield* generators[i]();
+  for (const generator of generators) {
+    yield* generator();
   }
 }
 

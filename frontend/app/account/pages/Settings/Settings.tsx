@@ -35,8 +35,8 @@ export default function Settings() {
   const editable = (val, setVal) => editing && {
     onChange: (newVal) => {
       setVal(newVal);
-      if (newVal !== val && !changes) setChanges(true);
-    }
+      if (newVal !== val && !changes) { setChanges(true); }
+    },
   };
 
   const saveChanges = () => {
@@ -62,7 +62,7 @@ export default function Settings() {
         <PageHeader
           style={{
             border: '1px solid rgb(235, 237, 240)',
-            marginBottom: "20px",
+            marginBottom: '20px',
           }}
           title="Account Settings"
           subTitle="Manage your account information"
@@ -70,13 +70,13 @@ export default function Settings() {
         <span className="ant-descriptions-title">User Info</span>
         {(editing && changes) ? <Button type="primary" onClick={() => saveChanges()}>
           Save
-        </Button> : <Button type={editing ? "primary" : "ghost"} onClick={() => setEditing(!editing)}>
-          {!editing ? "Edit" : "View Only"}
+        </Button> : <Button type={editing ? 'primary' : 'ghost'} onClick={() => setEditing(!editing)}>
+          {!editing ? 'Edit' : 'View Only'}
         </Button>}
-        {editing && changes && <Button type="ghost" onClick={revertChanges} style={{marginLeft: "8px"}}>
+        {editing && changes && <Button type="ghost" onClick={revertChanges} style={{marginLeft: '8px'}}>
           Revert Changes
         </Button>}
-        <Descriptions title="" column={2} bordered style={{margin: "25px 5px"}}>
+        <Descriptions title="" column={2} bordered style={{margin: '25px 5px'}}>
           <Descriptions.Item label="First Name">
             {user && <Text editable={editable(user.firstName, setFirstName)}>
               {(editing && firstName != null) ? firstName : user.firstName}
@@ -90,7 +90,7 @@ export default function Settings() {
         </Descriptions>
         {/* Hacky method to add a third column while preserving antd css */}
         <span className="ant-descriptions-title">Security Info</span>
-        <table className="custom" style={{margin: "25px 5px"}}>
+        <table className="custom" style={{margin: '25px 5px'}}>
           <tbody>
             <tr>
               <th>Email</th>
@@ -114,7 +114,7 @@ export default function Settings() {
           cancelText="No"
           icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
         >
-          <Button type="danger" style={{marginRight: "8px"}}>Delete Account</Button>
+          <Button type="danger" style={{marginRight: '8px'}}>Delete Account</Button>
         </Popconfirm>
       </Spin>
     </PageContent>

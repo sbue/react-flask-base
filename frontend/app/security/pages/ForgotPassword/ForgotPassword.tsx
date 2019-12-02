@@ -40,7 +40,7 @@ export default function ForgotPassword() {
         <PageHeader
           style={{
             border: '1px solid rgb(235, 237, 240)',
-            marginBottom: "20px",
+            marginBottom: '20px',
           }}
           title="Forgot Password"
           subTitle="Please enter your email"

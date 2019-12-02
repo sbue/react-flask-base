@@ -30,7 +30,7 @@ export default function Dashboard() {
       <Row type="flex" justify="start">
         <Col xs={24} sm={22} md={12} lg={12} xl={12} xxl={12}>
           <A route={PATHS.ManageUsers}>
-            <Card style={{ margin: "10px" }}>
+            <Card style={{ margin: '10px' }}>
               <Meta
                 avatar={<Icon type="team" style={{ fontSize: '32px', color: '#08c' }} />}
                 title="Manage Users"
@@ -41,7 +41,7 @@ export default function Dashboard() {
         </Col>
         <Col xs={24} sm={22} md={12} lg={12} xl={12} xxl={12}>
           <A route={PATHS.Home}>
-            <Card style={{ margin: "10px" }}>
+            <Card style={{ margin: '10px' }}>
               <Meta
                 avatar={<Icon type="user-add" style={{ fontSize: '32px', color: '#08c' }} />}
                 title="Add New User"
@@ -52,7 +52,7 @@ export default function Dashboard() {
         </Col>
         <Col xs={24} sm={22} md={12} lg={12} xl={12} xxl={12}>
           <A route={PATHS.Home}>
-            <Card style={{ margin: "10px" }}>
+            <Card style={{ margin: '10px' }}>
               <Meta
                 avatar={<Icon type="user-add" style={{ fontSize: '32px', color: '#08c' }} />}
                 title="Invite New User "
@@ -63,7 +63,7 @@ export default function Dashboard() {
         </Col>
         <Col xs={24} sm={22} md={12} lg={12} xl={12} xxl={12}>
           <A route={PATHS.Home}>
-            <Card style={{ margin: "10px" }}>
+            <Card style={{ margin: '10px' }}>
               <Meta
                 avatar={<Icon type="user-add" style={{ fontSize: '32px', color: '#08c' }} />}
                 title="Create Invitation Link"
@@ -73,5 +73,6 @@ export default function Dashboard() {
           </A>
         </Col>
       </Row>
-    </PageContent>)
+    </PageContent>
+  );
 }

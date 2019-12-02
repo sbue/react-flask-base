@@ -28,7 +28,7 @@ export default function PendingConfirmation() {
         <PageHeader
           style={{
             border: '1px solid rgb(235, 237, 240)',
-            marginBottom: "20px",
+            marginBottom: '20px',
           }}
           title="Please Confirm your Email Address"
           subTitle=""
@@ -40,5 +40,5 @@ export default function PendingConfirmation() {
         </Button>
       </Spin>
     </PageContent>
-  )
+  );
 }

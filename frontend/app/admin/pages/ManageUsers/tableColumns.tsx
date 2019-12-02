@@ -13,8 +13,8 @@ export const columns = [
     // sorter: (a, b) => a.name.localeCompare(b.name),
     // sortDirections: ['descend', 'ascend'],
     render: (name, record) => {
-      const params = {userID: record["key"].toString()};
-      return (<A route={PATHS.ManageUser} params={params}>{name}</A>)
+      const params = {userID: record['key'].toString()};
+      return (<A route={PATHS.ManageUser} params={params}>{name}</A>);
     },
   },
   {
@@ -41,6 +41,6 @@ export const columns = [
     // sortDirections: ['descend', 'ascend'],
     render: (verifiedEmail: boolean) => (
       <VerifiedEmailIcon verifiedEmail={verifiedEmail} />
-    )
-  }
+    ),
+  },
 ];

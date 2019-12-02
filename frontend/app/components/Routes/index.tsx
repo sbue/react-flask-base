@@ -55,7 +55,7 @@ export const UnconfirmedEmailRoute = ({component: Component, ...rest}) => {
 export const PrivateRoute = ({component: Component, ...rest}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const verifiedEmail = useSelector(selectVerifiedEmail);
-  const pathIsLogout = history.location.pathname == PATHS.Logout;
+  const pathIsLogout = history.location.pathname === PATHS.Logout;
   useEffect(() => {
     if (!isAuthenticated) {
       history.push(PATHS.Login);

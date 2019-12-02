@@ -8,8 +8,8 @@ import {useInjectReducer} from 'utils/injectReducer';
 import {useInjectMultipleSagas} from 'utils/injectSaga';
 import PageContent from 'components/PageContent';
 import {selectIsLoading} from 'reducers';
-import {PATHS} from "config";
-import {goTo} from "utils/history";
+import {PATHS} from 'config';
+import {goTo} from 'utils/history';
 
 import reducer, {selectAdmin} from 'admin/reducer';
 import fetchUsersSaga from 'admin/sagas/fetchUsers';
@@ -43,7 +43,7 @@ export default function ManageUser(props) {
     }
   }, []);
 
-  const name = user ? `${user.firstName} ${user.lastName}` : "";
+  const name = user ? `${user.firstName} ${user.lastName}` : '';
   const [editing, setEditing] = useState(false);
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
@@ -62,8 +62,8 @@ export default function ManageUser(props) {
   const editable = (val, setVal) => editing && {
     onChange: (newVal) => {
       setVal(newVal);
-      if (newVal !== val && !changes) setChanges(true);
-    }
+      if (newVal !== val && !changes) { setChanges(true); }
+    },
   };
   const verifiedEmailOnClick = () => {
     setVerifiedEmail(!(verifiedEmail != null ? verifiedEmail : user.verifiedEmail));
@@ -103,7 +103,7 @@ export default function ManageUser(props) {
           subTitle="Manage user"
           onBack={goTo(PATHS.ManageUsers)}
         />
-        <Descriptions title="" column={1} bordered style={{margin: "25px 5px"}}>
+        <Descriptions title="" column={1} bordered style={{margin: '25px 5px'}}>
           <Descriptions.Item label="First Name">
             {user && <Text editable={editable(user.firstName, setFirstName)}>
               {(editing && firstName != null) ? firstName : user.firstName}
@@ -128,7 +128,7 @@ export default function ManageUser(props) {
           <Descriptions.Item label="Verified Email">
             {user && (editing ?
               <Checkbox checked={verifiedEmail == null ? user.verifiedEmail : verifiedEmail}
-                        style={{marginRight: "8px"}}
+                        style={{marginRight: '8px'}}
                         onClick={() => verifiedEmailOnClick()} /> :
               <VerifiedEmailIcon verifiedEmail={user.verifiedEmail} />
             )}
@@ -144,17 +144,17 @@ export default function ManageUser(props) {
           cancelText="No"
           icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
         >
-          <Button type="danger" style={{marginRight: "8px"}}>Delete</Button>
+          <Button type="danger" style={{marginRight: '8px'}}>Delete</Button>
         </Popconfirm>
         {(editing && changes) ? <Button type="primary" onClick={() => saveChanges()}>
           Save
-        </Button> : <Button type={editing ? "primary" : "ghost"} onClick={() => setEditing(!editing)}>
-          {!editing ? "Edit" : "View Only"}
+        </Button> : <Button type={editing ? 'primary' : 'ghost'} onClick={() => setEditing(!editing)}>
+          {!editing ? 'Edit' : 'View Only'}
         </Button>}
-        {editing && changes && <Button type="ghost" onClick={revertChanges} style={{marginLeft: "8px"}}>
+        {editing && changes && <Button type="ghost" onClick={revertChanges} style={{marginLeft: '8px'}}>
           Revert Changes
         </Button>}
       </Spin>
     </PageContent>
-  )
-};
+  );
+}

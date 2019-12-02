@@ -51,7 +51,7 @@ export default function SignUp() {
         <PageHeader
           style={{
             border: '1px solid rgb(235, 237, 240)',
-            marginBottom: "20px",
+            marginBottom: '20px',
           }}
           title="Sign Up"
           subTitle="Let's get started"

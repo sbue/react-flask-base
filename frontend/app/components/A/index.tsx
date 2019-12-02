@@ -1,12 +1,12 @@
 import React, {ReactNode} from 'react';
 import {goTo} from 'utils/history';
-import {compile} from "path-to-regexp";
+import {compile} from 'path-to-regexp';
 
 interface AProps {
   route: string;
   children: ReactNode;
-  params?: object,
-  [x: string]: any
+  params?: object;
+  [x: string]: any;
 }
 
 export default function A(props: AProps) {
@@ -21,4 +21,4 @@ export default function A(props: AProps) {
       {props.children}
     </a>
   );
-};
+}

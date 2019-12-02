@@ -3,12 +3,12 @@ import _ from 'lodash';
 
 import { fetchUsers } from 'admin/actions';
 import AdminApi from 'admin/api';
-import {flashError} from "components/Flash";
+import {flashError} from 'components/Flash';
 
 function* sagaWorker() {
   try {
     const users = yield call(AdminApi.fetchUsers);
-    yield put(fetchUsers.success({users}))
+    yield put(fetchUsers.success({users}));
   } catch (error) {
     yield put(fetchUsers.failure(error.message));
     yield flashError(error.message);

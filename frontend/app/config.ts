@@ -8,7 +8,10 @@ export const isDev = !(isProd || isTest);
 export const LOGGING_ENABLED = isDev;
 export const LOG_LEVEL = DEBUG;
 
-export const SERVER_URL = 'http://localhost:5000'; // set this if your API server is different from the frontend server
+// set this if your API server is different from the frontend server
+export const LOCAL_SERVER_URL = 'http://localhost:5000';
+export const PROD_SERVER_URL = '<YOUR_PROD_SERVER_URL>';
+export const SERVER_URL = isProd ? PROD_SERVER_URL : LOCAL_SERVER_URL;
 
 export const SITE_NAME = 'Flask React Base';
 export const COPYRIGHT = 'Flask React Base';

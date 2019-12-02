@@ -29,8 +29,8 @@ export default function ManageUsers() {
         role,
         verifiedEmail,
         name: `${value.firstName} ${value.lastName}`,
-      }
-    })
+      };
+    }),
   );
   const isLoading = useSelector(selectIsLoading);
 
@@ -49,7 +49,7 @@ export default function ManageUsers() {
         <PageHeader
           style={{
             border: '1px solid rgb(235, 237, 240)',
-            marginBottom: "20px",
+            marginBottom: '20px',
           }}
           title="Manage Users"
           subTitle="View and manage registered users"
@@ -69,5 +69,5 @@ export default function ManageUsers() {
         </Col>
       </Row>
     </div>
-  )
+  );
 }

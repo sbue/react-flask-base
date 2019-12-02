@@ -19,6 +19,7 @@ import PageContent from 'components/PageContent';
 export default function HomePage() {
   const security = useSelector(selectFirstName);
   const userGreeting = security.firstName ? security.firstName : '🌍';
+
   return (
     <PageContent>
       <PageHeader

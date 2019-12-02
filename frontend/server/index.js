@@ -5,7 +5,6 @@ const proxy = require('express-http-proxy');
 const logger = require('./logger');
 
 const argv = require('./argv');
-const port = require('./port');
 const setup = require('./middlewares/frontendMiddleware');
 const isDev = process.env.NODE_ENV !== 'production';
 const ngrok =
@@ -26,11 +25,13 @@ const backendHost = process.env.API_HOST || frontendHost;
 const backendPort = process.env.API_PORT || 5000;
 const backendPrefix = isDev ? 'http://' : 'https://www.';
 
-
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
-app.use(/^\/api|auth\//, proxy(`${backendPrefix}${backendHost}:${backendPort}`, {
-  proxyReqPathResolver: (req) => req.baseUrl + req.url,
-}));
+app.use(
+  /^\/api|auth\//,
+  proxy(`${backendPrefix}${backendHost}:${backendPort}`, {
+    proxyReqPathResolver: req => req.baseUrl + req.url,
+  }),
+);
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {
@@ -59,7 +60,13 @@ app.listen(frontendPort, host, async err => {
     } catch (e) {
       return logger.error(e);
     }
-    logger.appStarted(frontendHost, frontendPort, backendHost, backendPort, url);
+    logger.appStarted(
+      frontendHost,
+      frontendPort,
+      backendHost,
+      backendPort,
+      url,
+    );
   } else {
     logger.appStarted(frontendHost, frontendPort, backendHost, backendPort);
   }

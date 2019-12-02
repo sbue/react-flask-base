@@ -7,10 +7,9 @@ const divider = chalk.gray('-----------------------------------');
  * Logger middleware, you can customize it to make messages more personal
  */
 const logger = {
-
   // Called whenever there's an error on the server we want to print
-  error: (err) => {
-    console.error(chalk.red(err))
+  error: err => {
+    console.error(chalk.red(err));
   },
 
   // Called when express.js app starts on given port w/o errors
@@ -19,7 +18,7 @@ const logger = {
 
     // If the tunnel started, log that and the URL it's available at
     if (tunnelStarted) {
-      console.log(`Tunnel initialised ${chalk.green('✓')}`)
+      console.log(`Tunnel initialised ${chalk.green('✓')}`);
     }
 
     console.log(`\n${chalk.bold('Access URLs:')}`);
@@ -29,7 +28,7 @@ Localhost: ${chalk.yellow(`http://${host}:${frontendPort}`)}
       LAN: ${chalk.yellow(`http://${ip.address()}:${frontendPort}`)}`);
     if (tunnelStarted) {
       console.log(`\
-    Proxy: ${chalk.yellow(tunnelStarted)}`)
+    Proxy: ${chalk.yellow(tunnelStarted)}`);
     }
     console.log(divider);
     console.log(`${chalk.bold('Backend URLs:')}`);
@@ -37,7 +36,7 @@ Localhost: ${chalk.yellow(`http://${host}:${frontendPort}`)}
     console.log(`\
 API proxy: ${chalk.yellow(`http://${backendHost}:${backendPort}`)}`);
     console.log(divider);
-    console.log(`${chalk.blue(`Press ${chalk.italic('CTRL-C')} to stop`)}\n`)
+    console.log(`${chalk.blue(`Press ${chalk.italic('CTRL-C')} to stop`)}\n`);
   },
 };
 

@@ -41,7 +41,7 @@ export default function ResetPassword(props) {
         <PageHeader
           style={{
             border: '1px solid rgb(235, 237, 240)',
-            marginBottom: "20px",
+            marginBottom: '20px',
           }}
           title="Reset Password"
           subTitle="Please enter a new password"

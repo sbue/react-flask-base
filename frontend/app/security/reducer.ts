@@ -14,7 +14,7 @@ export const initialState: ContainerState = {
     firstName: '',
     lastName: '',
     email: '',
-  }
+  },
 };
 
 const localStore = localStorage.getItem(StoreKey);
