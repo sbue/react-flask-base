@@ -90,29 +90,20 @@ export default function Settings() {
         </Descriptions>
         {/* Hacky method to add a third column while preserving antd css */}
         <span className="ant-descriptions-title">Security Info</span>
-        <table className="custom">
+        <table className="custom" style={{margin: "25px 5px"}}>
           <tbody>
             <tr>
               <th>Email</th>
-              <td className="">
-                {user.email}
-              </td>
-              <td>
-                <Button type="ghost">Change Email</Button>
-              </td>
+              <td className="">{user.email}</td>
+              <td><Button type="ghost">Change Email</Button></td>
             </tr>
             <tr>
               <th>Password</th>
-              <td>
-                ********
-              </td>
-              <td>
-                <Button type="ghost">Change Password</Button>
-              </td>
+              <td>********</td>
+              <td><Button type="ghost">Change Password</Button></td>
             </tr>
           </tbody>
         </table>
-
         <Popconfirm
           title="Are you sure delete your account? This cannot be undone."
           placement="bottom"

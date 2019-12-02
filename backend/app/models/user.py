@@ -136,7 +136,7 @@ class User(UserMixin, db.Model):
                 email=fake.email(),
                 password='password',
                 verified_email=True,
-                role=choice([r for r in Role]),
+                role=choice([r for r in Role if r != Role.ANONYMOUS]),
                 **kwargs)
             db.session.add(u)
             try:

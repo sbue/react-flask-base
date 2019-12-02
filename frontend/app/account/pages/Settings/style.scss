@@ -9,10 +9,16 @@ table.custom {
   table-layout: auto;
 }
 
-table.custom * td, th {
-  border: 1px solid;
+table.custom td, table.custom th {
+  border: 1px solid #e8e8e8;
   text-align: left;
-  padding: 8px;
+  padding: 16px 24px;
+  line-height: 1.5;
+}
+
+table.custom th {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: bold;
 }
 
 .ant-descriptions-title {
@@ -21,4 +27,8 @@ table.custom * td, th {
 
 .ant-descriptions-title + button {
   margin-left: 16px;
+}
+
+.ant-descriptions-item-label {
+  font-weight: bold;
 }

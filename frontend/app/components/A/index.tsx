@@ -10,10 +10,15 @@ interface AProps {
 }
 
 export default function A(props: AProps) {
-  const onClick = goTo(props.route, props.params);
+  const onClick = (evt) => {
+    if (evt !== undefined && evt.preventDefault) {
+      evt.preventDefault();
+    }
+    goTo(props.route, props.params)();
+  };
   return (
     <a href={compile(props.route)(props.params)} onClick={onClick} {...props} >
       {props.children}
     </a>
   );
-}
+};
