@@ -1,15 +1,15 @@
 import { ContainerState, ContainerActions } from './types';
-import { checkAuth, confirmEmail, login, logout,
-  resetPassword, signUp} from 'security/actions';
+import { checkAuth, changeEmail, changeUserInfo, confirmEmail, deleteAccount,
+  login, logout, resetPassword, signUp} from 'security/actions';
 import {SITE_NAME} from 'config';
 
 const StoreKey = `${SITE_NAME}/securityState`;
 
-export const initialState: ContainerState = {
+export const emptyState: ContainerState = {
   isAuthenticated: false,
   user: {
     userID: '',
-    role: 'Anonymous',
+    role: '',
     verifiedEmail: false,
     firstName: '',
     lastName: '',
@@ -18,14 +18,17 @@ export const initialState: ContainerState = {
 };
 
 const localStore = localStorage.getItem(StoreKey);
-const startState = localStore ? JSON.parse(localStore) : initialState;
+const localStoreParsed = localStore ? JSON.parse(localStore) : {};
+const initialState = localStoreParsed && localStoreParsed.user ?
+  localStoreParsed : emptyState;
 
-export default function(state: ContainerState = startState,
+export default function(state: ContainerState = initialState,
                         action: ContainerActions) {
   const { type, payload } = action;
   let newState = {};
   switch (type) {
     case checkAuth.SUCCESS:
+    case changeUserInfo.SUCCESS:
     case resetPassword.SUCCESS:
     case login.SUCCESS:
     case signUp.SUCCESS:
@@ -40,7 +43,22 @@ export default function(state: ContainerState = startState,
     case confirmEmail.SUCCESS:
       newState = {
         ...state,
-        verifiedEmail: true,
+        user: {
+          ...state.user,
+          verifiedEmail: true,
+        }
+      };
+      localStorage.setItem(StoreKey, JSON.stringify(newState));
+      return newState;
+
+    case changeEmail.SUCCESS:
+      newState = {
+        ...state,
+        user: {
+          ...state.user,
+          email: payload.newEmail,
+          // verifiedEmail: false,  // Seems odd to lock the user out immediately
+        }
       };
       localStorage.setItem(StoreKey, JSON.stringify(newState));
       return newState;
@@ -50,8 +68,9 @@ export default function(state: ContainerState = startState,
     case logout.FULFILL:
     case resetPassword.FAILURE:
     case signUp.FAILURE:
+    case deleteAccount.SUCCESS:
       localStorage.removeItem(StoreKey);
-      return initialState;
+      return emptyState;
 
     default:
       return state;

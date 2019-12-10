@@ -9,6 +9,8 @@ import {PATHS} from 'config';
 function* sagaWorker() {
   try {
     yield call(SecurityApi.logout);
+  } catch (error) {
+    // ignore
   } finally {
     yield flashInfo('You\'ve logged out');
     yield put(logout.fulfill());

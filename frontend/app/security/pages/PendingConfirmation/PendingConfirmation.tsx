@@ -2,16 +2,14 @@ import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, PageHeader, Spin} from 'antd';
 
-import {useInjectReducer} from 'utils/injectReducer';
+import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
 import {selectIsLoading} from 'reducers';
 import PageContent from 'components/PageContent';
 
-import reducer, {selectEmail} from 'security/reducer';
+import {selectEmail} from 'security/reducer';
 import {resendConfirmationEmail} from 'security/actions';
 import saga from 'security/sagas/resendConfirmation';
-
-const key = 'security';
 
 export default function PendingConfirmation() {
 
@@ -19,8 +17,8 @@ export default function PendingConfirmation() {
   const isLoading = useSelector(selectIsLoading);
   const email = useSelector(selectEmail);
 
-  useInjectReducer({ key: key, reducer: reducer });
-  useInjectSaga({ key: key, saga: saga });
+  useInjectSecurityReducer();
+  useInjectSaga({ key: 'pendingConfirmation', saga: saga });
 
   return (
     <PageContent>

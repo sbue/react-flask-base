@@ -1,19 +1,42 @@
+import _ from 'lodash';
 import { get, delete_, post, privateRequest } from 'utils/request';
 import {adminUrl} from 'api';
 
 export default class Admin {
   public static fetchUsers() {
-    const f = () => get(adminUrl('/users', {}), {});
-    return privateRequest(f);
+    return privateRequest(() =>
+      get(adminUrl('/users', {}), {})
+    );
   }
 
+  /**
+   * @param {string} userID The identifier of the user being deleted
+   */
   public static deleteUser(userID) {
-    const f = () => delete_(adminUrl(`/user/${userID}/delete`, {}), {});
-    return privateRequest(f);
+    return privateRequest(() =>
+      delete_(adminUrl(`/user/${userID}/delete`, {}), {})
+    );
   }
 
+  /**
+   * @param {string} userID The identifier of the user being updated
+   * @param {Object} payload The user details
+   * @param {string} [payload.firstName]
+   * @param {string} [payload.lastName]
+   * @param {string} [payload.email]
+   * @param {string} [payload.role]
+   * @param {boolean} [payload.verifiedEmail]
+   */
   public static updateUser(userID, payload) {
-    const f = () => post(adminUrl(`/user/${userID}/update`, {}), payload);
-    return privateRequest(f);
+    const filteredData = _.pickBy({
+      first_name: payload.firstName,
+      last_name: payload.lastName,
+      email: payload.email,
+      role: payload.role,
+      verified_email: payload.verifiedEmail,
+    }, v => v !== null);
+    return privateRequest(() =>
+      post(adminUrl(`/user/${userID}/update`, {}), filteredData)
+    );
   }
 }

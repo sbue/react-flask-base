@@ -7,10 +7,7 @@ from app import create_app
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-from zappa.asynchronous import task
 
-
-@task
 def send_email(recipient, subject, template, **kwargs):
     app = create_app(os.getenv('FLASK_CONFIG') or 'default')
     with app.app_context():

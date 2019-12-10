@@ -2,7 +2,7 @@ from flask import (Blueprint, jsonify, abort, Response, request)
 from marshmallow import Schema, fields, validate
 
 from app import db
-from app.utils import validate_request, to_camel_case
+from app.utils import validate_request
 from app.auth.fields import name_validate, email_validate
 from app.decorators import admin_required
 from app.email import send_email
@@ -11,13 +11,6 @@ from app.admin.utils import get_user_payload
 
 admin = Blueprint('admin', __name__)
 
-
-# @admin.route('/')
-# @login_required
-# @admin_required
-# def index():
-#     """Admin dashboard page."""
-#     return render_template('admin/index.html')
 #
 #
 # @admin.route('/new-user', methods=['GET', 'POST'])
@@ -73,6 +66,8 @@ admin = Blueprint('admin', __name__)
 #     return render_template('admin/new_user.html', form=form)
 #
 #
+
+
 @admin.route('/users')
 @admin_required
 def fetch_users():

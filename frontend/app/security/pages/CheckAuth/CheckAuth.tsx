@@ -1,19 +1,16 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 
-import { useInjectReducer } from 'utils/injectReducer';
-import { useInjectSaga } from 'utils/injectSaga';
-import { checkAuth } from 'security/actions';
-import reducer from 'security/reducer';
+import {useInjectSecurityReducer} from 'utils/injectReducer';
+import {useInjectSaga} from 'utils/injectSaga';
+import {checkAuth} from 'security/actions';
 import saga from 'security/sagas/checkAuth';
 
-const key = 'security';
-
 export default function CheckAuth() {
-  const dispatch = useDispatch();
+  useInjectSecurityReducer();
+  useInjectSaga({ key: 'checkAuth', saga: saga });
 
-  useInjectReducer({ key: key, reducer: reducer });
-  useInjectSaga({ key: key, saga: saga });
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(checkAuth.trigger());

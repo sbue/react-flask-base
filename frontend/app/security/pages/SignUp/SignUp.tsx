@@ -1,25 +1,19 @@
-/*
- * HomePage
- *
- * This is the first thing users see of our App, at the '/' route
- */
-
 import React, {useRef} from 'react';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
 
-import {useInjectReducer} from 'utils/injectReducer';
+import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
 import {signUp} from 'security/actions';
-import reducer from 'security/reducer';
 import saga from 'security/sagas/signUp';
 import {selectIsLoading} from 'reducers';
 import PageContent from 'components/PageContent';
 
-const key = 'security';
-
 export default function SignUp() {
+  useInjectSecurityReducer();
+  useInjectSaga({ key: 'signUp', saga: saga });
+
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
@@ -41,9 +35,6 @@ export default function SignUp() {
     };
     dispatch(signUp.request(payload));
   };
-
-  useInjectReducer({ key: key, reducer: reducer });
-  useInjectSaga({ key: key, saga: saga });
 
   return (
     <PageContent>

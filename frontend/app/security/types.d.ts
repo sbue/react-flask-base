@@ -7,7 +7,7 @@ interface SecurityState {
   isAuthenticated: boolean;
   user: {
     userID: string,
-    role: 'Anonymous' | 'User' | 'Admin';
+    role: 'User' | 'Admin' | '';
     verifiedEmail: boolean;
     firstName: string;
     lastName: string;

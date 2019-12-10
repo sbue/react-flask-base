@@ -3,18 +3,18 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
 
 import {selectIsLoading} from 'reducers';
-import {useInjectReducer} from 'utils/injectReducer';
+import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
 import PageContent from 'components/PageContent';
 
 import {forgotPassword} from 'security/actions';
-import reducer from 'security/reducer';
 import saga from 'security/sagas/forgotPassword';
 
 
-const key = 'security';
-
 export default function ForgotPassword() {
+  useInjectSecurityReducer();
+  useInjectSaga({ key: 'forgotPassword', saga: saga });
+
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
@@ -30,9 +30,6 @@ export default function ForgotPassword() {
     };
     dispatch(forgotPassword.request(payload));
   };
-
-  useInjectReducer({ key: key, reducer: reducer });
-  useInjectSaga({ key: key, saga: saga });
 
   return (
     <PageContent>

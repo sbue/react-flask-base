@@ -1,25 +1,55 @@
-import {
-  delete_,
-  get,
-  post,
-  privateRequest,
-} from 'utils/request';
+import _ from 'lodash';
+import {delete_, get, post, privateRequest} from 'utils/request';
 import {authUrl} from 'api';
 
 export default class Auth {
-  // /**
-  //  * @param {string} password
-  //  * @param {string} newPassword
-  //  * @param {string} confirmNewPassword
-  //  */
-  // static changePassword({ password, newPassword, confirmNewPassword }) {
-  //   return post(authUrl('/change-password'), { password, newPassword, confirmNewPassword })
-  // }
-  //
+  /**
+   * @param {string} newEmail
+   */
+  static changeEmail({ newEmail }) {
+    return privateRequest(() =>
+      post(authUrl('/settings/change-email', {}),
+        { new_email: newEmail })
+    );
+  }
+
+  /**
+   * @param {string} oldPassword
+   * @param {string} newPassword
+   */
+  static changePassword({ oldPassword, newPassword }) {
+    return privateRequest(() =>
+      post(authUrl('/settings/change-password', {}),
+        { old_password: oldPassword, new_password: newPassword })
+    );
+  }
+
+  /**
+   * @param {Object} payload The user details
+   * @param {string} [payload.firstName]
+   * @param {string} [payload.lastName]
+   */
+  public static changeUserInfo(payload) {
+    const filteredData = _.pickBy({
+      first_name: payload.firstName,
+      last_name: payload.lastName,
+    }, v => v !== null);
+    return privateRequest(() =>
+      post(authUrl(`/settings/change-user-info`, {}), filteredData)
+    );
+  }
+
+  public static deleteAccount() {
+    return privateRequest(() =>
+      delete_(authUrl('/settings/delete-account', {}), {})
+    );
+  }
+
 
   public static checkAuth() {
-    const f = () => get(authUrl('/check-auth', {}), {});
-    return privateRequest(f);
+    return privateRequest(() =>
+      get(authUrl('/check-auth', {}), {})
+    );
   }
 
   /**
@@ -38,13 +68,15 @@ export default class Auth {
   }
 
   public static logout() {
-    const f = () => delete_(authUrl('/logout', {}), {});
-    return privateRequest(f);
+    return privateRequest(() =>
+      delete_(authUrl('/logout', {}), {})
+    );
   }
 
   public static resendConfirmationEmail() {
-    const f = () => post(authUrl('/resend-confirm-email', {}), {});
-    return privateRequest(f);
+    return privateRequest(() =>
+      post(authUrl('/resend-confirm-email', {}), {})
+    );
   }
 
   /**
@@ -59,8 +91,9 @@ export default class Auth {
    * @param {string} token The confirm token from the URL
    */
   public static confirmEmail({ token }) {
-    const f = () => post(authUrl(`/verify-email/${token}`, {}), {});
-    return privateRequest(f);
+    return privateRequest(() =>
+      post(authUrl(`/verify-email/${token}`, {}), {})
+    );
   }
 
   /**
@@ -74,12 +107,4 @@ export default class Auth {
   public static signUp(payload) {
     return post(authUrl('/sign-up', {}), payload);
   }
-
-  // /**
-  //  * @param {object} user The user whose profile is being updated
-  //  * @param {object} payload Any modified fields to be updated
-  //  */
-  // static updateProfile(user, payload) {
-  //   return patch(authUrl(`/users/${user.id}`), payload)
-  // }
 }

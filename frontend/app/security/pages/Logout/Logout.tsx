@@ -1,25 +1,16 @@
-/*
- * Logout
- *
- * This is the logout component
- */
+import React, {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-
-import { useInjectReducer } from 'utils/injectReducer';
-import { useInjectSaga } from 'utils/injectSaga';
-import { logout } from 'security/actions';
-import reducer from 'security/reducer';
+import {useInjectSecurityReducer} from 'utils/injectReducer';
+import {useInjectSaga} from 'utils/injectSaga';
+import {logout} from 'security/actions';
 import saga from 'security/sagas/logout';
 
-const key = 'security';
-
 export default function Logout() {
-  const dispatch = useDispatch();
+  useInjectSecurityReducer();
+  useInjectSaga({ key: 'logout', saga: saga });
 
-  useInjectReducer({ key: key, reducer: reducer });
-  useInjectSaga({ key: key, saga: saga });
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(logout.request());

@@ -45,7 +45,7 @@ export function injectSagaFactory(store: InjectedStore, isValid: boolean = false
 
     const newDescriptor = {
       ...descriptor,
-      mode: descriptor.mode || DAEMON,
+      mode: descriptor.mode || RESTART_ON_REMOUNT,  // originally DAEMON
     };
     const { saga, mode } = newDescriptor;
 
@@ -106,3 +106,5 @@ export function getInjectors(store: InjectedStore) {
     ejectSaga: ejectSagaFactory(store, true),
   };
 }
+
+

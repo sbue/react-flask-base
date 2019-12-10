@@ -6,3 +6,6 @@ export { default as Logout } from './Logout';
 export { default as PendingConfirmation } from './PendingConfirmation';
 export { default as ResetPassword } from './ResetPassword';
 export { default as SignUp } from './SignUp';
+export { default as Settings } from './Settings';
+export { default as ChangePassword } from './ChangePassword';
+export { default as ChangeEmail } from './ChangeEmail';

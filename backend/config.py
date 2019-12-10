@@ -3,8 +3,9 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # TODO: this won't work in AWS Lambda
+# TODO: replace with dotenv
 if os.path.exists('config.env'):
-    print('Importing environment from .env file')
+    print('Importing environment from config.env file')
     for line in open('config.env'):
         var = line.strip().split('=')
         if len(var) == 2:
@@ -38,7 +39,7 @@ class Config:
         app_name=APP_NAME, email=MAIL_DEFAULT_SENDER)
 
     JWT_TOKEN_LOCATION = ['cookies']
-    JWT_COOKIE_SECURE = True
+    JWT_COOKIE_SAMESITE = 'Lax'
 
     @staticmethod
     def init_app(app):
@@ -61,14 +62,14 @@ class DevelopmentConfig(Config):
 
 class StagingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "STAGING_DATABASE_URL",
-        f"sqlite:///{os.path.join(basedir, 'data-staging.sqlite')}"
-    )
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{os.getenv('DB_USERNAME')}:" \
+                              f"{os.getenv('DB_PASSWORD')}" \
+                              f"@{os.getenv('DB_ENDPOINT')}"
+    JWT_COOKIE_SECURE = False
 
     @classmethod
     def init_app(cls, app):
-        app.logger.warning("THIS APP IS IN TESTING MODE. YOU SHOULD NOT SEE "
+        app.logger.warning("THIS APP IS IN STAGING MODE. YOU SHOULD NOT SEE "
                            "THIS IN PRODUCTION.")
 
 
@@ -77,6 +78,7 @@ class ProductionConfig(Config):
                               f"{os.getenv('DB_PASSWORD')}" \
                               f"@{os.getenv('DB_ENDPOINT')}"
     SSL_DISABLE = (os.getenv("SSL_DISABLE", "True") == "True")
+    JWT_COOKIE_SECURE = False  # TODO: change me
 
     @classmethod
     def init_app(cls, app):

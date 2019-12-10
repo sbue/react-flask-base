@@ -4,14 +4,14 @@ import {PageHeader, Spin, Popconfirm, Button, Icon,
   Descriptions, Typography, Checkbox} from 'antd';
 import _ from 'lodash';
 
-import {useInjectReducer} from 'utils/injectReducer';
+import {useInjectAdminReducer} from 'utils/injectReducer';
 import {useInjectMultipleSagas} from 'utils/injectSaga';
 import PageContent from 'components/PageContent';
 import {selectIsLoading} from 'reducers';
 import {PATHS} from 'config';
 import {goTo} from 'utils/history';
 
-import reducer, {selectAdmin} from 'admin/reducer';
+import {selectAdmin} from 'admin/reducer';
 import fetchUsersSaga from 'admin/sagas/fetchUsers';
 import deleteUserSaga from 'admin/sagas/deleteUser';
 import updateUserSaga from 'admin/sagas/updateUser';
@@ -19,10 +19,7 @@ import {fetchUsers, deleteUser, updateUser} from 'admin/actions';
 import {RoleTag, VerifiedEmailIcon} from 'admin/pages/ManageUsers/Tags';
 import './style.scss';
 
-
-const key = 'admin';
 const { Text } = Typography;
-
 
 export default function ManageUser(props) {
 
@@ -34,8 +31,9 @@ export default function ManageUser(props) {
   const userID = props.match.params.userID;
   const user = _.has(users, userID) ? users[userID] : null;
 
-  useInjectReducer({ key: key, reducer: reducer });
-  useInjectMultipleSagas({ key: key, sagas: [fetchUsersSaga, deleteUserSaga, updateUserSaga] });
+  useInjectAdminReducer();
+  useInjectMultipleSagas({ key: 'manageUser',
+    sagas: [fetchUsersSaga, deleteUserSaga, updateUserSaga] });
 
   useEffect(() => {
     if (!user || adminState.stale) {
@@ -71,14 +69,8 @@ export default function ManageUser(props) {
   };
   const saveChanges = () => {
     const payload = {
-      data: {
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        role: role,
-        verified_email: verifiedEmail,
-      },
-      userID: userID,
+      data: { firstName, lastName, email, role, verifiedEmail },
+      userID,
       name,
     };
     dispatch(updateUser.request(payload));

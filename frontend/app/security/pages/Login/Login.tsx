@@ -1,41 +1,37 @@
-import React, {useRef} from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
+import validator from 'validator';
 
 import {PATHS} from 'config';
-import {useInjectReducer} from 'utils/injectReducer';
+
+import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
 import {selectIsLoading} from 'reducers';
 import PageContent from 'components/PageContent';
 import A from 'components/A';
 
 import {login} from 'security/actions';
-import reducer from 'security/reducer';
 import saga from 'security/sagas/login';
 
-const key = 'security';
-
 export default function Login() {
+  useInjectSecurityReducer();
+  useInjectSaga({ key: 'login', saga: saga });
+
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
-  const emailInput: any = useRef(null);
-  const passwordInput: any = useRef(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Not gonna declare event types here. No need. any is fine
   const handleSubmit = (evt?: any) => {
     if (evt !== undefined && evt.preventDefault) {
       evt.preventDefault();
     }
-    const payload = {
-      email: emailInput.current.state.value,
-      password: passwordInput.current.state.value,
-    };
+    const payload = { email, password };
     dispatch(login.request(payload));
   };
-
-  useInjectReducer({ key: key, reducer: reducer });
-  useInjectSaga({ key: key, saga: saga });
 
   return (
     <PageContent>
@@ -49,18 +45,19 @@ export default function Login() {
           subTitle="Please login to get started"
         />
         <Form onSubmit={handleSubmit}>
-          <Form.Item>
+          <Form.Item validateStatus="success">
             <Input
-              ref={emailInput}
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               type="email"
               prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="Email"
             />
           </Form.Item>
           <Form.Item>
-            <Input
-              ref={passwordInput}
-              type="password"
+            <Input.Password
+              value={password}
+              onChange={e => setPassword(e.target.value)}
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="Password"
               autoComplete="on"

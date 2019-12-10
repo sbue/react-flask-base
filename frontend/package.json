@@ -105,7 +105,8 @@
     "reselect": "4.0.0",
     "sanitize.css": "10.0.0",
     "styled-components": "4.3.2",
-    "typesafe-actions": "4.4.0"
+    "typesafe-actions": "4.4.0",
+    "validator": "^12.1.0"
   },
   "devDependencies": {
     "@babel/cli": "7.5.0",

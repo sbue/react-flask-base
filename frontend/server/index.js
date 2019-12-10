@@ -23,12 +23,14 @@ const frontendPort = process.env.PORT || 3000;
 
 const backendHost = process.env.API_HOST || frontendHost;
 const backendPort = process.env.API_PORT || 5000;
-const backendPrefix = isDev ? 'http://' : 'https://www.';
+const backendDev = `http://${backendHost}:${backendPort}`;
+const backendProd = '<YOUR PROD SERVER HERE>';
+const backend = isDev ? backendDev : backendProd;
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 app.use(
   /^\/api|auth\//,
-  proxy(`${backendPrefix}${backendHost}:${backendPort}`, {
+  proxy(backend, {
     proxyReqPathResolver: req => req.baseUrl + req.url,
   }),
 );
@@ -60,14 +62,8 @@ app.listen(frontendPort, host, async err => {
     } catch (e) {
       return logger.error(e);
     }
-    logger.appStarted(
-      frontendHost,
-      frontendPort,
-      backendHost,
-      backendPort,
-      url,
-    );
+    logger.appStarted(frontendHost, frontendPort, backend, url);
   } else {
-    logger.appStarted(frontendHost, frontendPort, backendHost, backendPort);
+    logger.appStarted(frontendHost, frontendPort, backend);
   }
 });

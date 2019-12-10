@@ -4,6 +4,8 @@ import { useStore } from 'react-redux';
 
 import { getInjectors } from './reducerInjectors';
 import { InjectReducerParams, InjectedStore } from 'types';
+import securityReducer from "../security/reducer";
+import adminReducer from "../admin/reducer";
 
 /**
  * Dynamically injects a reducer
@@ -43,11 +45,14 @@ export default function hocWithReducer<P>({
   return wrap;
 }
 
-const useInjectReducer = ({ key, reducer }: InjectReducerParams) => {
+export const useInjectReducer = ({ key, reducer }: InjectReducerParams) => {
   const store = useStore() as InjectedStore;
   React.useEffect(() => {
     getInjectors(store).injectReducer(key, reducer);
   }, []);
 };
 
-export { useInjectReducer };
+export const useInjectAdminReducer = () =>
+  useInjectReducer({ key: 'admin', reducer: adminReducer });
+export const useInjectSecurityReducer = () =>
+  useInjectReducer({ key: 'security', reducer: securityReducer });

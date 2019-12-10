@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
 
@@ -7,18 +7,18 @@ import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
 import PageContent from 'components/PageContent';
 
-import {resetPassword} from 'security/actions';
-import saga from 'security/sagas/resetPassword';
+import {changeEmail} from 'security/actions';
+import saga from 'security/sagas/changeEmail';
 
 
-export default function ResetPassword(props) {
+export default function ChangeEmail() {
   useInjectSecurityReducer();
-  useInjectSaga({ key: 'resetPassword', saga: saga });
+  useInjectSaga({ key: 'changeEmail', saga: saga });
 
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
-  const passwordInput: any = useRef(null);
+  const [newEmail, setNewEmail] = useState("");
 
   // Not gonna declare event types here. No need. any is fine
   const handleSubmit = (evt?: any) => {
@@ -26,10 +26,9 @@ export default function ResetPassword(props) {
       evt.preventDefault();
     }
     const payload = {
-      password: passwordInput.current.state.value,
-      token: props.match.params.token,
+      newEmail: newEmail,
     };
-    dispatch(resetPassword.request(payload));
+    dispatch(changeEmail.request(payload));
   };
 
   return (
@@ -40,21 +39,22 @@ export default function ResetPassword(props) {
             border: '1px solid rgb(235, 237, 240)',
             marginBottom: '20px',
           }}
-          title="Reset Password"
-          subTitle="Please enter a new password"
+          title="Change Email"
+          subTitle="Please enter a new email"
         />
         <Form onSubmit={handleSubmit}>
           <Form.Item>
             <Input
-              ref={passwordInput}
-              type="password"
-              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Password"
+              value={newEmail}
+              onChange={e => setNewEmail(e.target.value)}
+              type="email"
+              prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="New Email"
               autoComplete="on"
             />
           </Form.Item>
           <Button type="primary" size="default" htmlType="submit">
-            Reset password
+            Change Email
           </Button>
         </Form>
       </Spin>

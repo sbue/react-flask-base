@@ -10,7 +10,8 @@ export async function privateRequest(f: any) {  // TODO: add better typing
   try {
     return await f();
   } catch (error) {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401 &&
+      Cookies.get(CSRF_REFRESH_TOKEN_KEY)) {
       try {
         await post(authUrl('/refresh-access-token', {}), {},
           {requiresRefresh: true});
@@ -30,6 +31,7 @@ export function get(url, kwargs = {}) {
   const CSRFHeader = requiresAuth ? {
     'X-CSRF-Token': Cookies.get(CSRF_ACCESS_TOKEN_KEY),
   } : {};
+  console.log(CSRFHeader);
   const defaults = {
     credentials: 'include',
     headers: {
@@ -53,6 +55,7 @@ export function post(url, data, kwargs = {requiresRefresh: false}) {
       Cookies.get(CSRF_ACCESS_TOKEN_KEY)
     ),
   } : {};
+  console.log(CSRFHeader);
   const defaults = {
     credentials: 'include',
     headers: {

@@ -6,18 +6,19 @@ import _ from 'lodash';
 import {goTo} from 'utils/history';
 import {PATHS} from 'config';
 import PageContent from 'components/PageContent';
-import { useInjectReducer } from 'utils/injectReducer';
-import { useInjectSaga } from 'utils/injectSaga';
+import {useInjectAdminReducer} from 'utils/injectReducer';
+import {useInjectSaga} from 'utils/injectSaga';
 import {selectIsLoading} from 'reducers';
 
-import reducer, {selectAdmin} from 'admin/reducer';
+import {selectAdmin} from 'admin/reducer';
 import saga from 'admin/sagas/fetchUsers';
 import {fetchUsers} from 'admin/actions';
 import {columns} from './tableColumns';
 
-const key = 'admin';
-
 export default function ManageUsers() {
+  useInjectAdminReducer();
+  useInjectSaga({ key: 'manageUsers', saga: saga });
+
   const dispatch = useDispatch();
   const adminState = useSelector(selectAdmin);
   const tableData = _.toArray(
@@ -33,9 +34,6 @@ export default function ManageUsers() {
     }),
   );
   const isLoading = useSelector(selectIsLoading);
-
-  useInjectReducer({ key: key, reducer: reducer });
-  useInjectSaga({ key: key, saga: saga });
 
   useEffect(() => {
     if (adminState.staleData || adminState.users) {

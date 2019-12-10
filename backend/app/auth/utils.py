@@ -1,5 +1,8 @@
+import os
 from flask import jsonify
 import flask_jwt_extended as jwt
+
+from app import create_app
 from app.models.user import User
 from app.utils import to_camel_case
 
@@ -22,6 +25,19 @@ def authenticate(user):
     resp = authenticate_payload(user)
     jwt.set_access_cookies(resp, access_token)
     jwt.set_refresh_cookies(resp, refresh_token)
+    if os.getenv('FLASK_CONFIG') in ['staging', 'production']:
+        app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+        with app.app_context():
+            # Add frontend domain to cookies
+            original_headers = resp.headers.copy()
+            resp.headers.clear()
+            for (key, value) in original_headers:
+                if key == 'Set-Cookie':
+                    url = app.config['FRONTEND_URL']
+                    url = url[url.rfind('.', 0, url.rfind('.'))+1:]
+                    url = url.replace('https://', '')
+                    value += f"; Domain={url}"
+                resp.headers.add(key, value)
     return resp
 
 

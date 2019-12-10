@@ -4,9 +4,10 @@ import startCase from 'lodash/startCase';
 
 import { Home, NotFound } from 'site/pages';
 import { SignUp, Login, Logout, ForgotPassword, ResetPassword,
-  PendingConfirmation, ConfirmEmail } from 'security/pages';
+  PendingConfirmation, ConfirmEmail, Settings, ChangeEmail,
+  ChangePassword,
+} from 'security/pages';
 import { AdminDashboard, ManageUsers, ManageUser } from 'admin/pages';
-import { AccountSettings } from 'account/pages';
 import { PrivateRoute, PublicRoute, RestrictedPublicRoute,
   AdminRoute, UnconfirmedEmailRoute } from 'components/Routes';
 import {PATHS} from 'config';
@@ -79,12 +80,23 @@ const routes = [
     routeComponent: RestrictedPublicRoute,
     label: 'Reset Password',
   },
-  // ACCOUNT
   {
     key: 'Settings',
     path: PATHS.Settings,
     routeComponent: PrivateRoute,
-    component: AccountSettings,
+    component: Settings,
+  },
+  {
+    key: 'ChangeEmail',
+    path: PATHS.ChangeEmail,
+    routeComponent: PrivateRoute,
+    component: ChangeEmail,
+  },
+  {
+    key: 'ChangePassword',
+    path: PATHS.ChangePassword,
+    routeComponent: PrivateRoute,
+    component: ChangePassword,
   },
   // ADMIN
   {

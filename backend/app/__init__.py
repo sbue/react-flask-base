@@ -31,7 +31,7 @@ def create_app(config):
 
     Config[config_name].init_app(app)
 
-    CORS(app, resources={r'/*': {'origins': app.config['FRONTEND_URL']}},
+    CORS(app, resources={r'/*': {'origins': f"{app.config['FRONTEND_URL']}"}},
          supports_credentials=True)
 
     # Set up extensions

@@ -12,6 +12,8 @@ import { ApplicationRootState } from 'types';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { loadingBarMiddleware } from 'react-redux-loading-bar';
 
+import {ALLOW_REDUX_IN_PROD} from 'config';
+
 export default function configureStore(initialState: ApplicationRootState | {} = {}, history: History) {
   const reduxSagaMonitorOptions = {};
   const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions);
@@ -26,7 +28,8 @@ export default function configureStore(initialState: ApplicationRootState | {} =
 
   // If Redux Dev Tools and Saga Dev Tools Extensions are installed, enable them
   /* istanbul ignore next */
-  if (process.env.NODE_ENV !== 'production' && typeof window === 'object') {
+  if ((process.env.NODE_ENV !== 'production' || ALLOW_REDUX_IN_PROD)
+    && typeof window === 'object') {
     enhancer = composeWithDevTools(enhancer);
   }
 

@@ -3,7 +3,7 @@ import json
 
 def validate_request(request, schema):
     if not request.data:
-        raise Exception("Invalid request")
+        raise ValueError("Invalid request")
     else:
         data = json.loads(request.data)
         validation_errors = schema().validate(data)

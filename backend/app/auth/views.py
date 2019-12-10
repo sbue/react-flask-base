@@ -2,13 +2,13 @@ from operator import itemgetter
 
 from flask import Blueprint, jsonify, request, Response, abort, current_app
 import flask_jwt_extended as jwt
-from marshmallow import Schema
+from marshmallow import Schema, fields
 
 from app import db
 from app.decorators import login_required
 from app.utils import validate_request
 from app.models.user import User
-from app.auth.fields import name_field, email_field, password_field
+from app.auth.fields import name_field, email_field, password_field, name_validate
 from app.auth.utils import authenticate, get_current_user, authenticate_payload
 from app.auth.emails import send_confirm_email, send_reset_password_email
 
@@ -144,7 +144,7 @@ def reset_password(token):
         return Response(str(e), 400)
 
 
-@auth.route('/manage/change-password', methods=['POST'])
+@auth.route('/settings/change-password', methods=['POST'])
 @login_required
 def change_password(current_user):
     """Change an existing user's password."""
@@ -152,6 +152,7 @@ def change_password(current_user):
         old_password = password_field
         new_password = password_field
     try:
+
         data = validate_request(request, ChangePasswordSchema)
         if current_user.verify_password(data['old_password']):
             current_user.password = data['new_password']
@@ -163,3 +164,63 @@ def change_password(current_user):
             raise ValueError("Original password is invalid.")
     except ValueError as e:
         return Response(str(e), 400)
+
+
+@auth.route('/settings/change-email', methods=['POST'])
+@login_required
+def change_email(current_user):
+    """Change an existing user's email."""
+    class ChangeEmailSchema(Schema):
+        new_email = email_field
+    try:
+        data = validate_request(request, ChangeEmailSchema)
+        if User.query.filter_by(email=data['new_email']).first() is not None:
+            raise ValueError("Email already in use.")
+        else:
+            current_user.email = data['new_email']
+            current_user.verified_email = False
+            db.session.add(current_user)
+            db.session.commit()
+            send_confirm_email(current_user,
+                               current_app.config['FRONTEND_URL'])
+            # TODO: send email to old email notifying email change
+            return jsonify({}), 200
+    except ValueError as e:
+        return Response(str(e), 400)
+
+
+@auth.route('/settings/change-user-info', methods=['POST'])
+@login_required
+def change_user_info(current_user):
+    """Change an existing user's email."""
+    class ChangeUserInfoSchema(Schema):
+        first_name = fields.Str(required=False, validate=name_validate)
+        last_name = fields.Str(required=False, validate=name_validate)
+    try:
+        data = validate_request(request, ChangeUserInfoSchema)
+        if len(data) == 0:
+            raise ValueError("Request didn't include any changes.")
+        if 'first_name' in data:
+            current_user.first_name = data['first_name']
+        if 'last_name' in data:
+            current_user.last_name = data['last_name']
+        db.session.add(current_user)
+        db.session.commit()
+        return authenticate_payload(current_user), 200
+    except ValueError as e:
+        return Response(str(e), 400)
+
+
+@auth.route('/settings/delete-account', methods=['DELETE'])
+@login_required
+def delete_user(current_user):
+    """Delete a user's account."""
+    if current_user.is_admin():
+        return Response("You cannot delete your own account. Please "
+                        "ask another administrator to do this.", 400)
+    else:
+        db.session.delete(current_user)
+        db.session.commit()
+        resp = jsonify({})
+        jwt.unset_jwt_cookies(resp)
+        return resp, 200

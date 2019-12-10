@@ -27,13 +27,13 @@ export interface InjectReducerParams {
 }
 
 export interface InjectSagaParams {
-  key: keyof ApplicationRootState;
+  key: string;
   saga: () => IterableIterator<any>;
   mode?: string | undefined;
 }
 
 export interface InjectMultipleSagasParams {
-  key: keyof ApplicationRootState;
+  key: string;
   sagas: Array<() => IterableIterator<any>>;
   mode?: string | undefined;
 }
