@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
 
+import {goTo} from 'utils/history';
+import {PATHS} from 'config';
 import {selectIsLoading} from 'reducers';
 import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
@@ -41,6 +43,7 @@ export default function ChangeEmail() {
           }}
           title="Change Email"
           subTitle="Please enter a new email"
+          onBack={goTo(PATHS.Settings)}
         />
         <Form onSubmit={handleSubmit}>
           <Form.Item>

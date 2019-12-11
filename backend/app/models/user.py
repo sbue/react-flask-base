@@ -10,12 +10,11 @@ from .. import db
 
 
 class Role(Enum):
-    ANONYMOUS = 'Anonymous'
     ADMIN = 'Admin'
     USER = 'User'
 
     @staticmethod
-    def get_private_roles():  # Returns string names, ie ["Admin"...]
+    def get_roles():  # Returns string names, ie ["Admin"...]
         return [role.value for role in Role]
 
 

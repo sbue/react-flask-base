@@ -1,21 +1,21 @@
-@font-face {
-  font-family: Lato, Avenir, -apple-system, system-ui, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  font-style: normal;
-}
 
 #header {
   max-width: 1200px;
   width: 100%;
-  margin: 20px auto 0;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 30px;
   padding: 0 24px;
   position: relative;
 
-  div.ant-row {
+  .ant-menu-horizontal {
     position: relative;
     height: 64px;
     display: block;
+    background-color: inherit;
+    border-bottom: 0 none !important;
 
-    #logo {
+    .menu-item-logo {
       height: 100%;
 
       img {
@@ -26,35 +26,51 @@
 
       h5 {
         line-height: 64px;
-        font-family: Lato, Avenir, -apple-system, system-ui, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
         font-size: 19px;
         display: inline-block;
         margin: 0;
         vertical-align: middle;
       }
     }
+    .ant-menu-item:hover, .ant-menu-item-selected, .ant-menu-item-active,
+    .ant-menu-overflowed-submenu, .ant-menu-submenu-horizontal, .ant-menu-submenu {
+      border-bottom: 2px solid transparent !important;
+      color: inherit !important;
+    }
 
-    #menu {
+    //.ant-menu-overflowed-submenu {
+    //  .ant-menu-submenu-title > span {
+    //    display: none;
+    //  }
+    //  .ant-menu-submenu-title:after {
+    //    content: url('data:image/svg+xml;%20charset=utf8,%20%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%2260%22%20width%3D%22200%22%3E%0A%0A%20%20%3CforeignObject%20y%3D%220%22%20x%3D%220%22%20height%3D%22100%25%22%20width%3D%22100%25%22%3E%0A%09%3Cdiv%20style%3D%22color%3A%20blue%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%3E%0A%09%09I%20am%20%3Cpre%3EHTML%3C%2Fpre%3E%0A%09%3C%2Fdiv%3E%0A%20%20%3C%2FforeignObject%3E%0A%3C%2Fsvg%3E');
+    //  }
+    //}
+
+    .right-menu {
+      float: right;
       height: 64px;
       a {
         color: #314659;
         line-height: 64px;
-        font-family: Lato, Avenir, -apple-system, system-ui, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
         font-size: 16px;
         float: right;
         text-decoration: none;
-        margin-right: 25px;
       }
       a:hover {
         color: rgb(25, 142, 251);
       }
       span {
-        font-family: Lato, Avenir, -apple-system, system-ui, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+        // Vertically center the admin tag: https://www.w3schools.com/howto/howto_css_center-vertical.asp
         font-size: 14px;
-        margin-top: 10.3px;
+        position: absolute;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        top: 50%;
         float: right;
-        margin-right: 25px;
       }
     }
   }
 }
+
+

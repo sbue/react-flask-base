@@ -10,7 +10,7 @@ export const LOG_LEVEL = DEBUG;
 
 // set this if your API server is different from the frontend server
 export const LOCAL_SERVER_URL = 'http://localhost:5000';
-export const PROD_SERVER_URL = '<YOUR PROD SERVER HERE>';
+export const PROD_SERVER_URL = '<YOUR PROD SERVER HERE>';  // example: https://api.reactflaskbase.xyz
 export const SERVER_URL = isProd ? PROD_SERVER_URL : LOCAL_SERVER_URL;
 
 export const SITE_NAME = 'Flask React Base' + (isDev ? ' Dev' : '');

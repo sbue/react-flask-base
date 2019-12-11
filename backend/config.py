@@ -2,7 +2,6 @@ import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# TODO: this won't work in AWS Lambda
 # TODO: replace with dotenv
 if os.path.exists('config.env'):
     print('Importing environment from config.env file')

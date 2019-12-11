@@ -24,7 +24,7 @@ const frontendPort = process.env.PORT || 3000;
 const backendHost = process.env.API_HOST || frontendHost;
 const backendPort = process.env.API_PORT || 5000;
 const backendDev = `http://${backendHost}:${backendPort}`;
-const backendProd = '<YOUR PROD SERVER HERE>';
+const backendProd = '<YOUR PROD SERVER HERE>'; // example: https://api.reactflaskbase.xyz
 const backend = isDev ? backendDev : backendProd;
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here

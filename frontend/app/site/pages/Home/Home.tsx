@@ -6,8 +6,8 @@ import {selectFirstName} from 'security/reducer';
 import PageContent from 'components/PageContent';
 
 export default function HomePage() {
-  const security = useSelector(selectFirstName);
-  const userGreeting = security.firstName ? security.firstName : '🌍';
+  const firstName = useSelector(selectFirstName);
+  const userGreeting = firstName ? firstName : '🌍';
 
   return (
     <PageContent>
@@ -16,7 +16,7 @@ export default function HomePage() {
           border: '1px solid rgb(235, 237, 240)',
         }}
         title={`Howdy ${userGreeting}`}
-        subTitle="Welcome to our application. Lets see if we're caching."
+        subTitle="Welcome to our application."
       />
       <Skeleton />
       <Skeleton />

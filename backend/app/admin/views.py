@@ -1,71 +1,42 @@
-from flask import (Blueprint, jsonify, abort, Response, request)
+from flask import (Blueprint, jsonify, abort, Response, request, current_app)
 from marshmallow import Schema, fields, validate
 
 from app import db
 from app.utils import validate_request
-from app.auth.fields import name_validate, email_validate
+from app.auth.fields import name_validate, email_validate, name_field, email_field
 from app.decorators import admin_required
-from app.email import send_email
 from app.models.user import Role, User
 from app.admin.utils import get_user_payload
+from app.admin.emails import send_join_from_invite_email
 
 admin = Blueprint('admin', __name__)
 
-#
-#
-# @admin.route('/new-user', methods=['GET', 'POST'])
-# @login_required
-# @admin_required
-# def new_user():
-#     """Create a new user."""
-#     form = NewUserForm()
-#     if form.validate_on_submit():
-#         user = User(
-#             role=form.role.data,
-#             first_name=form.first_name.data,
-#             last_name=form.last_name.data,
-#             email=form.email.data,
-#             password=form.password.data)
-#         db.session.add(user)
-#         db.session.commit()
-#         flash('User {} successfully created'.format(user.full_name()),
-#               'form-success')
-#     return render_template('admin/new_user.html', form=form)
-#
-#
-# @admin.route('/invite-user', methods=['GET', 'POST'])
-# @login_required
-# @admin_required
-# def invite_user():
-#     """Invites a new user to create an account and set their own password."""
-#     form = InviteUserForm()
-#     if form.validate_on_submit():
-#         user = User(
-#             role=form.role.data,
-#             first_name=form.first_name.data,
-#             last_name=form.last_name.data,
-#             email=form.email.data)
-#         db.session.add(user)
-#         db.session.commit()
-#         token = user.generate_confirmation_token()
-#         invite_link = url_for(
-#             'account.join_from_invite',
-#             user_id=user.id,
-#             token=token,
-#             _external=True)
-#         get_queue().enqueue(
-#             send_email,
-#             recipient=user.email,
-#             subject='You Are Invited To Join',
-#             template='account/email/invite',
-#             user=user,
-#             invite_link=invite_link,
-#         )
-#         flash('User {} successfully invited'.format(user.full_name()),
-#               'form-success')
-#     return render_template('admin/new_user.html', form=form)
-#
-#
+
+@admin.route('/invite-user', methods=['GET', 'POST'])
+@admin_required
+def invite_user():
+    """Invites a new user to create an account and set their own password."""
+    class InviteUserSchema(Schema):
+        first_name = name_field
+        last_name = name_field
+        email = email_field
+        role = fields.Str(required=False, validate=validate.OneOf(Role.get_roles()))
+    try:
+        data = validate_request(request, InviteUserSchema)
+        if User.query.filter_by(email=data['email']).first() is not None:
+            raise ValueError("Email already in use.")
+        user = User(
+            role=Role(data['role']),
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            email=data['email']
+        )
+        db.session.add(user)
+        db.session.commit()
+        send_join_from_invite_email(user, current_app.config['FRONTEND_URL'])
+        return jsonify({}), 200
+    except ValueError as e:
+        return Response(str(e), 400)
 
 
 @admin.route('/users')
@@ -100,7 +71,7 @@ def update_user(user_id):
         first_name = fields.Str(required=False, validate=name_validate)
         last_name = fields.Str(required=False, validate=name_validate)
         email = fields.Email(required=False, validate=email_validate)
-        role = fields.Str(required=False, validate=validate.OneOf(Role.get_private_roles()))
+        role = fields.Str(required=False, validate=validate.OneOf(Role.get_roles()))
         verified_email = fields.Boolean(required=False)
     try:
         user = User.query.filter_by(id=user_id).first()
@@ -128,96 +99,3 @@ def update_user(user_id):
         raise ValueError("Request didn't include any changes.")
     except ValueError as e:
         return Response(str(e), 400)
-
-
-# @admin.route('/user/<int:user_id>')
-# @admin.route('/user/<int:user_id>/info')
-# @login_required
-# @admin_required
-# def user_info(user_id):
-#     """View a user's profile."""
-#     user = User.query.filter_by(id=user_id).first()
-#     if user is None:
-#         abort(404)
-#     return render_template('admin/manage_user.html', user=user)
-#
-#
-# @admin.route('/user/<int:user_id>/change-email', methods=['GET', 'POST'])
-# @login_required
-# @admin_required
-# def change_user_email(user_id):
-#     """Change a user's email."""
-#     user = User.query.filter_by(id=user_id).first()
-#     if user is None:
-#         abort(404)
-#     form = ChangeUserEmailForm()
-#     if form.validate_on_submit():
-#         user.email = form.email.data
-#         db.session.add(user)
-#         db.session.commit()
-#         flash('Email for user {} successfully changed to {}.'.format(
-#             user.full_name(), user.email), 'form-success')
-#     return render_template('admin/manage_user.html', user=user, form=form)
-#
-#
-# @admin.route(
-#     '/user/<int:user_id>/change-account-type', methods=['GET', 'POST'])
-# @login_required
-# @admin_required
-# def change_account_type(user_id):
-#     """Change a user's account type."""
-#     if current_user.id == user_id:
-#         flash('You cannot change the type of your own account. Please ask '
-#               'another administrator to do this.', 'error')
-#         return redirect(url_for('admin.user_info', user_id=user_id))
-#
-#     user = User.query.get(user_id)
-#     if user is None:
-#         abort(404)
-#     form = ChangeAccountTypeForm()
-#     if form.validate_on_submit():
-#         user.role = form.role.data
-#         db.session.add(user)
-#         db.session.commit()
-#         flash('Role for user {} successfully changed to {}.'.format(
-#             user.full_name(), user.role.name), 'form-success')
-#     return render_template('admin/manage_user.html', user=user, form=form)
-#
-#
-#
-#
-# @admin.route('/user/<int:user_id>/_delete')
-# @login_required
-# @admin_required
-# def delete_user(user_id):
-#     """Delete a user's account."""
-#     if current_user.id == user_id:
-#         flash('You cannot delete your own account. Please ask another '
-#               'administrator to do this.', 'error')
-#     else:
-#         user = User.query.filter_by(id=user_id).first()
-#         db.session.delete(user)
-#         db.session.commit()
-#         flash('Successfully deleted user %s.' % user.full_name(), 'success')
-#     return redirect(url_for('admin.registered_users'))
-#
-#
-# @admin.route('/_update_editor_contents', methods=['POST'])
-# @login_required
-# @admin_required
-# def update_editor_contents():
-#     """Update the contents of an editor."""
-#
-#     edit_data = request.form.get('edit_data')
-#     editor_name = request.form.get('editor_name')
-#
-#     editor_contents = EditableHTML.query.filter_by(
-#         editor_name=editor_name).first()
-#     if editor_contents is None:
-#         editor_contents = EditableHTML(editor_name=editor_name)
-#     editor_contents.value = edit_data
-#
-#     db.session.add(editor_contents)
-#     db.session.commit()
-#
-#     return 'OK', 200

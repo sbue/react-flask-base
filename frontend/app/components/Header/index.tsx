@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {Col, Row, Tag} from 'antd';
+import {Col, Row, Tag, Menu, Icon} from 'antd';
 
 import {SITE_NAME, PATHS} from 'config';
 import {selectIsAuthenticated, selectIsAdmin} from 'security/reducer';
@@ -15,27 +15,34 @@ export default function Header() {
   const isAdmin = useSelector(selectIsAdmin);
   return (
     <div id="header">
-      <Row>
-        <Col id="logo" xs={24} sm={24} md={7} lg={7} xl={7} xxl={6}>
-          <A route={PATHS.Home}>
-            <img src={icon} height="32px" />
+      <Menu mode="horizontal"
+            onSelect={() => null}
+            overflowedIndicator={<Icon type="menu" style={{fontSize: "20px"}} />}>
+        <Menu.Item key="home">
+          <A route={PATHS.Home} className="menu-item-logo">
+            <img src={icon} height="32px" style={{}} />
             <h5>{SITE_NAME}</h5>
           </A>
-        </Col>
-        <Col id="menu" xs={0} sm={0} md={17} lg={17} xl={17} xxl={18}>
-          {isAuthenticated ? <div>
-            {isAdmin && <span>
-              <Tag color="purple">Admin</Tag>
-            </span>}
-            <A route={PATHS.Logout}>Logout</A>
-            <A route={PATHS.Settings}>Settings</A>
-            {isAdmin && <A route={PATHS.AdminDashboard}>Dashboard</A>}
-          </div> : <div>
-            <A route={PATHS.SignUp}>Sign Up</A>
-            <A route={PATHS.Login}>Login</A>
-          </div>}
-        </Col>
-      </Row>
+        </Menu.Item>
+        {isAuthenticated && isAdmin && <Menu.Item key="admin-badge" className="right-menu">
+          <Tag color="purple">Admin</Tag>
+        </Menu.Item>}
+        {isAuthenticated && <Menu.Item key="logout" className="right-menu">
+          <A route={PATHS.Logout}>Logout</A>
+        </Menu.Item>}
+        {isAuthenticated && <Menu.Item key="settings" className="right-menu">
+          <A route={PATHS.Settings}>Settings</A>
+        </Menu.Item>}
+        {isAuthenticated && isAdmin && <Menu.Item key="admin-dashboard" className="right-menu">
+          <A route={PATHS.AdminDashboard}>Dashboard</A>
+        </Menu.Item>}
+        {!isAuthenticated && <Menu.Item key="sign-up" className="right-menu">
+          <A route={PATHS.SignUp}>Sign Up</A>
+        </Menu.Item>}
+        {!isAuthenticated && <Menu.Item key="login" className="right-menu">
+          <A route={PATHS.Login}>Login</A>
+        </Menu.Item>}
+      </Menu>
     </div>
   );
 }

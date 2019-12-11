@@ -63,6 +63,7 @@ export default function ManageUsers() {
             dataSource={tableData}
             loading={isLoading}
             size="middle"
+            scroll={{ x: 700 }}
           />
         </Col>
       </Row>

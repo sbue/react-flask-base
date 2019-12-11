@@ -6,7 +6,7 @@ def send_confirm_email(user, frontend_url):
     confirm_link = f"{frontend_url}/sign-up/pending-confirm-email/{token}"
     send_email(recipient=user.email,
                subject='Confirm Your Account',
-               template='account/email/confirm_email',
+               template='emails/confirm_email',
                user=user,
                confirm_link=confirm_link)
 
@@ -16,7 +16,7 @@ def send_reset_password_email(user, frontend_url, next):
     reset_link = f"{frontend_url}/login/reset-password/{token}"
     send_email(recipient=user.email,
                subject="Reset Your Password",
-               template="account/email/reset_password",
+               template="emails/reset_password",
                user=user,
                reset_link=reset_link,
                next=next)

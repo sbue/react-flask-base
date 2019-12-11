@@ -31,7 +31,6 @@ export function get(url, kwargs = {}) {
   const CSRFHeader = requiresAuth ? {
     'X-CSRF-Token': Cookies.get(CSRF_ACCESS_TOKEN_KEY),
   } : {};
-  console.log(CSRFHeader);
   const defaults = {
     credentials: 'include',
     headers: {
@@ -55,7 +54,6 @@ export function post(url, data, kwargs = {requiresRefresh: false}) {
       Cookies.get(CSRF_ACCESS_TOKEN_KEY)
     ),
   } : {};
-  console.log(CSRFHeader);
   const defaults = {
     credentials: 'include',
     headers: {

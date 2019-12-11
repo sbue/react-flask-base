@@ -1,0 +1,23 @@
+{
+    "dev": {
+        "app_function": "manage.app",
+        "runtime": "python3.6",
+        "aws_region": "us-east-1",
+        "exclude": [
+        	".env",
+        	"*.sqlite",
+        	".+requirements.txt",
+        	".idea",
+            ".git",
+        	".gitignore",
+            "venv",
+            "config.env",
+            "data-dev.sqlite"
+        ],
+        "profile_name": "CHANGE ME",
+        "project_name": "CHANGE ME",
+        "s3_bucket": "CHANGE ME",
+        "certificate_arn": "CHANGE ME",
+        "domain": "CHANGE ME"
+    }
+}

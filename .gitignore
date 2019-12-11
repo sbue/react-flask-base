@@ -25,4 +25,3 @@ dist
 .idea
 dump.rdb
 .vscode/
-zappa_settings.json
