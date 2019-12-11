@@ -1,5 +1,5 @@
 # react-flask-base
-WIP
+WIP: Need to add documentation and polish
 
 ## Running locally
 * Frontend (`cd frontend`)
