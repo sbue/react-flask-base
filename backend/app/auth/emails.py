@@ -1,9 +1,8 @@
 from app.email import send_email
-from app.models.user import User
 
 
 def send_confirm_email(user, frontend_url):
-    token = User.generate_email_confirmation_token(user.id).decode()  # TODO: remove me
+    token = user.generate_email_confirmation_token().decode()  # TODO: remove me
     confirm_link = f"{frontend_url}/sign-up/pending-confirm-email/{token}"
     send_email(recipient=user.email,
                subject='Confirm Your Account',

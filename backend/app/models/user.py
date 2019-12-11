@@ -49,12 +49,11 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    @staticmethod
-    def generate_email_confirmation_token(user_id, expiration=604800):
+    def generate_email_confirmation_token(self, expiration=604800):
         """Generate a confirmation token to email a new user."""
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         ts = int(datetime.now().timestamp())
-        return s.dumps({'id': user_id, 'ts': ts})
+        return s.dumps({'id': self.id, 'ts': ts})
 
     def generate_email_change_token(self, new_email, expiration=3600):
         """Generate an email change token to email an existing user."""
