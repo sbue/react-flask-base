@@ -78,9 +78,10 @@ def sign_up():
             raise ValueError("Email already in use.")
         else:
             user = User(**data)
-            send_confirm_email(user, current_app.config['FRONTEND_URL'])
             db.session.add(user)
-            db.session.commit()
+            db.session.flush()
+            db.session.expunge(user)
+            send_confirm_email(user, current_app.config['FRONTEND_URL'])
             resp = authenticate(user)
             return resp, 200
     except ValueError as e:

@@ -1,10 +1,11 @@
 from enum import Enum
+from datetime import datetime
+import logging
 from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import datetime
 
 from .. import db
 
@@ -48,11 +49,12 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def generate_email_confirmation_token(self, expiration=604800):
+    @staticmethod
+    def generate_email_confirmation_token(user_id, expiration=604800):
         """Generate a confirmation token to email a new user."""
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         ts = int(datetime.now().timestamp())
-        return s.dumps({'id': self.id, 'ts': ts})
+        return s.dumps({'id': user_id, 'ts': ts})
 
     def generate_email_change_token(self, new_email, expiration=3600):
         """Generate an email change token to email an existing user."""
@@ -74,8 +76,12 @@ class User(UserMixin, db.Model):
         try:
             data = s.loads(token)
         except (BadSignature, SignatureExpired):
+            logging.warning(f"Error verifying email for user "
+                            f"id {self.id}: BadSignature or SignatureExpired")
             return False
         if data.get('id') != self.id:
+            logging.warning(f"Error verifying email for user "
+                            f"id {self.id}: {data}")
             return False
         self.verified_email = True
         db.session.add(self)
@@ -83,23 +89,7 @@ class User(UserMixin, db.Model):
         return True
 
     def change_email(self, token):
-        """Verify the new email for this user."""
-        s = Serializer(current_app.config['SECRET_KEY'])
-        try:
-            data = s.loads(token)
-        except (BadSignature, SignatureExpired):
-            return False
-        if data.get('id') != self.id:
-            return False
-        new_email = data.get('new_email')
-        if new_email is None:
-            return False
-        if self.query.filter_by(email=new_email).first() is not None:
-            return False
-        self.email = new_email
-        db.session.add(self)
-        db.session.commit()
-        return True
+        pass  # TODO:
 
     @staticmethod
     def reset_password(token, new_password):
@@ -108,10 +98,13 @@ class User(UserMixin, db.Model):
         try:
             data = s.loads(token)
         except (BadSignature, SignatureExpired):
+            logging.warning(f"Error reseting password: BadSignature or "
+                            f"SignatureExpired")
             return None
         user_id = data.get('id')
         user = User.query.filter_by(id=user_id).first()
         if user is None:
+            logging.warning(f"User with id {user_id} does not exist.")
             return None
         user.password = new_password
         db.session.add(user)
