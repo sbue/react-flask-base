@@ -17,5 +17,3 @@ export const flashWarning = (msg) => {
 export const flashInfo = (msg) => {
   message.info(msg);
 };
-
-

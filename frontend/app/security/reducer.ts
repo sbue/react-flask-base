@@ -1,7 +1,10 @@
+import * as Cookies from 'js-cookie';
+import {SITE_NAME} from 'config';
+import {CSRF_ACCESS_TOKEN_KEY, CSRF_REFRESH_TOKEN_KEY} from 'utils/constants';
+
 import { ContainerState, ContainerActions } from './types';
 import { checkAuth, changeEmail, changeUserInfo, confirmEmail, deleteAccount,
   login, logout, resetPassword, signUp} from 'security/actions';
-import {SITE_NAME} from 'config';
 
 const StoreKey = `${SITE_NAME}/securityState`;
 
@@ -17,9 +20,11 @@ export const emptyState: ContainerState = {
   },
 };
 
+const haveTokens = Cookies.get(CSRF_ACCESS_TOKEN_KEY) &&
+  Cookies.get(CSRF_REFRESH_TOKEN_KEY);
 const localStore = localStorage.getItem(StoreKey);
 const localStoreParsed = localStore ? JSON.parse(localStore) : {};
-const initialState = localStoreParsed && localStoreParsed.user ?
+const initialState = haveTokens && localStoreParsed && localStoreParsed.user ?
   localStoreParsed : emptyState;
 
 export default function(state: ContainerState = initialState,
@@ -82,4 +87,5 @@ export const selectFirstName = (state) => state.security.user.firstName;
 export const selectEmail = (state) => state.security.user.email;
 export const selectIsAuthenticated = (state) => state.security.isAuthenticated;
 export const selectIsAdmin = (state) => state.security.user.role === 'Admin';
-export const selectVerifiedEmail = (state) => state.security.user.verifiedEmail;
+export const selectUnconfirmedEmail = (state) => state.security.isAuthenticated &&
+  !state.security.user.verifiedEmail;
