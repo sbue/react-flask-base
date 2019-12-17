@@ -24,7 +24,7 @@ export const RestrictedPublicRoute = ({component: Component, ...rest}) => {
   const unconfirmedEmail = useSelector(selectUnconfirmedEmail);
   useEffect(() => {
     if (unconfirmedEmail) history.push(PATHS.PendingConfirmation);
-    if (isAuthenticated) history.push(PATHS.Home);
+    else if (isAuthenticated) history.push(PATHS.Home);
   }, []);
   return (
     <Route {...rest} render={props => (
@@ -51,7 +51,7 @@ export const PrivateRoute = ({component: Component, ...rest}) => {
   const pathIsLogout = history.location.pathname === PATHS.Logout;
   useEffect(() => {
     if (!isAuthenticated) history.push(PATHS.Login);
-    if (!pathIsLogout && unconfirmedEmail) history.push(PATHS.PendingConfirmation);
+    else if (!pathIsLogout && unconfirmedEmail) history.push(PATHS.PendingConfirmation);
   }, []);
   return (
     <Route {...rest} render={props => (
@@ -61,12 +61,11 @@ export const PrivateRoute = ({component: Component, ...rest}) => {
 };
 
 export const AdminRoute = ({component: Component, ...rest}) => {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
   const isAdmin = useSelector(selectIsAdmin);
   const unconfirmedEmail = useSelector(selectUnconfirmedEmail);
   useEffect(() => {
     if (unconfirmedEmail) history.push(PATHS.PendingConfirmation);
-    if (!isAdmin) history.push(PATHS.Home);
+    else if (!isAdmin) history.push(PATHS.Home);
   }, []);
   return (
     <Route {...rest} render={props => (
