@@ -7,17 +7,16 @@ import {flashInfo} from 'components/Flash';
 import {PATHS} from 'config';
 
 function* sagaWorker() {
+  yield put(logout.fulfill());
+  yield flashInfo('You\'ve logged out');
+  yield call(goTo(PATHS.Home));
   try {
     yield call(SecurityApi.logout);
   } catch (error) {
     // ignore
-  } finally {
-    yield flashInfo('You\'ve logged out');
-    yield put(logout.fulfill());
-    yield call(goTo(PATHS.Home));
   }
 }
 
 export default function* saga() {
-  yield takeLatest(logout.REQUEST, sagaWorker);
+  yield takeLatest(logout.TRIGGER, sagaWorker);
 }

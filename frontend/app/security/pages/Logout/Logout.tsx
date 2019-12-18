@@ -13,7 +13,7 @@ export default function Logout() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(logout.request());
+    dispatch(logout.trigger());
   }, []);
 
   return null;
