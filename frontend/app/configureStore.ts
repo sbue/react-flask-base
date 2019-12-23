@@ -21,7 +21,7 @@ export default function configureStore(initialState: ApplicationRootState | {} =
   const middlewares = [
     sagaMiddleware,
     routerMiddleware(history),
-    loadingBarMiddleware({ promiseTypeSuffixes: ['REQUEST', 'FULFILL'] }),
+    loadingBarMiddleware({ promiseTypeSuffixes: ['REQUEST', 'SUCCESS', 'FAILURE', 'FULFILL'] }),
   ];
 
   let enhancer = applyMiddleware(...middlewares);
