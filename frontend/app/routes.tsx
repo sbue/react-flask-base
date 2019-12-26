@@ -5,9 +5,9 @@ import startCase from 'lodash/startCase';
 import { Home, NotFound } from 'site/pages';
 import { SignUp, Login, Logout, ForgotPassword, ResetPassword,
   PendingConfirmation, ConfirmEmail, Settings, ChangeEmail,
-  ChangePassword,
+  ChangePassword, JoinInvite,
 } from 'security/pages';
-import { AdminDashboard, ManageUsers, ManageUser } from 'admin/pages';
+import { AdminDashboard, ManageUsers, ManageUser, InviteUser } from 'admin/pages';
 import { PrivateRoute, PublicRoute, RestrictedPublicRoute,
   AdminRoute, UnconfirmedEmailRoute } from 'components/Routes';
 import {PATHS} from 'config';
@@ -98,6 +98,12 @@ const routes = [
     routeComponent: PrivateRoute,
     component: ChangePassword,
   },
+  {
+    key: 'JoinInvite',
+    path: PATHS.JoinInvite,
+    routeComponent: RestrictedPublicRoute,
+    component: JoinInvite,
+  },
   // ADMIN
   {
     key: 'AdminDashboard',
@@ -119,6 +125,13 @@ const routes = [
     component: ManageUser,
     routeComponent: AdminRoute,
     label: 'Manage User',
+  },
+  {
+    key: 'InviteUser',
+    path: PATHS.InviteUser,
+    component: InviteUser,
+    routeComponent: AdminRoute,
+    label: 'Invite User',
   },
 ];
 

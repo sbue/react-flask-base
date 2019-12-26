@@ -35,3 +35,11 @@ def admin_required(f):
         else:
             abort(403)
     return decorated_function
+
+
+# Used for disabling routes
+def disabled(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        abort(404)
+    return decorated_function

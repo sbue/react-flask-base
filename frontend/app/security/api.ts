@@ -60,6 +60,14 @@ export default class Auth {
   }
 
   /**
+   * @param {string} token The reset token from the URL
+   * @param {string} password
+   */
+  public static joinInviteSetPassword({ token, password }) {
+    return post(authUrl(`/sign-up/join-from-invite/${token}`, {}), { password });
+  }
+
+  /**
    * @param {string} email The username or email to authenticate
    * @param {string} password
    */
@@ -105,6 +113,11 @@ export default class Auth {
    * @param {string} payload.password
    */
   public static signUp(payload) {
-    return post(authUrl('/sign-up', {}), payload);
+    return post(authUrl('/sign-up', {}), {
+      email: payload.email,
+      first_name: payload.firstName,
+      last_name: payload.lastName,
+      password: payload.password,
+    });
   }
 }

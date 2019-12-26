@@ -4,7 +4,7 @@ import {CSRF_ACCESS_TOKEN_KEY, CSRF_REFRESH_TOKEN_KEY} from 'utils/constants';
 
 import { ContainerState, ContainerActions } from './types';
 import { checkAuth, changeEmail, changeUserInfo, confirmEmail, deleteAccount,
-  login, logout, resetPassword, signUp} from 'security/actions';
+  login, logout, resetPassword, signUp, joinInviteSetPassword} from 'security/actions';
 
 const StoreKey = `${SITE_NAME}/securityState`;
 
@@ -35,6 +35,7 @@ export default function(state: ContainerState = initialState,
     case checkAuth.SUCCESS:
     case changeUserInfo.SUCCESS:
     case resetPassword.SUCCESS:
+    case joinInviteSetPassword.SUCCESS:
     case login.SUCCESS:
     case signUp.SUCCESS:
       newState = {

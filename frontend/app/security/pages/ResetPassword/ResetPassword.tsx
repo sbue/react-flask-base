@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
 
@@ -18,7 +18,7 @@ export default function ResetPassword(props) {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
-  const passwordInput: any = useRef(null);
+  const [password, setPassword] = useState("");
 
   // Not gonna declare event types here. No need. any is fine
   const handleSubmit = (evt?: any) => {
@@ -26,7 +26,7 @@ export default function ResetPassword(props) {
       evt.preventDefault();
     }
     const payload = {
-      password: passwordInput.current.state.value,
+      password,
       token: props.match.params.token,
     };
     dispatch(resetPassword.request(payload));
@@ -46,7 +46,8 @@ export default function ResetPassword(props) {
         <Form onSubmit={handleSubmit}>
           <Form.Item>
             <Input
-              ref={passwordInput}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
               type="password"
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="Password"

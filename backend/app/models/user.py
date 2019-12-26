@@ -4,10 +4,10 @@ import logging
 from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from itsdangerous import BadSignature, SignatureExpired
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .. import db
+from app.utils import deserialize_data
 
 
 class Role(Enum):
@@ -71,17 +71,14 @@ class User(UserMixin, db.Model):
 
     def verify_email(self, token):
         """Verify that the provided token is for this user's id."""
-        s = Serializer(current_app.config['SECRET_KEY'])
-        try:
-            data = s.loads(token)
-        except (BadSignature, SignatureExpired):
+        data = deserialize_data(token)
+        if not data:
             logging.warning(f"Error verifying email for user "
                             f"id {self.id}: BadSignature or SignatureExpired")
             return False
         if data.get('id') != self.id:
             logging.warning(f"Error verifying email for user "
                             f"id {self.id}: {data}")
-            return False
         self.verified_email = True
         db.session.add(self)
         db.session.commit()
@@ -93,10 +90,8 @@ class User(UserMixin, db.Model):
     @staticmethod
     def reset_password(token, new_password):
         """Verify the new password for this user."""
-        s = Serializer(current_app.config["SECRET_KEY"])
-        try:
-            data = s.loads(token)
-        except (BadSignature, SignatureExpired):
+        data = deserialize_data(token)
+        if data is None:
             logging.warning(f"Error reseting password: BadSignature or "
                             f"SignatureExpired")
             return None

@@ -1,5 +1,4 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import _ from 'lodash';
 
 import { fetchUsers } from 'admin/actions';
 import AdminApi from 'admin/api';

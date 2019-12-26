@@ -4,8 +4,8 @@ import { useStore } from 'react-redux';
 
 import { getInjectors } from './reducerInjectors';
 import { InjectReducerParams, InjectedStore } from 'types';
-import securityReducer from "../security/reducer";
-import adminReducer from "../admin/reducer";
+import securityReducer from "security/reducer";
+import adminReducer from "admin/reducer";
 
 /**
  * Dynamically injects a reducer

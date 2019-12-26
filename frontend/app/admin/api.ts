@@ -39,4 +39,22 @@ export default class Admin {
       post(adminUrl(`/user/${userID}/update`, {}), filteredData)
     );
   }
+
+  /**
+   * @param {Object} payload The user details
+   * @param {string} [payload.firstName]
+   * @param {string} [payload.lastName]
+   * @param {string} [payload.email]
+   * @param {string} [payload.role]
+   */
+  public static inviteUser(payload) {
+    return privateRequest(() =>
+      post(adminUrl(`/invite-user`, {}), {
+        first_name: payload.firstName,
+        last_name: payload.lastName,
+        email: payload.email,
+        role: payload.role,
+      })
+    );
+  }
 }

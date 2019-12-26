@@ -1,12 +1,12 @@
 from operator import itemgetter
-
+import logging
 from flask import Blueprint, jsonify, request, Response, abort, current_app
 import flask_jwt_extended as jwt
 from marshmallow import Schema, fields
 
 from app import db
 from app.decorators import login_required
-from app.utils import validate_request
+from app.utils import validate_request, deserialize_data
 from app.models.user import User
 from app.auth.fields import name_field, email_field, password_field, name_validate
 from app.auth.utils import authenticate, get_current_user, authenticate_payload
@@ -101,7 +101,7 @@ def resend_confirm_email(current_user):
         return Response(str(e), 400)
 
 
-@auth.route('/verify-email/<token>', methods=["POST"])
+@auth.route('/verify-email/<token>', methods=['POST'])
 @login_required
 def verify_email(current_user, token):
     """Verify new user's account with provided token."""
@@ -225,3 +225,28 @@ def delete_user(current_user):
         resp = jsonify({})
         jwt.unset_jwt_cookies(resp)
         return resp, 200
+
+
+@auth.route('/sign-up/join-from-invite/<token>', methods=['POST'])
+def join_from_invite(token):
+    """Reset an existing user's password."""
+    class JoinFromInviteSchema(Schema):
+        password = password_field
+    try:
+        request_data = validate_request(request, JoinFromInviteSchema)
+        token_data = deserialize_data(token)
+        if token_data:
+            user_id = token_data.get('id')
+            user = User.query.filter_by(id=user_id).first()
+            if not user:
+                logging.warning(f"User with id {user_id} does not exist.")
+            else:
+                user.verified_email = True
+                user.password = request_data['password']
+                db.session.add(user)
+                db.session.commit()
+                resp = authenticate(user)
+                return resp, 200
+        raise ValueError("The join from invite link is invalid or has expired.", 400)
+    except ValueError as e:
+        return Response(str(e), 400)

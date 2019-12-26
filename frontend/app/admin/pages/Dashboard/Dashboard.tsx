@@ -37,7 +37,7 @@ export default function Dashboard() {
           </A>
         </Col>
         <Col xs={24} sm={22} md={12} lg={12} xl={12} xxl={12}>
-          <A route={PATHS.Home}>
+          <A route={PATHS.InviteUser}>
             <Card style={{ margin: '10px' }}>
               <Meta
                 avatar={<Icon type="user-add" style={{ fontSize: '32px', color: '#08c' }} />}

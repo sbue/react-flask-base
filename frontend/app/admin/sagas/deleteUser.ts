@@ -14,7 +14,7 @@ function* sagaWorker(action) {
     yield flashSuccess(`Successfully deleted user ${action.payload.name}.`);
     yield call(goTo(PATHS.ManageUsers));
   } catch (error) {
-    yield put(deleteUser.failure(error.message));
+    yield put(deleteUser.failure());
     yield flashError(error.message);
   } finally {
     yield put(deleteUser.fulfill());

@@ -56,7 +56,7 @@ export default function ChangePassword() {
             />
           </Form.Item>
           <Form.Item>
-            {/* forms should have (optionally hidden) username fields
+            {/* TODO: forms should have (optionally hidden) username fields
                 for accessibility: (More info: https://goo.gl/9p2vKq */}
             {/*<input hidden type="email" value={email} />*/}
             <Input.Password

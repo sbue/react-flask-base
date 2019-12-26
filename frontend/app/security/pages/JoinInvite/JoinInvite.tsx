@@ -2,26 +2,22 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
 
-import {PATHS} from 'config';
-
+import {selectIsLoading} from 'reducers';
 import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
-import {selectIsLoading} from 'reducers';
 import PageContent from 'components/PageContent';
-import A from 'components/A';
 
-import {login} from 'security/actions';
-import saga from 'security/sagas/login';
+import {joinInviteSetPassword} from 'security/actions';
+import saga from 'security/sagas/joinInviteSetPassword';
 
 
-export default function Login() {
+export default function JoinFromInvite(props) {
   useInjectSecurityReducer();
-  useInjectSaga({ key: 'login', saga: saga });
+  useInjectSaga({ key: 'joinInvite', saga: saga });
 
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   // Not gonna declare event types here. No need. any is fine
@@ -29,8 +25,11 @@ export default function Login() {
     if (evt !== undefined && evt.preventDefault) {
       evt.preventDefault();
     }
-    const payload = { email, password };
-    dispatch(login.request(payload));
+    const payload = {
+      password,
+      token: props.match.params.token,
+    };
+    dispatch(joinInviteSetPassword.request(payload));
   };
 
   return (
@@ -41,34 +40,23 @@ export default function Login() {
             border: '1px solid rgb(235, 237, 240)',
             marginBottom: '20px',
           }}
-          title="Login"
-          subTitle="Please login to get started"
+          title="Create your password"
+          subTitle="Please enter a password to get started"
         />
         <Form onSubmit={handleSubmit}>
-          <Form.Item validateStatus="success">
-            <Input
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              type="email"
-              prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Email"
-            />
-          </Form.Item>
           <Form.Item>
-            <Input.Password
+            <Input
               value={password}
               onChange={e => setPassword(e.target.value)}
+              type="password"
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="Password"
               autoComplete="on"
             />
           </Form.Item>
           <Button type="primary" size="default" htmlType="submit">
-            Login
+            Set Password
           </Button>
-          <A route={PATHS.ForgotPassword}  style={{marginLeft: '20px'}}>
-            Forgot password?
-          </A>
         </Form>
       </Spin>
     </PageContent>

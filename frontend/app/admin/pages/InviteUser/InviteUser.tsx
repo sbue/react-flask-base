@@ -1,19 +1,23 @@
 import React, {useState} from 'react';
+import _ from 'lodash';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
+import {Button, Form, Icon, Input, PageHeader, Spin, Select} from 'antd';
 
-import {useInjectSecurityReducer} from 'utils/injectReducer';
-import {useInjectSaga} from 'utils/injectSaga';
-import {signUp} from 'security/actions';
-import saga from 'security/sagas/signUp';
 import {selectIsLoading} from 'reducers';
+import {ROLES} from 'config';
 import PageContent from 'components/PageContent';
+import {useInjectAdminReducer} from 'utils/injectReducer';
 
+import {useInjectSaga} from 'utils/injectSaga';
+import {inviteUser} from 'admin/actions';
+import saga from 'admin/sagas/inviteUser';
 
-export default function SignUp() {
-  useInjectSecurityReducer();
-  useInjectSaga({ key: 'signUp', saga: saga });
+const { Option } = Select;
+
+export default function InviteUser() {
+  useInjectAdminReducer();
+  useInjectSaga({ key: 'inviteUser', saga: saga });
 
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
@@ -21,15 +25,15 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
+  const [role, setRole] = useState(ROLES.User);
 
   // Not gonna declare event types here. No need. any is fine
   const handleSubmit = (evt?: any) => {
     if (evt !== undefined && evt.preventDefault) {
       evt.preventDefault();
     }
-    const payload = { email, firstName, lastName, password };
-    dispatch(signUp.request(payload));
+    const payload = { email, firstName, lastName, role };
+    dispatch(inviteUser.request(payload));
   };
 
   return (
@@ -40,8 +44,8 @@ export default function SignUp() {
             border: '1px solid rgb(235, 237, 240)',
             marginBottom: '20px',
           }}
-          title="Sign Up"
-          subTitle="Let's get started"
+          title="Invite User"
+          subTitle="Let's add a user"
         />
         <Form onSubmit={handleSubmit}>
           <Form.Item>
@@ -70,17 +74,14 @@ export default function SignUp() {
             />
           </Form.Item>
           <Form.Item>
-            <Input
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              type="password"
-              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Password"
-              autoComplete="on"
-            />
+            <Select defaultValue={role} style={{ width: 120 }} onChange={newRole => setRole(newRole)}>
+              {_.map(ROLES, (value, key) =>
+                <Option value={value} key={value}>{key}</Option>
+              )}
+            </Select>
           </Form.Item>
           <Button type="primary" size="default" htmlType="submit">
-            Sign Up
+            InviteUser
           </Button>
         </Form>
       </Spin>

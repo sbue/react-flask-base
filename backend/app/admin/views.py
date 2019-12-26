@@ -12,7 +12,7 @@ from app.admin.emails import send_join_from_invite_email
 admin = Blueprint('admin', __name__)
 
 
-@admin.route('/invite-user', methods=['GET', 'POST'])
+@admin.route('/invite-user', methods=['POST'])
 @admin_required
 def invite_user():
     """Invites a new user to create an account and set their own password."""
@@ -20,7 +20,7 @@ def invite_user():
         first_name = name_field
         last_name = name_field
         email = email_field
-        role = fields.Str(required=False, validate=validate.OneOf(Role.get_roles()))
+        role = fields.Str(validate=validate.OneOf(Role.get_roles()))
     try:
         data = validate_request(request, InviteUserSchema)
         if User.query.filter_by(email=data['email']).first() is not None:
@@ -32,14 +32,15 @@ def invite_user():
             email=data['email']
         )
         db.session.add(user)
-        db.session.commit()
-        send_join_from_invite_email(user, current_app.config['FRONTEND_URL'])
+        db.session.flush()
+        db.session.expunge(user)
+        send_join_from_invite_email(user)
         return jsonify({}), 200
     except ValueError as e:
         return Response(str(e), 400)
 
 
-@admin.route('/users')
+@admin.route('/users', methods=['GET'])
 @admin_required
 def fetch_users():
     """View all registered users."""

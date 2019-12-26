@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
 
@@ -18,17 +18,14 @@ export default function ForgotPassword() {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
-  const emailInput: any = useRef(null);
+  const [email, setEmail] = useState("");
 
   // Not gonna declare event types here. No need. any is fine
   const handleSubmit = (evt?: any) => {
     if (evt !== undefined && evt.preventDefault) {
       evt.preventDefault();
     }
-    const payload = {
-      email: emailInput.current.state.value,
-    };
-    dispatch(forgotPassword.request(payload));
+    dispatch(forgotPassword.request({ email }));
   };
 
   return (
@@ -45,7 +42,8 @@ export default function ForgotPassword() {
         <Form onSubmit={handleSubmit}>
           <Form.Item>
             <Input
-              ref={emailInput}
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               type="email"
               prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="Email"
