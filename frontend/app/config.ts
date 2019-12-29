@@ -20,6 +20,10 @@ export const ALLOW_REDUX_IN_PROD = true;
 
 export const HIGHLIGHT_LANGUAGES = ['javascript', 'json', 'python', 'scss', 'yaml'];
 
+export const ROLES = {
+  User: 'User',
+  Admin: 'Admin',
+};
 
 export const PATHS = {
   Home: '/',
@@ -27,6 +31,7 @@ export const PATHS = {
   Logout: '/logout',
   PendingConfirmation: '/sign-up/pending-confirm-email',
   ConfirmEmail: '/sign-up/pending-confirm-email/:token',
+  JoinInvite: '/sign-up/join-from-invite/:token',
   ResetPassword: '/login/reset-password/:token',
   ForgotPassword: '/login/forgot-password',
   SignUp: '/sign-up',
@@ -36,4 +41,5 @@ export const PATHS = {
   AdminDashboard: '/admin/dashboard',
   ManageUsers: '/admin/users',
   ManageUser: '/admin/users/:userID',
+  InviteUser: '/admin/invite-user',
 };

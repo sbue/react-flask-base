@@ -46,10 +46,6 @@ def create_app(config):
     # Setup the Flask-JWT-Extended extension
     JWTManager(app)
 
-    # Setup logging
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-
     # Configure SSL if platform supports it
     if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
         from flask_sslify import SSLify

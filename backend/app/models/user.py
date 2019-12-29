@@ -33,7 +33,7 @@ class User(UserMixin, db.Model):
         super(User, self).__init__(**kwargs)
 
     def full_name(self):
-        return '%s %s' % (self.first_name, self.last_name)
+        return f"{self.first_name} {self.last_name}"
 
     def is_admin(self):
         return self.role == Role.ADMIN

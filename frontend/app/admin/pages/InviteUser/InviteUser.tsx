@@ -5,7 +5,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin, Select} from 'antd';
 
 import {selectIsLoading} from 'reducers';
-import {ROLES} from 'config';
+import {ROLES, PATHS} from 'config';
+import {goTo} from 'utils/history';
 import PageContent from 'components/PageContent';
 import {useInjectAdminReducer} from 'utils/injectReducer';
 
@@ -46,6 +47,7 @@ export default function InviteUser() {
           }}
           title="Invite User"
           subTitle="Let's add a user"
+          onBack={goTo(PATHS.AdminDashboard)}
         />
         <Form onSubmit={handleSubmit}>
           <Form.Item>
@@ -81,7 +83,7 @@ export default function InviteUser() {
             </Select>
           </Form.Item>
           <Button type="primary" size="default" htmlType="submit">
-            InviteUser
+            Invite User
           </Button>
         </Form>
       </Spin>
