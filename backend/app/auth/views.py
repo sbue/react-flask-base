@@ -179,7 +179,7 @@ def change_email(current_user):
             raise ValueError("Email already in use.")
         else:
             current_user.email = data['new_email']
-            # current_user.verified_email = False  TODO: remove commenting out
+            current_user.verified_email = False
             db.session.add(current_user)
             db.session.flush()
             db.session.expunge(current_user)

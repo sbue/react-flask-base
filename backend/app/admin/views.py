@@ -1,8 +1,8 @@
-from flask import (Blueprint, jsonify, abort, Response, request, current_app)
+from flask import (Blueprint, jsonify, abort, Response, request)
 from marshmallow import Schema, fields, validate
 
 from app import db
-from app.utils import validate_request, to_camel_case
+from app.utils import validate_request
 from app.auth.fields import name_validate, email_validate, name_field, email_field
 from app.decorators import admin_required
 from app.models.user import Role, User
@@ -29,7 +29,8 @@ def invite_user():
             role=Role(data['role']),
             first_name=data['first_name'],
             last_name=data['last_name'],
-            email=data['email']
+            email=data['email'],
+            verified_email=True,  # implicit since they get invite via email
         )
         db.session.add(user)
         db.session.flush()
