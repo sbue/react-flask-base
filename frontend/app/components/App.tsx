@@ -12,13 +12,10 @@ import GlobalStyle from 'global-styles';
 import Cookies from 'js-cookie';
 
 export default function App() {
-
-  const checkingAuth = (!!Cookies.get(CSRF_ACCESS_TOKEN_KEY) &&
-                        !!Cookies.get(CSRF_REFRESH_TOKEN_KEY));
   return (
     <div>
       <Helmet titleTemplate={`%s - ${SITE_NAME}`} defaultTitle={SITE_NAME} />
-      {checkingAuth && <CheckAuth />}
+      <CheckAuth />
       <Header/>
       <main>
         <Routes />
