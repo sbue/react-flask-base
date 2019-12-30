@@ -36,10 +36,10 @@ export default function ManageUsers() {
   const isLoading = useSelector(selectIsLoading);
 
   useEffect(() => {
-    if (adminState.users) {
-      dispatch(fetchUsers.trigger());  // doesn't impact loading
-    } else {
+    if (_.isEmpty(adminState.users)) {
       dispatch(fetchUsers.request());
+    } else {
+      dispatch(fetchUsers.trigger());  // doesn't impact loading
     }
   }, []);
 
