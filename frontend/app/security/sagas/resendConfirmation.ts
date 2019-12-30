@@ -1,7 +1,8 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
 import {flashError, flashSuccess} from 'components/Flash';
-import { resendConfirmationEmail } from 'security/actions';
+import defaultHandleError from 'utils/handleError';
+import {resendConfirmationEmail} from 'security/actions';
 import SecurityApi from 'security/api';
 
 function* sagaWorker(action) {
@@ -9,8 +10,7 @@ function* sagaWorker(action) {
     yield call(SecurityApi.resendConfirmationEmail);
     yield flashSuccess(`A new confirmation link has been sent to ${action.payload.email}`);
   } catch (error) {
-    yield put(resendConfirmationEmail.failure());
-    yield flashError(error.message);
+    yield* defaultHandleError(error, resendConfirmationEmail);
   } finally {
     yield put(resendConfirmationEmail.fulfill());
   }

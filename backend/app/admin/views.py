@@ -2,7 +2,7 @@ from flask import (Blueprint, jsonify, abort, Response, request, current_app)
 from marshmallow import Schema, fields, validate
 
 from app import db
-from app.utils import validate_request
+from app.utils import validate_request, to_camel_case
 from app.auth.fields import name_validate, email_validate, name_field, email_field
 from app.decorators import admin_required
 from app.models.user import Role, User
@@ -35,7 +35,7 @@ def invite_user():
         db.session.flush()
         db.session.expunge(user)
         send_join_from_invite_email(user)
-        return jsonify({}), 200
+        return jsonify({'userID': user.id}), 200
     except ValueError as e:
         return Response(str(e), 400)
 

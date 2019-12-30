@@ -1,10 +1,11 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
 
+import {PATHS} from 'config';
+import {goTo} from 'utils/history';
+import defaultHandleError from 'utils/handleError';
+import {flashSuccess} from 'components/Flash';
 import {joinInviteSetPassword} from 'security/actions';
 import SecurityApi from 'security/api';
-import {goTo} from 'utils/history';
-import {flashSuccess, flashError} from 'components/Flash';
-import {PATHS} from 'config';
 
 function* sagaWorker(action) {
   try {
@@ -13,8 +14,7 @@ function* sagaWorker(action) {
     yield flashSuccess('Your password has been set successfully');
     yield call(goTo(PATHS.Home));
   } catch (error) {
-    yield put(joinInviteSetPassword.failure());
-    yield flashError(error.message);
+    yield* defaultHandleError(error, joinInviteSetPassword);
   } finally {
     yield put(joinInviteSetPassword.fulfill());
   }

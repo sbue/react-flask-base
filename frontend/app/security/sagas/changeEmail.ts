@@ -1,8 +1,9 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
-import { changeEmail } from 'security/actions';
+import {flashSuccess} from 'components/Flash';
+import defaultHandleError from 'utils/handleError';
+import {changeEmail} from 'security/actions';
 import SecurityApi from 'security/api';
-import {flashSuccess, flashError} from 'components/Flash';
 
 function* sagaWorker(action) {
   try {
@@ -11,8 +12,7 @@ function* sagaWorker(action) {
     yield put(changeEmail.success({newEmail}));
     yield flashSuccess('Your email has been updated.');
   } catch (error) {
-    yield put(changeEmail.failure());
-    yield flashError(error.message);
+    yield* defaultHandleError(error, changeEmail);
   } finally {
     yield put(changeEmail.fulfill());
   }

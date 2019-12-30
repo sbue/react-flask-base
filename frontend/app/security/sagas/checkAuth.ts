@@ -14,6 +14,7 @@ function* sagaWorker(action) {
     yield put(checkAuth.failure());
     if (action.payload.isAuthenticated) {
       yield flashInfo('You\'ve logged out');
+      yield call(goTo(PATHS.Home));
     }
   }
 }

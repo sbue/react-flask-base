@@ -1,7 +1,7 @@
 import * as Cookies from 'js-cookie';
 import {CSRF_ACCESS_TOKEN_KEY, CSRF_REFRESH_TOKEN_KEY} from 'utils/constants';
 
-import { SERVER_URL } from 'config';
+import {SERVER_URL} from 'config';
 import {authUrl} from 'api';
 
 

@@ -1,16 +1,15 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
-import { fetchUsers } from 'admin/actions';
+import defaultHandleError from 'utils/handleError';
+import {fetchUsers} from 'admin/actions';
 import AdminApi from 'admin/api';
-import {flashError} from 'components/Flash';
 
 function* sagaWorker() {
   try {
     const users = yield call(AdminApi.fetchUsers);
     yield put(fetchUsers.success({users}));
   } catch (error) {
-    yield put(fetchUsers.failure(error.message));
-    yield flashError(error.message);
+    yield* defaultHandleError(error, fetchUsers);
   } finally {
     yield put(fetchUsers.fulfill());
   }
@@ -18,4 +17,5 @@ function* sagaWorker() {
 
 export default function* saga() {
   yield takeLatest(fetchUsers.REQUEST, sagaWorker);
+  yield takeLatest(fetchUsers.TRIGGER, sagaWorker);
 }

@@ -6,9 +6,9 @@ import {goTo} from 'utils/history';
 import {flashInfo} from 'components/Flash';
 import {PATHS} from 'config';
 
-function* sagaWorker() {
+function* sagaWorker(action) {
   yield put(logout.fulfill());
-  yield flashInfo('You\'ve logged out');
+  yield flashInfo(action.payload.message);
   yield call(goTo(PATHS.Home));
   try {
     yield call(SecurityApi.logout);

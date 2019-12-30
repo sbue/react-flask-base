@@ -1,8 +1,9 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
-import { forgotPassword } from 'security/actions';
+import {flashSuccess} from 'components/Flash';
+import defaultHandleError from 'utils/handleError';
+import {forgotPassword} from 'security/actions';
 import SecurityApi from 'security/api';
-import { flashSuccess, flashError } from 'components/Flash';
 
 function* sagaWorker(action) {
   try {
@@ -11,8 +12,7 @@ function* sagaWorker(action) {
     yield put(forgotPassword.success());
     yield flashSuccess(`A password reset link has been sent to ${email}`);
   } catch (error) {
-    yield put(forgotPassword.failure());
-    yield flashError(error.message);
+    yield* defaultHandleError(error, forgotPassword);
   } finally {
     yield put(forgotPassword.fulfill());
   }

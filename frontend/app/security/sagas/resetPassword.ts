@@ -1,10 +1,11 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
-import { resetPassword } from 'security/actions';
-import SecurityApi from 'security/api';
-import {goTo} from 'utils/history';
-import {flashSuccess, flashError} from 'components/Flash';
 import {PATHS} from 'config';
+import {goTo} from 'utils/history';
+import defaultHandleError from 'utils/handleError';
+import {flashSuccess} from 'components/Flash';
+import {resetPassword} from 'security/actions';
+import SecurityApi from 'security/api';
 
 function* sagaWorker(action) {
   try {
@@ -13,8 +14,7 @@ function* sagaWorker(action) {
     yield flashSuccess('Your password has been updated.');
     yield call(goTo(PATHS.Home));
   } catch (error) {
-    yield put(resetPassword.failure());
-    yield flashError(error.message);
+    yield* defaultHandleError(error, resetPassword);
   } finally {
     yield put(resetPassword.fulfill());
   }

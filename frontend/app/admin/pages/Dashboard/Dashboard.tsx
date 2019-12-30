@@ -8,7 +8,7 @@ import A from 'components/A';
 import PageContent from 'components/PageContent';
 import {PATHS} from 'config';
 
-const { Meta } = Card;
+const {Meta} = Card;
 
 export default function Dashboard() {
 

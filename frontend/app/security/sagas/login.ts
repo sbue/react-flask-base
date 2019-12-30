@@ -1,10 +1,11 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
-import { login } from 'security/actions';
-import SecurityApi from 'security/api';
 import {PATHS} from 'config';
 import {goTo} from 'utils/history';
-import { flashSuccess, flashError } from 'components/Flash';
+import defaultHandleError from 'utils/handleError';
+import {flashSuccess} from 'components/Flash';
+import {login} from 'security/actions';
+import SecurityApi from 'security/api';
 
 function* sagaWorker(action) {
   try {
@@ -13,8 +14,7 @@ function* sagaWorker(action) {
     yield flashSuccess('You have been successfully logged in.');
     yield call(goTo(response.verifiedEmail ? PATHS.Home : PATHS.PendingConfirmation));
   } catch (error) {
-    yield put(login.failure());
-    yield flashError(error.message);
+    yield* defaultHandleError(error, login);
   } finally {
     yield put(login.fulfill());
   }

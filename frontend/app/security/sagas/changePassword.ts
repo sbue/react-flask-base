@@ -1,8 +1,9 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
-import { changePassword } from 'security/actions';
+import {flashSuccess} from 'components/Flash';
+import defaultHandleError from 'utils/handleError';
+import {changePassword} from 'security/actions';
 import SecurityApi from 'security/api';
-import {flashSuccess, flashError} from 'components/Flash';
 
 function* sagaWorker(action) {
   try {
@@ -10,8 +11,7 @@ function* sagaWorker(action) {
     yield put(changePassword.success());
     yield flashSuccess('Your password has been updated.');
   } catch (error) {
-    yield put(changePassword.failure());
-    yield flashError(error.message);
+    yield* defaultHandleError(error, changePassword);
   } finally {
     yield put(changePassword.fulfill());
   }

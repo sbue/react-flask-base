@@ -1,10 +1,12 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
-import { confirmEmail } from 'security/actions';
-import SecurityApi from 'security/api';
-import {goTo} from 'utils/history';
-import {flashSuccess, flashError} from 'components/Flash';
 import {PATHS} from 'config';
+import {goTo} from 'utils/history';
+import {isAuthError, automaticLogout} from 'utils/handleError';
+import {flashSuccess, flashError} from 'components/Flash';
+
+import {confirmEmail} from 'security/actions';
+import SecurityApi from 'security/api';
 
 function* sagaWorker(action) {
   try {
@@ -14,8 +16,12 @@ function* sagaWorker(action) {
     yield call(goTo(PATHS.Home));
   } catch (error) {
     yield put(confirmEmail.failure());
-    yield flashError(error.message);
-    yield call(goTo(PATHS.PendingConfirmation));
+    if (isAuthError(error)) {
+      yield* automaticLogout();
+    } else {
+      yield flashError(error.message);
+      yield call(goTo(PATHS.PendingConfirmation));
+    }
   } finally {
     yield put(confirmEmail.fulfill());
   }

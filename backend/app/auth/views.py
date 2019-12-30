@@ -179,11 +179,11 @@ def change_email(current_user):
             raise ValueError("Email already in use.")
         else:
             current_user.email = data['new_email']
-            current_user.verified_email = False
+            # current_user.verified_email = False  TODO: remove commenting out
             db.session.add(current_user)
-            db.session.commit()
-            send_confirm_email(current_user,
-                               current_app.config['FRONTEND_URL'])
+            db.session.flush()
+            db.session.expunge(current_user)
+            send_confirm_email(current_user)
             # TODO: send email to old email notifying email change
             return jsonify({}), 200
     except ValueError as e:

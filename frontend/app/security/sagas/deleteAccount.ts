@@ -1,10 +1,11 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
+import {PATHS} from 'config';
+import {flashSuccess} from 'components/Flash';
+import {goTo} from 'utils/history';
+import defaultHandleError from 'utils/handleError';
 import {deleteAccount} from 'security/actions';
 import SecurityApi from 'security/api';
-import {flashSuccess, flashError} from 'components/Flash';
-import {PATHS} from 'config';
-import {goTo} from 'utils/history';
 
 function* sagaWorker() {
   try {
@@ -13,8 +14,7 @@ function* sagaWorker() {
     yield flashSuccess('Your account has been deleted.');
     yield call(goTo(PATHS.Home));
   } catch (error) {
-    yield put(deleteAccount.failure());
-    yield flashError(error.message);
+    yield* defaultHandleError(error, deleteAccount);
   } finally {
     yield put(deleteAccount.fulfill());
   }
