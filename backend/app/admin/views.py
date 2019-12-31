@@ -94,7 +94,8 @@ def update_user(user_id):
                     user_updated |= True
             if user_updated:
                 if email_updated:
-                    user.verified_email = False
+                    user.verified_email = (False or
+                                           user.is_admin())  # Don't lock out admins
                 db.session.add(user)
                 db.session.commit()
                 return jsonify(get_user_payload(user)), 200

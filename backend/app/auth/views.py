@@ -81,7 +81,7 @@ def sign_up():
             db.session.add(user)
             db.session.flush()
             db.session.expunge(user)
-            send_confirm_email(user, current_app.config['FRONTEND_URL'])
+            send_confirm_email(user)
             resp = authenticate(user)
             return resp, 200
     except ValueError as e:
@@ -95,7 +95,7 @@ def resend_confirm_email(current_user):
     try:
         if current_user.verified_email:
             raise ValueError("User has already verified their email")
-        send_confirm_email(current_user, current_app.config['FRONTEND_URL'])
+        send_confirm_email(current_user)
         return jsonify({}), 200
     except ValueError as e:
         return Response(str(e), 400)
@@ -122,8 +122,7 @@ def reset_password_request():
         if not user:
             raise ValueError("No matching user for email.")
         else:
-            send_reset_password_email(user, current_app.config['FRONTEND_URL'],
-                                      request.args.get('next'))
+            send_reset_password_email(user, request.args.get('next'))
     except ValueError as e:
         return Response(str(e), 400)
 
@@ -179,7 +178,8 @@ def change_email(current_user):
             raise ValueError("Email already in use.")
         else:
             current_user.email = data['new_email']
-            current_user.verified_email = False
+            current_user.verified_email = (False or
+                                           current_user.is_admin())  # Don't lock out admins
             db.session.add(current_user)
             db.session.flush()
             db.session.expunge(current_user)

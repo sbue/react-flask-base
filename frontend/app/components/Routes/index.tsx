@@ -83,7 +83,7 @@ export const AdminRoute = ({component: Component, ...rest}) => {
   const isAdmin = useSelector(selectIsAdmin);
   const unconfirmedEmail = useSelector(selectUnconfirmedEmail);
   useEffect(() => {
-    if (!isAdmin && unconfirmedEmail) {
+    if (isAdmin && unconfirmedEmail) {
       flashWarning("Please confirm your email to access this page");
       history.push(PATHS.PendingConfirmation);
     }
