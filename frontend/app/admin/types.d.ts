@@ -13,7 +13,6 @@ interface UserObject {
 
 interface AdminState {
   users: Record<string, UserObject>,
-  stale: boolean,
 }
 
 /* --- ACTIONS --- */

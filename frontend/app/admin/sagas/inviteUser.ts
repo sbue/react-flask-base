@@ -11,7 +11,8 @@ function* sagaWorker(action) {
   try {
     const {userID} = yield call(AdminApi.inviteUser, action.payload);
     yield put(inviteUser.success({userID}));
-    yield flashSuccess(`Successfully invited ${action.payload.firstName} ${action.payload.lastName}.`);
+    const fullName = `${action.payload.firstName} ${action.payload.lastName}`;
+    yield flashSuccess(`Successfully invited ${fullName}.`);
     yield call(goTo(PATHS.ManageUser, {userID}))
   } catch (error) {
     yield* defaultHandleError(error, inviteUser);

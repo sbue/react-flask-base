@@ -155,6 +155,9 @@ module.exports = require('./webpack.base.babel')({
     }),
   ],
 
+  // Uncomment when debugging
+  // devtool: 'eval-source-map',
+
   performance: {
     assetFilter: assetFilename =>
       !/(\.map$)|(^(main\.|favicon\.))/.test(assetFilename),

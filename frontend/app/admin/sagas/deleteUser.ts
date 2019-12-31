@@ -11,8 +11,9 @@ import AdminApi from 'admin/api';
 
 function* sagaWorker(action) {
   try {
-    const users = yield call(AdminApi.deleteUser, action.payload.userID);
-    yield put(deleteUser.success({users}));
+    const userID = action.payload.userID;
+    yield call(AdminApi.deleteUser, userID);
+    yield put(deleteUser.success({userID}));
     yield flashSuccess(`Successfully deleted user ${action.payload.name}.`);
     yield call(goTo(PATHS.ManageUsers));
   } catch (error) {

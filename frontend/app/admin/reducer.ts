@@ -1,8 +1,8 @@
+import _ from 'lodash';
 import { ContainerState, ContainerActions } from './types';
 import {fetchUsers, deleteUser, updateUser} from 'admin/actions';
 export const initialState = {
   users: {},
-  stale: false,
 };
 
 export default function(state: ContainerState = initialState,
@@ -13,15 +13,14 @@ export default function(state: ContainerState = initialState,
       return {
         ...state,
         users: payload.users,
-        stale: false,
       };
     case deleteUser.SUCCESS:
       return {
         ...state,
-        stale: true,
+        users: _.omit(state.users, payload.userID),
       };
     case updateUser.SUCCESS:
-      const {userID, user} = action.payload;
+      const {userID, user} = payload;
       return {
         ...state,
         users: {...state.users, ...{[userID]: user}},

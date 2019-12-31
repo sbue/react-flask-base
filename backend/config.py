@@ -39,6 +39,7 @@ class Config:
 
     JWT_TOKEN_LOCATION = ['cookies']
     JWT_COOKIE_SAMESITE = 'Lax'
+    JWT_COOKIE_DOMAIN = os.getenv('JWT_COOKIE_DOMAIN', 'localhost')
 
     @staticmethod
     def init_app(app):

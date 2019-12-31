@@ -76,8 +76,6 @@ export default function(state: ContainerState = initialState,
     case signUp.FAILURE:
     case deleteAccount.SUCCESS:
       localStorage.removeItem(StoreKey);
-      Cookies.remove(CSRF_ACCESS_TOKEN_KEY);
-      Cookies.remove(CSRF_REFRESH_TOKEN_KEY);
       return emptyState;
 
     default:
