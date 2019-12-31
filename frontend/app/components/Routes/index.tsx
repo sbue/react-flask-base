@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import { Route } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectIsAuthenticated, selectIsAdmin,
-  selectUnconfirmedEmail } from 'security/reducer';
+import React, {useEffect} from 'react';
+import {Route} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {selectIsAuthenticated, selectIsAdmin,
+  selectUnconfirmedEmail} from 'security/reducer';
 import history from 'utils/history';
 import {PATHS} from 'config';
-import { flashSuccess, flashWarning } from 'components/Flash';
+import {flashWarning} from 'components/Flash';
 
 
 export const PublicRoute = ({component: Component, ...rest}) => {
