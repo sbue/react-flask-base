@@ -30,7 +30,6 @@ def invite_user():
             first_name=data['first_name'],
             last_name=data['last_name'],
             email=data['email'],
-            verified_email=True,  # implicit since they get invite via email
         )
         db.session.add(user)
         db.session.flush()
@@ -94,8 +93,7 @@ def update_user(user_id):
                     user_updated |= True
             if user_updated:
                 if email_updated:
-                    user.verified_email = (False or
-                                           user.is_admin())  # Don't lock out admins
+                    user.verified_email = not user.is_admin()  # Don't lock out admins
                 db.session.add(user)
                 db.session.commit()
                 return jsonify(get_user_payload(user)), 200

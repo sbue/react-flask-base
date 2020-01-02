@@ -178,8 +178,7 @@ def change_email(current_user):
             raise ValueError("Email already in use.")
         else:
             current_user.email = data['new_email']
-            current_user.verified_email = (False or
-                                           current_user.is_admin())  # Don't lock out admins
+            current_user.verified_email = not current_user.is_admin()  # Don't lock out admins
             db.session.add(current_user)
             db.session.flush()
             db.session.expunge(current_user)
