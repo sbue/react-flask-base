@@ -10,7 +10,7 @@ from app.utils import validate_request, deserialize_data
 from app.models.user import User
 from app.auth.fields import name_field, email_field, password_field, name_validate
 from app.auth.utils import authenticate, get_current_user, authenticate_payload
-from app.auth.emails import send_confirm_email, send_reset_password_email
+from app.auth.emails import send_confirm_email, send_reset_password_email, send_change_email
 
 auth = Blueprint('auth', __name__)
 
@@ -182,7 +182,7 @@ def change_email(current_user):
             db.session.add(current_user)
             db.session.flush()
             db.session.expunge(current_user)
-            send_confirm_email(current_user)
+            send_change_email(current_user)
             # TODO: send email to old email notifying email change
             return jsonify({}), 200
     except ValueError as e:
