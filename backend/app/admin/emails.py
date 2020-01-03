@@ -1,7 +1,7 @@
 from app.utils import get_config
 from app.email import send_email
 
-template_prefix = 'emails/auth'
+template_prefix = 'emails/admin'
 
 
 def send_join_from_invite_email(user):
