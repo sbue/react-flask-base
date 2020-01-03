@@ -95,6 +95,7 @@ def resend_confirm_email(current_user):
     try:
         if current_user.verified_email:
             raise ValueError("User has already verified their email")
+        db.session.expunge(current_user)
         send_confirm_email(current_user)
         return jsonify({}), 200
     except ValueError as e:
@@ -105,6 +106,7 @@ def resend_confirm_email(current_user):
 @login_required
 def verify_email(current_user, token):
     """Verify new user's account with provided token."""
+    db.session.expunge(current_user)
     if current_user.verified_email or current_user.verify_email(token.encode()):
         return jsonify({}), 200
     else:

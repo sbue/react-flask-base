@@ -7,7 +7,7 @@ import _ from 'lodash';
 import {useInjectAdminReducer} from 'utils/injectReducer';
 import {useInjectMultipleSagas} from 'utils/injectSaga';
 import PageContent from 'components/PageContent';
-import {selectIsLoading} from 'reducers';
+import {selectIsLoading} from 'site/reducer';
 import {PATHS} from 'config';
 import {goTo} from 'utils/history';
 

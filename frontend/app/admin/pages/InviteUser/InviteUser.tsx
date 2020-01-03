@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Form, Icon, Input, PageHeader, Spin, Select} from 'antd';
 
-import {selectIsLoading} from 'reducers';
+import {selectIsLoading} from 'site/reducer';
 import {ROLES, PATHS} from 'config';
 import {goTo} from 'utils/history';
 import PageContent from 'components/PageContent';

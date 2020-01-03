@@ -4,7 +4,7 @@ import {Button, PageHeader, Spin} from 'antd';
 
 import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
-import {selectIsLoading} from 'reducers';
+import {selectIsLoading} from 'site/reducer';
 import PageContent from 'components/PageContent';
 
 import {selectEmail} from 'security/reducer';

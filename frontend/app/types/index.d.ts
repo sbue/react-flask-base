@@ -1,16 +1,10 @@
 import { Reducer, Store } from 'redux';
 import { RouterState } from 'connected-react-router';
 import { ContainerState as LanguageProviderState } from 'components/LanguageProvider/types';
-import { ContainerState as HomeState } from 'site/pages/Home/types';
+import { ContainerState as SiteState } from 'site/types';
 import { ContainerState as SecurityState } from 'security/types';
 import { ContainerState as AdminState } from 'admin/types';
 
-// interface AppState {
-//   readonly loading: boolean;
-//   readonly error?: object | boolean;
-//   readonly currentUser: string;
-//   // readonly userData: UserData;
-// }
 
 export interface InjectedStore extends Store {
   injectedReducers: any;
@@ -41,9 +35,8 @@ export interface InjectMultipleSagasParams {
 // Your root reducer type, which is your redux state types also
 export interface ApplicationRootState {
   readonly router: RouterState;
-  // readonly global: AppState;
   readonly language: LanguageProviderState;
-  readonly home: HomeState;
+  readonly site: SiteState;
   readonly security: SecurityState;
   readonly admin: AdminState;
   // for testing purposes

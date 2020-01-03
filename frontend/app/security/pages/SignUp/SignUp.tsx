@@ -7,7 +7,7 @@ import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
 import {signUp} from 'security/actions';
 import saga from 'security/sagas/signUp';
-import {selectIsLoading} from 'reducers';
+import {selectIsLoading} from 'site/reducer';
 import PageContent from 'components/PageContent';
 
 

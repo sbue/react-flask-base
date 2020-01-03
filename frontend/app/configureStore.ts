@@ -2,15 +2,16 @@
  * Create the store with dynamic reducers
  */
 
-import { applyMiddleware, createStore } from 'redux';
-import { routerMiddleware } from 'connected-react-router';
+import {applyMiddleware, createStore} from 'redux';
+import {routerMiddleware} from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
+import {History} from 'history';
+import {ApplicationRootState} from 'types';
+import {composeWithDevTools} from 'redux-devtools-extension';
+
 import createReducer from './reducers';
-import { InjectedStore } from './types';
-import { History } from 'history';
-import { ApplicationRootState } from 'types';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import { loadingBarMiddleware } from 'react-redux-loading-bar';
+import {InjectedStore} from './types';
+import {isLoadingMiddleware} from 'site/reducer';
 
 import {ALLOW_REDUX_IN_PROD} from 'config';
 
@@ -21,7 +22,9 @@ export default function configureStore(initialState: ApplicationRootState | {} =
   const middlewares = [
     sagaMiddleware,
     routerMiddleware(history),
-    loadingBarMiddleware({ promiseTypeSuffixes: ['REQUEST', 'SUCCESS', 'FAILURE', 'FULFILL'] }),
+    // TODO: replace with https://github.com/pburtchaell/redux-promise-middleware/blob/master/docs/guides/custom-suffixes.md
+    // loadingBarMiddleware only supports two fulfill suffixes
+    isLoadingMiddleware(),
   ];
 
   let enhancer = applyMiddleware(...middlewares);

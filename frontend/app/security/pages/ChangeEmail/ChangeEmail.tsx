@@ -4,7 +4,7 @@ import {Button, Form, Icon, Input, PageHeader, Spin} from 'antd';
 
 import {goTo} from 'utils/history';
 import {PATHS} from 'config';
-import {selectIsLoading} from 'reducers';
+import {selectIsLoading} from 'site/reducer';
 import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
 import PageContent from 'components/PageContent';

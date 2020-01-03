@@ -8,7 +8,7 @@ import {PATHS} from 'config';
 import PageContent from 'components/PageContent';
 import {useInjectAdminReducer} from 'utils/injectReducer';
 import {useInjectSaga} from 'utils/injectSaga';
-import {selectIsLoading} from 'reducers';
+import {selectIsLoading} from 'site/reducer';
 
 import {selectAdmin} from 'admin/reducer';
 import saga from 'admin/sagas/fetchUsers';

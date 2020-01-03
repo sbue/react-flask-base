@@ -8,6 +8,7 @@ import SecurityApi from 'security/api';
 function* sagaWorker(action) {
   try {
     yield call(SecurityApi.resendConfirmationEmail);
+    yield put(resendConfirmationEmail.success());
     yield flashSuccess(`A new confirmation link has been sent to ${action.payload.email}`);
   } catch (error) {
     yield* defaultHandleError(error, resendConfirmationEmail);

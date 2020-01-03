@@ -6,7 +6,7 @@ import A from 'components/A';
 import {PATHS} from 'config';
 import {useInjectSecurityReducer} from 'utils/injectReducer';
 import {useInjectMultipleSagas} from 'utils/injectSaga';
-import {selectIsLoading} from 'reducers';
+import {selectIsLoading} from 'site/reducer';
 import PageContent from 'components/PageContent/index';
 
 import {changeUserInfo, deleteAccount} from 'security/actions'

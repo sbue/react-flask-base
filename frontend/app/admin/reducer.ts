@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { ContainerState, ContainerActions } from './types';
 import {fetchUsers, deleteUser, updateUser} from 'admin/actions';
+
 export const initialState = {
   users: {},
 };
