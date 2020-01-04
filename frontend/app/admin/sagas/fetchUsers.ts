@@ -12,7 +12,7 @@ function* sagaWorker(action) {
   try {
     const users = yield call(AdminApi.fetchUsers);
     yield put(fetchUsers.success({users}));
-    const userID = action.payload ? action.payload.userID : null;
+    const userID = action?.payload?.userID;
     if (userID && !_.has(users, userID)) {
       yield flashError("User does not exist.");
       yield call(goTo(PATHS.Home))

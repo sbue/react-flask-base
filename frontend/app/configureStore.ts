@@ -17,7 +17,7 @@ import {ALLOW_REDUX_IN_PROD} from 'config';
 
 export default function configureStore(initialState: ApplicationRootState | {} = {}, history: History) {
   const reduxSagaMonitorOptions = {};
-  const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions);
+  const sagaMiddleware: any = createSagaMiddleware(reduxSagaMonitorOptions);
 
   const middlewares = [
     sagaMiddleware,

@@ -42,3 +42,4 @@ export interface ApplicationRootState {
   // for testing purposes
   readonly test: any;
 }
+
