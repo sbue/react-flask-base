@@ -37,7 +37,7 @@ export default function ManageUser(props) {
 
   useEffect(() => {
     if (!user || adminState.stale) {
-      dispatch(fetchUsers.request());
+      dispatch(fetchUsers.request({ userID }));
     }
   }, []);
 

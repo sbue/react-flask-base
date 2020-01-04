@@ -55,7 +55,9 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user is None:
             raise ValueError("No matching user for email.")
-        elif user.password_hash is None or not user.verify_password(password):
+        elif user.password_hash is None:
+            raise ValueError("Password not set. Please check for email invite.")
+        elif not user.verify_password(password):
             raise ValueError("Incorrect password.")
         else:
             resp = authenticate(user)
@@ -120,7 +122,7 @@ def reset_password_request():
         email = email_field
     try:
         data = validate_request(request, ResetPasswordSchema)
-        user = User.query.filter_by(emails=data['email']).first()
+        user = User.query.filter_by(email=data['email']).first()
         if not user:
             raise ValueError("No matching user for email.")
         else:
