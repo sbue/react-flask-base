@@ -148,6 +148,31 @@ def reset_password(token):
         return Response(str(e), 400)
 
 
+@auth.route('/sign-up/join-from-invite/<token>', methods=['POST'])
+def join_from_invite(token):
+    """Reset an existing user's password."""
+    class JoinFromInviteSchema(Schema):
+        password = password_field
+    try:
+        request_data = validate_request(request, JoinFromInviteSchema)
+        token_data = deserialize_data(token)
+        if token_data:
+            user_id = token_data.get('id')
+            user = User.query.filter_by(id=user_id).first()
+            if not user:
+                logging.warning(f"User with id {user_id} does not exist.")
+            else:
+                user.verified_email = True
+                user.password = request_data['password']
+                db.session.add(user)
+                db.session.commit()
+                resp = authenticate(user)
+                return resp, 200
+        raise ValueError("The join from invite link is invalid or has expired.", 400)
+    except ValueError as e:
+        return Response(str(e), 400)
+
+
 @auth.route('/settings/change-password', methods=['POST'])
 @login_required
 def change_password(current_user):
@@ -193,6 +218,21 @@ def change_email(current_user):
         return Response(str(e), 400)
 
 
+@auth.route('/settings/delete-account', methods=['DELETE'])
+@login_required
+def delete_user(current_user):
+    """Delete a user's account."""
+    if current_user.is_admin():
+        return Response("You cannot delete your own account. Please "
+                        "ask another administrator to do this.", 400)
+    else:
+        db.session.delete(current_user)
+        db.session.commit()
+        resp = jsonify({})
+        jwt.unset_jwt_cookies(resp)
+        return resp, 200
+
+
 @auth.route('/settings/change-user-info', methods=['POST'])
 @login_required
 def change_user_info(current_user):
@@ -211,45 +251,5 @@ def change_user_info(current_user):
         db.session.add(current_user)
         db.session.commit()
         return authenticate_payload(current_user), 200
-    except ValueError as e:
-        return Response(str(e), 400)
-
-
-@auth.route('/settings/delete-account', methods=['DELETE'])
-@login_required
-def delete_user(current_user):
-    """Delete a user's account."""
-    if current_user.is_admin():
-        return Response("You cannot delete your own account. Please "
-                        "ask another administrator to do this.", 400)
-    else:
-        db.session.delete(current_user)
-        db.session.commit()
-        resp = jsonify({})
-        jwt.unset_jwt_cookies(resp)
-        return resp, 200
-
-
-@auth.route('/sign-up/join-from-invite/<token>', methods=['POST'])
-def join_from_invite(token):
-    """Reset an existing user's password."""
-    class JoinFromInviteSchema(Schema):
-        password = password_field
-    try:
-        request_data = validate_request(request, JoinFromInviteSchema)
-        token_data = deserialize_data(token)
-        if token_data:
-            user_id = token_data.get('id')
-            user = User.query.filter_by(id=user_id).first()
-            if not user:
-                logging.warning(f"User with id {user_id} does not exist.")
-            else:
-                user.verified_email = True
-                user.password = request_data['password']
-                db.session.add(user)
-                db.session.commit()
-                resp = authenticate(user)
-                return resp, 200
-        raise ValueError("The join from invite link is invalid or has expired.", 400)
     except ValueError as e:
         return Response(str(e), 400)
