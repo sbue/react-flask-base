@@ -18,6 +18,7 @@ WIP: Need to add documentation and polish
       ADMIN_EMAIL=flask-base-admin@example.com
       ADMIN_PASSWORD=password
       FRONTEND_URL=http://localhost:3000
+      SEND_EMAIL_IN_DEV=False
       # Sendgrid configs. Only configure if you need to send mail.
       MAIL_DEFAULT_SENDER=no-reply@<YOUR DOMAIN> 
       SENDGRID_API_KEY=<YOUR_SENDGRID_KEY>
