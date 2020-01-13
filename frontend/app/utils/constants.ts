@@ -12,3 +12,5 @@ export const DEBUG = 'DEBUG';
 
 export const CSRF_ACCESS_TOKEN_KEY = 'csrf_access_token';
 export const CSRF_REFRESH_TOKEN_KEY = 'csrf_refresh_token';
+
+export const FORM_DATA_FILE_KEY = 'file';

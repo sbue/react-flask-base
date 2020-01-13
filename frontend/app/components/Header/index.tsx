@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 import {Col, Row, Tag, Menu, Icon} from 'antd';
 
 import {SITE_NAME, PATHS} from 'config';
-import {selectIsAuthenticated, selectIsAdmin} from 'security/reducer';
+import {selectIsAuthenticated, selectIsAdmin} from 'account/reducer';
 import A from 'components/A';
 
 import icon from 'assets/images/icon-512x512.png';

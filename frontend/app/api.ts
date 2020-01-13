@@ -5,8 +5,8 @@ export function apiUrl(uri, queryParams) {
   return _url(`/${uri}`, queryParams);
 }
 
-export function authUrl(uri, queryParams) {
-  return apiUrl(`auth${uri}`, queryParams);
+export function accountUrl(uri, queryParams) {
+  return apiUrl(`account${uri}`, queryParams);
 }
 
 export function adminUrl(uri, queryParams) {

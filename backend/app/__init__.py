@@ -1,5 +1,5 @@
 import os
-import logging
+import s3fs
 
 from flask import Flask
 from flask_compress import Compress
@@ -15,6 +15,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 mail = Mail()
 db = SQLAlchemy()
 compress = Compress()
+
+# Setup S3 client
+s3_fs = s3fs.S3FileSystem()
 
 
 def create_app(config):
@@ -52,8 +55,8 @@ def create_app(config):
         SSLify(app)
 
     # Create app blueprints
-    from .auth.views import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint, url_prefix="/auth")
+    from .account.views import account as account_blueprint
+    app.register_blueprint(account_blueprint, url_prefix="/account")
 
     from .admin.views import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix="/admin")

@@ -6,7 +6,7 @@ import {CSRF_ACCESS_TOKEN_KEY, CSRF_REFRESH_TOKEN_KEY} from 'utils/constants';
 import Routes from 'routes';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import {CheckAuth} from 'security/pages';
+import {CheckAuth} from 'account/pages';
 
 import GlobalStyle from 'global-styles';
 import Cookies from 'js-cookie';

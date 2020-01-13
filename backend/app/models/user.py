@@ -6,8 +6,8 @@ from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .. import db
-from app.utils import deserialize_data
+from .. import db, s3_fs
+from app.utils import deserialize_data, get_config
 
 
 class Role(Enum):
@@ -28,6 +28,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     verified_email = db.Column(db.Boolean, default=False)
+    profile_photo_s3_key = db.Column(db.String(128))
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -87,6 +88,21 @@ class User(UserMixin, db.Model):
     def change_email(self, token):
         pass  # TODO:
 
+    def upload_profile_photo(self, file):
+        bucket = get_config()['S3_BUCKET']
+        file_name = file.filename
+        db.session.add(self)
+        s3_dir = f'{bucket}/profile_photos/{self.id}'
+        s3_key = f'{s3_dir}/{file_name}'
+        if s3_fs.exists(s3_dir):  # Remove existing folder
+            s3_fs.rm(s3_dir)
+        with s3_fs.open(s3_key, 'wb') as s3_fp:
+            s3_fp.write(file.read())
+            self.profile_photo_s3_key = s3_key
+        db.session.add(self)
+        db.session.commit()
+        return s3_key
+
     @staticmethod
     def reset_password(token, new_password):
         """Verify the new password for this user."""
@@ -122,7 +138,7 @@ class User(UserMixin, db.Model):
                 email=fake.email(),
                 password='password',
                 verified_email=True,
-                role=choice([r for r in Role if r != Role.ANONYMOUS]),
+                role=choice([r for r in Role]),
                 **kwargs)
             db.session.add(u)
             try:

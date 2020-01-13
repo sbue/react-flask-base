@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {PageHeader, Spin, Popconfirm, Button, Icon,
-  Descriptions, Typography, Checkbox} from 'antd';
+  Descriptions, Typography, Checkbox, Avatar, Badge, Modal} from 'antd';
 import _ from 'lodash';
 
 import {useInjectAdminReducer} from 'utils/injectReducer';
@@ -49,6 +49,8 @@ export default function ManageUser(props) {
   const [role, setRole] = useState(null);
   const [verifiedEmail, setVerifiedEmail] = useState<null | boolean>(null);
   const [changes, setChanges] = useState(false);
+  const [profilePhotoVisible, setProfilePhotoVisible] = useState(false);
+
   const revertChanges = () => {
     setFirstName(user.firstName);
     setLastName(user.lastName);
@@ -96,6 +98,28 @@ export default function ManageUser(props) {
           onBack={goTo(PATHS.ManageUsers)}
         />
         <Descriptions title="" column={1} bordered style={{margin: '25px 5px'}}>
+          <Descriptions.Item label="Profile Photo">
+            {(user?.profilePhotoUrl) ?
+              <a onClick={() => setProfilePhotoVisible(true)}>
+                <Badge
+                  count={<Icon type="eye" style={{borderRadius: "12px", backgroundColor: "white"}} />}
+                  title={"Preview photo"}
+                  color={"red"}
+                >
+                  <Avatar size={86} shape="square" src={user.profilePhotoUrl} />
+                </Badge>
+              </a> :
+              <Avatar size={86} icon="user" shape="square" />
+            }
+            <Modal
+              title="Profile Photo"
+              footer={null}
+              visible={user?.profilePhotoUrl && profilePhotoVisible}
+              onCancel={() => setProfilePhotoVisible(false)}
+            >
+              {user?.profilePhotoUrl && <img src={user?.profilePhotoUrl} style={{width: "100%"}} />}
+            </Modal>
+          </Descriptions.Item>
           <Descriptions.Item label="First Name">
             {user && <Text editable={editable(user.firstName, setFirstName)}>
               {(editing && firstName != null) ? firstName : user.firstName}

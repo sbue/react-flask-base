@@ -23,12 +23,9 @@ export default function ManageUsers() {
   const adminState = useSelector(selectAdmin);
   const tableData = _.toArray(
     _.mapValues(adminState.users, (value, key) => {
-      const {email, role, verifiedEmail} = value;
       return {
         key,
-        email,
-        role,
-        verifiedEmail,
+        ...value,
         name: `${value.firstName} ${value.lastName}`,
       };
     }),
@@ -66,6 +63,7 @@ export default function ManageUsers() {
             loading={isLoading}
             size="middle"
             scroll={{ x: 700 }}
+            pagination={{ pageSize: 8 }}
           />
         </Col>
       </Row>

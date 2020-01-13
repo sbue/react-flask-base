@@ -2,10 +2,11 @@ import * as React from 'react';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import {useStore} from 'react-redux';
 
-import {getInjectors} from './reducerInjectors';
 import {InjectReducerParams, InjectedStore} from 'types';
-import securityReducer from "security/reducer";
-import adminReducer from "admin/reducer";
+import accountReducer from 'account/reducer';
+import adminReducer from 'admin/reducer';
+import {getInjectors} from './reducerInjectors';
+
 
 /**
  * Dynamically injects a reducer
@@ -54,5 +55,5 @@ export const useInjectReducer = ({ key, reducer }: InjectReducerParams) => {
 
 export const useInjectAdminReducer = () =>
   useInjectReducer({ key: 'admin', reducer: adminReducer });
-export const useInjectSecurityReducer = () =>
-  useInjectReducer({ key: 'security', reducer: securityReducer });
+export const useInjectAccountReducer = () =>
+  useInjectReducer({ key: 'account', reducer: accountReducer });

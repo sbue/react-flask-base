@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {Route} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {selectIsAuthenticated, selectIsAdmin,
-  selectUnconfirmedEmail} from 'security/reducer';
+  selectUnconfirmedEmail} from 'account/reducer';
 import history from 'utils/history';
 import {PATHS} from 'config';
 import {flashWarning} from 'components/Flash';

@@ -1,0 +1,34 @@
+
+table.custom {
+  border-collapse: collapse;
+  width: 100%;
+  display: table;
+  border-spacing: 2px;
+  border-color: gray;
+  box-sizing: border-box;
+  table-layout: auto;
+}
+
+table.custom td, table.custom th {
+  border: 1px solid #e8e8e8;
+  text-align: left;
+  padding: 16px 24px;
+  line-height: 1.5;
+}
+
+table.custom th {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: bold;
+}
+
+.ant-descriptions-title {
+  margin-left: 6px;
+}
+
+.ant-descriptions-title + button {
+  margin-left: 16px;
+}
+
+.ant-descriptions-item-label {
+  font-weight: bold;
+}

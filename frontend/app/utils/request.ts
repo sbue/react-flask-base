@@ -1,8 +1,9 @@
 import * as Cookies from 'js-cookie';
-import {CSRF_ACCESS_TOKEN_KEY, CSRF_REFRESH_TOKEN_KEY} from 'utils/constants';
+import {CSRF_ACCESS_TOKEN_KEY, CSRF_REFRESH_TOKEN_KEY,
+  FORM_DATA_FILE_KEY} from 'utils/constants';
 
 import {SERVER_URL} from 'config';
-import {authUrl} from 'api';
+import {accountUrl} from 'api';
 
 
 // See: https://cdn-media-1.freecodecamp.org/images/1*5vWZxAH-ffLyThTCwTp9ww.png
@@ -13,7 +14,7 @@ export async function privateRequest(f: any) {  // TODO: add better typing
     if (error.response && error.response.status === 401 &&
       Cookies.get(CSRF_REFRESH_TOKEN_KEY)) {
       try {
-        await post(authUrl('/refresh-access-token', {}), {},
+        await post(accountUrl('/refresh-access-token', {}), {},
           {requiresRefresh: true});
         return await f();
       } catch (refreshError) {
@@ -48,23 +49,29 @@ export function get(url, kwargs = {}) {
 export function post(url, data, kwargs = {requiresRefresh: false}) {
   const { requiresRefresh, ...options } = kwargs;
   const requiresAuth = url.startsWith(SERVER_URL);
+  const body = data instanceof FormData ? data : JSON.stringify(data);
+  const isFileUpload = data instanceof FormData &&
+    data.getAll(FORM_DATA_FILE_KEY).length > 0;
   const CSRFHeader = (requiresAuth || requiresRefresh) ? {
     'X-CSRF-Token': (requiresRefresh ?
       Cookies.get(CSRF_REFRESH_TOKEN_KEY) :
       Cookies.get(CSRF_ACCESS_TOKEN_KEY)
     ),
   } : {};
+  const contentTypeHeader = isFileUpload ? {} : {
+    'Content-Type': 'application/json',
+  };
   const defaults = {
     credentials: 'include',
     headers: {
       ...{
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
       },
+      ...contentTypeHeader,
       ...CSRFHeader,
     },
     method: 'POST',
-    body: JSON.stringify(data),
+    body: body,
   };
   return request(url, _mergeOptions(defaults, options));
 }

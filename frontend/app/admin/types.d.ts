@@ -9,6 +9,7 @@ interface UserObject {
   email: string,
   role: string,
   verifiedEmail: boolean,
+  profilePhotoUrl: null | string;
 }
 
 interface AdminState {

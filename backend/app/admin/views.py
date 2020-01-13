@@ -3,7 +3,7 @@ from marshmallow import Schema, fields, validate
 
 from app import db
 from app.utils import validate_request
-from app.auth.fields import name_validate, email_validate, name_field, email_field
+from app.account.fields import name_validate, email_validate, name_field, email_field
 from app.decorators import admin_required
 from app.models.user import Role, User
 from app.admin.utils import get_user_payload

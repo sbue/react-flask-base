@@ -2,7 +2,7 @@ import { Reducer, Store } from 'redux';
 import { RouterState } from 'connected-react-router';
 import { ContainerState as LanguageProviderState } from 'components/LanguageProvider/types';
 import { ContainerState as SiteState } from 'site/types';
-import { ContainerState as SecurityState } from 'security/types';
+import { ContainerState as AccountState } from 'account/types';
 import { ContainerState as AdminState } from 'admin/types';
 
 
@@ -37,7 +37,7 @@ export interface ApplicationRootState {
   readonly router: RouterState;
   readonly language: LanguageProviderState;
   readonly site: SiteState;
-  readonly security: SecurityState;
+  readonly account: AccountState;
   readonly admin: AdminState;
   // for testing purposes
   readonly test: any;

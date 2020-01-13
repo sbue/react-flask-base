@@ -1,9 +1,11 @@
+import os
 from functools import wraps
-from flask import abort
+from flask import abort, request, Response
 from flask_jwt_extended import (get_jwt_identity as get_current_user_id,
                                 jwt_required)
 
 from app.models.user import User
+from app.utils import get_config
 
 
 def login_required(f):
@@ -43,3 +45,24 @@ def disabled(f):
     def decorated_function(*args, **kwargs):
         abort(404)
     return decorated_function
+
+
+def file_upload(content_types=None, max_size=2000000):
+    def decorated_function_wrapper(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            files = [request.files[k] for k in request.files.keys()]
+            if len(files) == 0:
+                abort(Response("No files were included in the request", 400))
+            for file in files:
+                if content_types and file.content_type not in content_types:
+                    abort(Response("File uploaded is wrong content type", 400))
+                else:
+                    file.seek(0, os.SEEK_END)
+                    file_length = file.tell()
+                    if file_length > max_size:
+                        abort(Response("File uploaded is too big", 400))
+                    file.seek(0)
+            return f(*args, files=files, **kwargs)
+        return decorated_function
+    return decorated_function_wrapper

@@ -2,7 +2,7 @@ import React from 'react';
 import {PageHeader, Skeleton} from 'antd';
 
 import {useSelector} from 'react-redux';
-import {selectFirstName} from 'security/reducer';
+import {selectFirstName} from 'account/reducer';
 import PageContent from 'components/PageContent';
 
 export default function HomePage() {

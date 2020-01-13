@@ -6,7 +6,7 @@ import { Home, NotFound } from 'site/pages';
 import { SignUp, Login, Logout, ForgotPassword, ResetPassword,
   PendingConfirmation, ConfirmEmail, Settings, ChangeEmail,
   ChangePassword, JoinInvite,
-} from 'security/pages';
+} from 'account/pages';
 import { AdminDashboard, ManageUsers, ManageUser, InviteUser } from 'admin/pages';
 import { PrivateRoute, PublicRoute, RestrictedPublicRoute,
   AdminRoute, UnconfirmedEmailRoute } from 'components/Routes';

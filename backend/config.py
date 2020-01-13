@@ -41,6 +41,8 @@ class Config:
     JWT_COOKIE_SAMESITE = 'Lax'
     JWT_COOKIE_DOMAIN = os.getenv('JWT_COOKIE_DOMAIN', None)
 
+    S3_BUCKET = os.getenv('S3_BUCKET', None)
+
     @staticmethod
     def init_app(app):
         pass
