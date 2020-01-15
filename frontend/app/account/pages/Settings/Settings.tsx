@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Button, Descriptions, Icon, Modal,
-  PageHeader, Spin, Popconfirm, Typography, Upload} from 'antd';
+import {Button, Icon, Modal, PageHeader, Spin, Popconfirm,
+  Typography, Upload} from 'antd';
 
 import A from 'components/A';
 import {PATHS} from 'config';

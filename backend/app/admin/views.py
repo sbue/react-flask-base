@@ -1,7 +1,7 @@
 from flask import (Blueprint, jsonify, abort, Response, request)
 from marshmallow import Schema, fields, validate
 
-from app import db
+from app import db_session
 from app.utils import validate_request
 from app.account.fields import name_validate, email_validate, name_field, email_field
 from app.decorators import admin_required
@@ -31,9 +31,9 @@ def invite_user():
             last_name=data['last_name'],
             email=data['email'],
         )
-        db.session.add(user)
-        db.session.flush()
-        db.session.expunge(user)
+        db_session.add(user)
+        db_session.flush()
+        db_session.expunge(user)
         send_join_from_invite_email(user)
         return jsonify({'userID': user.id}), 200
     except ValueError as e:
@@ -59,8 +59,9 @@ def delete_user(current_user, user_id):
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
-    db.session.delete(user)
-    db.session.commit()
+    user.clean()
+    db_session.delete(user)
+    db_session.commit()
     return jsonify({}), 200
 
 
@@ -94,8 +95,8 @@ def update_user(user_id):
             if user_updated:
                 if email_updated:
                     user.verified_email = not user.is_admin()  # Don't lock out admins
-                db.session.add(user)
-                db.session.commit()
+                db_session.add(user)
+                db_session.commit()
                 return jsonify(get_user_payload(user)), 200
         raise ValueError("Request didn't include any changes.")
     except ValueError as e:

@@ -20,7 +20,6 @@ class Config:
             SECRET_KEY = os.getenv(secret_key)
         else:
             SECRET_KEY = "SECRET_KEY_ENV_VAR_NOT_SET"
-    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
     # Email
     SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
@@ -55,6 +54,7 @@ class DevelopmentConfig(Config):
         f"sqlite:///{os.path.join(basedir, 'data-dev.sqlite')}"
     JWT_COOKIE_SECURE = False
     SEND_EMAIL_IN_DEV = os.getenv('SEND_EMAIL_IN_DEV', 'False') == 'True'
+    SSL_DISABLE = True
 
     @classmethod
     def init_app(cls, app):
@@ -62,25 +62,21 @@ class DevelopmentConfig(Config):
                         "YOU SHOULD NOT SEE THIS IN PRODUCTION.")
 
 
-class StagingConfig(Config):
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{os.getenv('DB_USERNAME')}:" \
-                              f"{os.getenv('DB_PASSWORD')}" \
-                              f"@{os.getenv('DB_ENDPOINT')}"
-    JWT_COOKIE_SECURE = False
-
-    @classmethod
-    def init_app(cls, app):
-        app.logger.warning("THIS APP IS IN STAGING MODE. YOU SHOULD NOT SEE "
-                           "THIS IN PRODUCTION.")
-
-
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{os.getenv('DB_USERNAME')}:" \
-                              f"{os.getenv('DB_PASSWORD')}" \
-                              f"@{os.getenv('DB_ENDPOINT')}"
-    SSL_DISABLE = (os.getenv("SSL_DISABLE", "True") == "True")
-    JWT_COOKIE_SECURE = False  # TODO: change me
+    port = f":{os.getenv('DB_PORT')}" if 'DB_PORT' in os.environ else ""
+    db_name = f"/{os.getenv('DB_NAME')}" if 'DB_NAME' in os.environ else ""
+    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_DIALECT', '')}://" \
+                              f"{os.getenv('DB_USERNAME', '')}:" \
+                              f"{os.getenv('DB_PASSWORD', '')}@" \
+                              f"{os.getenv('DB_ENDPOINT', '')}" \
+                              f"{port}" \
+                              f"{db_name}"
+
+    AURORA_CLUSTER_ARN = os.getenv('AURORA_CLUSTER_ARN')
+    AURORA_SECRET_ARN = os.getenv('AURORA_SECRET_ARN')
+
+    SSL_DISABLE = False
+    JWT_COOKIE_SECURE = True
 
     @classmethod
     def init_app(cls, app):
@@ -89,7 +85,18 @@ class ProductionConfig(Config):
         assert os.getenv("JWT_SECRET_KEY") != "SECRET_KEY_ENV_VAR_NOT_SET"
 
 
-config = {
+class StagingConfig(ProductionConfig):
+    TESTING = True
+    JWT_COOKIE_SECURE = False
+    SSL_DISABLE = True
+
+    @classmethod
+    def init_app(cls, app):
+        app.logger.warning("THIS APP IS IN STAGING MODE. YOU SHOULD NOT SEE "
+                           "THIS IN PRODUCTION.")
+
+
+configs = {
     "development": DevelopmentConfig,
     "staging": StagingConfig,
     "production": ProductionConfig,

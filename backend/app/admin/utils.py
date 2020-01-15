@@ -9,8 +9,6 @@ def get_user_payload(user):
         'first_name': user.first_name,
         'last_name': user.last_name,
         'email': user.email,
-        'profile_photo_url': None,
+        'profile_photo_url': user.profile_photo_url(),
     }
-    if user.profile_photo_s3_key:
-        data['profile_photo_url'] = s3_fs.url(user.profile_photo_s3_key)
     return to_camel_case(data)

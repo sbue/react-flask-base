@@ -44,7 +44,8 @@
     "test": "cross-env NODE_ENV=test jest --coverage",
     "test:watch": "cross-env NODE_ENV=test jest --watchAll",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "prettify": "prettier --write"
+    "prettify": "prettier --write",
+    "deploy": "npm run build && node_modules/s3-deploy/bin/s3-deploy './build/**' --cwd './build/' --region us-east-1 --bucket CHANGEME --distId CHANGEME --invalidate '/*' --deleteRemoved"
   },
   "eslintIgnore": [
     "**/*.ts",
@@ -198,6 +199,7 @@
     "react-test-renderer": "16.8.6",
     "redux-devtools-extension": "^2.13.8",
     "rimraf": "2.6.3",
+    "s3-deploy": "^1.4.0",
     "sass-loader": "^8.0.0",
     "shelljs": "^0.8.3",
     "style-loader": "0.23.1",

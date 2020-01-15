@@ -5,7 +5,6 @@ from flask_jwt_extended import (get_jwt_identity as get_current_user_id,
                                 jwt_required)
 
 from app.models.user import User
-from app.utils import get_config
 
 
 def login_required(f):

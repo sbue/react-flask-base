@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request, Response, abort
 import flask_jwt_extended as jwt
 from marshmallow import Schema, fields
 
-from app import db, s3_fs
+from app import db_session, s3_fs
 from app.decorators import login_required, file_upload
 from app.utils import validate_request, deserialize_data, to_camel_case
 from app.models.user import User
@@ -80,9 +80,9 @@ def sign_up():
             raise ValueError("Email already in use.")
         else:
             user = User(**data)
-            db.session.add(user)
-            db.session.flush()
-            db.session.expunge(user)
+            db_session.add(user)
+            db_session.flush()
+            db_session.expunge(user)
             send_confirm_email(user)
             resp = authenticate(user)
             return resp, 200
@@ -97,7 +97,7 @@ def resend_confirm_email(current_user):
     try:
         if current_user.verified_email:
             raise ValueError("User has already verified their email")
-        db.session.expunge(current_user)
+        db_session.expunge(current_user)
         send_confirm_email(current_user)
         return jsonify({}), 200
     except ValueError as e:
@@ -108,7 +108,7 @@ def resend_confirm_email(current_user):
 @login_required
 def verify_email(current_user, token):
     """Verify new user's account with provided token."""
-    db.session.expunge(current_user)
+    db_session.expunge(current_user)
     if current_user.verified_email or current_user.verify_email(token.encode()):
         return jsonify({}), 200
     else:
@@ -164,8 +164,8 @@ def join_from_invite(token):
             else:
                 user.verified_email = True
                 user.password = request_data['password']
-                db.session.add(user)
-                db.session.commit()
+                db_session.add(user)
+                db_session.commit()
                 resp = authenticate(user)
                 return resp, 200
         raise ValueError("The join from invite link is invalid or has expired.", 400)
@@ -185,8 +185,8 @@ def change_password(current_user):
         data = validate_request(request, ChangePasswordSchema)
         if current_user.verify_password(data['old_password']):
             current_user.password = data['new_password']
-            db.session.add(current_user)
-            db.session.commit()
+            db_session.add(current_user)
+            db_session.commit()
             # TODO: send email confirming password change
             return jsonify({}), 200
         else:
@@ -208,9 +208,9 @@ def change_email(current_user):
         else:
             current_user.email = data['new_email']
             current_user.verified_email = not current_user.is_admin()  # Don't lock out admins
-            db.session.add(current_user)
-            db.session.flush()
-            db.session.expunge(current_user)
+            db_session.add(current_user)
+            db_session.flush()
+            db_session.expunge(current_user)
             send_change_email(current_user)
             # TODO: send email to old email notifying email change
             return jsonify({}), 200
@@ -226,8 +226,9 @@ def delete_user(current_user):
         return Response("You cannot delete your own account. Please "
                         "ask another administrator to do this.", 400)
     else:
-        db.session.delete(current_user)
-        db.session.commit()
+        current_user.clean()
+        db_session.delete(current_user)
+        db_session.commit()
         resp = jsonify({})
         jwt.unset_jwt_cookies(resp)
         return resp, 200
@@ -248,8 +249,8 @@ def change_user_info(current_user):
             current_user.first_name = data['first_name']
         if 'last_name' in data:
             current_user.last_name = data['last_name']
-        db.session.add(current_user)
-        db.session.commit()
+        db_session.add(current_user)
+        db_session.commit()
         return authenticate_payload(current_user), 200
     except ValueError as e:
         return Response(str(e), 400)
@@ -259,9 +260,8 @@ def change_user_info(current_user):
 def _upload_profile_photo(current_user, files):
     current_user.upload_profile_photo(files[0])
     resp = jsonify(to_camel_case({
-        'url': s3_fs.url(current_user.profile_photo_s3_key,
-                         expires=3600),  # TODO: change expiry time
-        'file_name': files[0].name,
+        'url': current_user.profile_photo_url(),
+        'file_name': files[0].filename,
     }))
     return resp, 200
 
@@ -269,8 +269,8 @@ def _upload_profile_photo(current_user, files):
 def _delete_profile_photo(current_user):
     s3_fs.rm(current_user.profile_photo_s3_key)
     current_user.profile_photo_s3_key = ""
-    db.session.add(current_user)
-    db.session.commit()
+    db_session.add(current_user)
+    db_session.commit()
     resp = jsonify({})
     return resp, 200
 

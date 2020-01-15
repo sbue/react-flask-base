@@ -1,13 +1,12 @@
 import logging
 from flask import render_template
 
-from app.utils import get_config
+from app import config
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 
 def send_email(recipient, subject, template, **kwargs):
-    config = get_config()
     message = Mail(
         from_email=config['EMAIL_SENDER'],
         to_emails=[recipient],

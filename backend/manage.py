@@ -1,21 +1,29 @@
 #!/usr/bin/env python
-import os
 import subprocess
 
-from flask_migrate import Migrate, MigrateCommand
+# from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager, Shell
+from flask_migrate import Migrate, MigrateCommand
 
-from app import create_app, db
+from app import create_app, engine, Base, db_session, config
 from app.models.user import User, Role
-from config import Config
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+app = create_app()
 manager = Manager(app)
+
+
+# HACK: db object for Flask-migrate
+class DB:
+    def __init__(self, metadata):
+        self.metadata = metadata
+
+
+db = DB(Base.metadata)
 migrate = Migrate(app, db)
 
 
 def make_shell_context():
-    return dict(app=app, db=db, User=User)
+    return dict(app=app, session=db_session)
 
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
@@ -37,9 +45,9 @@ def recreate_db():
     Recreates a local database. You probably should not use this on
     production.
     """
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+    db_session.commit()
 
 
 @manager.option(
@@ -71,17 +79,17 @@ def setup_prod():
 def setup_general():
     """Runs the set-up needed for both local development and production.
        Also sets up first admin user."""
-    if User.query.filter_by(email=Config.ADMIN_EMAIL).first() is None:
+    if User.query.filter_by(email=config['ADMIN_EMAIL']).first() is None:
         user = User(
             role=Role.ADMIN,
             first_name='Admin',
             last_name='Account',
-            password=Config.ADMIN_PASSWORD,
-            email=Config.ADMIN_EMAIL,
+            password=config['ADMIN_PASSWORD'],
+            email=config['ADMIN_EMAIL'],
             verified_email=True,
         )
-        db.session.add(user)
-        db.session.commit()
+        db_session.add(user)
+        db_session.commit()
         print('Added administrator {}'.format(user.full_name()))
 
 

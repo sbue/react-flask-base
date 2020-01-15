@@ -1,16 +1,18 @@
-from enum import Enum
+from enum import Enum as EnumMeta
 from datetime import datetime
 import logging
 from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy import Column, Integer, String, Enum, Boolean
 
-from .. import db, s3_fs
-from app.utils import deserialize_data, get_config
+from app import Base, s3_fs, db_session, config
+from app.utils import deserialize_data
+from app.constants import PROFILE_PHOTOS_DIR, SEVEN_DAYS_EXPIRATION
 
 
-class Role(Enum):
+class Role(EnumMeta):
     ADMIN = 'Admin'
     USER = 'User'
 
@@ -19,16 +21,17 @@ class Role(Enum):
         return [role.value for role in Role]
 
 
-class User(UserMixin, db.Model):
+class User(UserMixin, Base):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    role = db.Column(db.Enum(Role), index=True, default=Role.USER)
-    first_name = db.Column(db.String(64), index=True)
-    last_name = db.Column(db.String(64), index=True)
-    email = db.Column(db.String(64), unique=True, index=True)
-    password_hash = db.Column(db.String(128))
-    verified_email = db.Column(db.Boolean, default=False)
-    profile_photo_s3_key = db.Column(db.String(128))
+
+    id = Column(Integer, primary_key=True)
+    role = Column(Enum(Role), index=True, default=Role.USER)
+    first_name = Column(String(64), index=True)
+    last_name = Column(String(64), index=True)
+    email = Column(String(64), unique=True, index=True)
+    password_hash = Column(String(128))
+    verified_email = Column(Boolean, default=False)
+    profile_photo_s3_key = Column(String(128))
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -81,27 +84,35 @@ class User(UserMixin, db.Model):
             logging.warning(f"Error verifying email for user "
                             f"id {self.id}: {data}")
         self.verified_email = True
-        db.session.add(self)
-        db.session.commit()
+        db_session.add(self)
+        db_session.commit()
         return True
 
     def change_email(self, token):
         pass  # TODO:
 
     def upload_profile_photo(self, file):
-        bucket = get_config()['S3_BUCKET']
-        file_name = file.filename
-        db.session.add(self)
-        s3_dir = f'{bucket}/profile_photos/{self.id}'
-        s3_key = f'{s3_dir}/{file_name}'
+        db_session.add(self)
+        s3_dir = PROFILE_PHOTOS_DIR.format(bucket=config['S3_BUCKET'], id=self.id)
+        s3_key = f'{s3_dir}/{file.filename}'
         if s3_fs.exists(s3_dir):  # Remove existing folder
             s3_fs.rm(s3_dir)
         with s3_fs.open(s3_key, 'wb') as s3_fp:
             s3_fp.write(file.read())
             self.profile_photo_s3_key = s3_key
-        db.session.add(self)
-        db.session.commit()
+        db_session.add(self)
+        db_session.commit()
         return s3_key
+
+    def profile_photo_url(self):
+        if self.profile_photo_s3_key:
+            return s3_fs.url(self.profile_photo_s3_key,
+                             expires=604800)  # 7 Days
+
+    def clean(self):
+        if self.profile_photo_s3_key:
+            s3_dir = PROFILE_PHOTOS_DIR.format(bucket=config['S3_BUCKET'], id=self.id)
+            s3_fs.rm(s3_dir)
 
     @staticmethod
     def reset_password(token, new_password):
@@ -112,13 +123,13 @@ class User(UserMixin, db.Model):
                             f"SignatureExpired")
             return None
         user_id = data.get('id')
-        user = User.query.filter_by(id=user_id).first()
+        user = db_session.query(User).filter_by(id=user_id).first()
         if user is None:
             logging.warning(f"User with id {user_id} does not exist.")
             return None
         user.password = new_password
-        db.session.add(user)
-        db.session.commit()
+        db_session.add(user)
+        db_session.commit()
         return user
 
     @staticmethod
@@ -140,11 +151,11 @@ class User(UserMixin, db.Model):
                 verified_email=True,
                 role=choice([r for r in Role]),
                 **kwargs)
-            db.session.add(u)
+            db_session.add(u)
             try:
-                db.session.commit()
+                db_session.commit()
             except IntegrityError:
-                db.session.rollback()
+                db_session.rollback()
 
     def __repr__(self):
         return '<User \'%s\'>' % self.full_name()

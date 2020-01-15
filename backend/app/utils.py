@@ -1,8 +1,7 @@
-import os
 import json
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
-from app import create_app
+from app import config
 
 
 def validate_request(request, schema):
@@ -30,14 +29,8 @@ def to_camel_case(obj):
 
 
 def deserialize_data(token):
-    s = Serializer(get_config()['SECRET_KEY'])
+    s = Serializer(config['SECRET_KEY'])
     try:
         return s.loads(token)
     except (BadSignature, SignatureExpired):
         return None
-
-
-def get_config():
-    app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-    with app.app_context():
-        return dict(app.config)

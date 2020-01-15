@@ -15,7 +15,7 @@ export const columns = [
     align: 'center' as ColumnProps<any>['align'],
     render: (profilePhotoUrl) => {
       const props = profilePhotoUrl ? {src: profilePhotoUrl} : {icon: 'user'};
-      return <Avatar {...props} size={48} />;
+      return <Avatar {...props} size={48} shape="square" />;
     },
   },
   {
@@ -50,9 +50,8 @@ export const columns = [
     dataIndex: 'verifiedEmail',
     width: '15%',
     align: 'center' as ColumnProps<any>['align'],
-    // align: center,
-    // sorter: (a, b) => a.role.localeCompare(b.role),
-    // sortDirections: ['descend', 'ascend'],
+    sorter: (a, b) => a.role.localeCompare(b.role),
+    sortDirections: ['descend', 'ascend'] as SortOrder[],
     render: (verifiedEmail: boolean) => (
       <VerifiedEmailIcon verifiedEmail={verifiedEmail} />
     ),

@@ -1,7 +1,6 @@
 from flask import jsonify
 import flask_jwt_extended as jwt
 
-from app import s3_fs
 from app.models.user import User
 from app.utils import to_camel_case
 
@@ -19,7 +18,7 @@ def authenticate_payload(user):
     if user.profile_photo_s3_key:
         key = user.profile_photo_s3_key
         data['profile_photo'] = {
-            'url': s3_fs.url(key),
+            'url': user.profile_photo_url(),
             'file_name': key[key.rfind('/') + 1:],
         }
     return jsonify(to_camel_case(data))
