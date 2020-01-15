@@ -1,3 +1,3 @@
 
 PROFILE_PHOTOS_DIR = "{bucket}/profile_photos/{id}"
-SEVEN_DAYS_EXPIRATION = 0
+SEVEN_DAYS_EXPIRATION = 604800

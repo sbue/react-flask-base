@@ -107,7 +107,7 @@ class User(UserMixin, Base):
     def profile_photo_url(self):
         if self.profile_photo_s3_key:
             return s3_fs.url(self.profile_photo_s3_key,
-                             expires=604800)  # 7 Days
+                             expires=SEVEN_DAYS_EXPIRATION)  # 7 Days
 
     def clean(self):
         if self.profile_photo_s3_key:
