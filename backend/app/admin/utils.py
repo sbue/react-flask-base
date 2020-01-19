@@ -1,5 +1,4 @@
 from app.utils import to_camel_case
-from app import s3_fs
 
 
 def get_user_payload(user):

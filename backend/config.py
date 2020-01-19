@@ -37,7 +37,7 @@ class Config:
         app_name=APP_NAME, email=MAIL_DEFAULT_SENDER)
 
     JWT_TOKEN_LOCATION = ['cookies']
-    JWT_COOKIE_SAMESITE = 'Lax'
+    JWT_COOKIE_SAMESITE = 'Strict'
     JWT_COOKIE_DOMAIN = os.getenv('JWT_COOKIE_DOMAIN', None)
 
     S3_BUCKET = os.getenv('S3_BUCKET', None)
