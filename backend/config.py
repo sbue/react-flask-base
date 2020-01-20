@@ -12,6 +12,7 @@ if os.path.exists('config.env'):
 
 
 class Config:
+    ENVIRONMENT = os.getenv('FLASK_CONFIG', 'development')
     APP_NAME = os.getenv('APP_NAME', 'Flask-Base')
     FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
 
@@ -48,7 +49,6 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    DEBUG = True
     ASSETS_DEBUG = True
     SQLALCHEMY_DATABASE_URI = \
         f"sqlite:///{os.path.join(basedir, 'data-dev.sqlite')}"
@@ -100,5 +100,4 @@ configs = {
     "development": DevelopmentConfig,
     "staging": StagingConfig,
     "production": ProductionConfig,
-    "default": DevelopmentConfig,
 }

@@ -19,7 +19,7 @@ mail = Mail()
 compress = Compress()
 
 # Set up configs
-config_name = os.getenv('FLASK_CONFIG', 'default')
+config_name = os.getenv('FLASK_CONFIG', 'development')
 config = configs[config_name]
 config = {k: getattr(config, k) for k in dir(config) if k.isupper()}
 

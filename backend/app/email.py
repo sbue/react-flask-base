@@ -13,7 +13,7 @@ def send_email(recipient, subject, template, **kwargs):
         subject=f"{config['EMAIL_SUBJECT_PREFIX']} {subject}",
         html_content=render_template(f"{template}.html", **kwargs)
     )
-    if config['DEBUG'] and not config['SEND_EMAIL_IN_DEV']:
+    if config['ENVIRONMENT'] == 'development' and not config['SEND_EMAIL_IN_DEV']:
         print(message)
     else:
         sg = SendGridAPIClient(config['SENDGRID_API_KEY'])
