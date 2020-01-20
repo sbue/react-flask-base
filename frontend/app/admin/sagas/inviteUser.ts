@@ -9,8 +9,9 @@ import AdminApi from 'admin/api';
 
 function* sagaWorker(action) {
   try {
-    const {userID} = yield call(AdminApi.inviteUser, action.payload);
-    yield put(inviteUser.success({userID}));
+    const userPayload = yield call(AdminApi.inviteUser, action.payload);
+    const userID = Object.keys(userPayload)[0];
+    yield put(inviteUser.success(userPayload));
     const fullName = `${action.payload.firstName} ${action.payload.lastName}`;
     yield flashSuccess(`Successfully invited ${fullName}.`);
     yield call(goTo(PATHS.ManageUser, {userID}))

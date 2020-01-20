@@ -10,6 +10,7 @@ interface UserObject {
   role: string,
   verifiedEmail: boolean,
   profilePhotoUrl: null | string;
+  allowResendInvite: boolean,
 }
 
 interface AdminState {

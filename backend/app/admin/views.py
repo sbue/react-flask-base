@@ -31,11 +31,27 @@ def invite_user():
             last_name=data['last_name'],
             email=data['email'],
         )
-        db_session.expire_on_commit = False
         db_session.add(user)
         db_session.commit()
         send_join_from_invite_email(user)
-        return jsonify({'userID': user.id}), 200
+        return jsonify({user.id: get_user_payload(user)}), 200
+    except ValueError as e:
+        return Response(str(e), 400)
+
+
+@admin.route('/invite-user/resend-email/<int:user_id>', methods=['PUT'])
+@admin_required
+def invite_user_resend_email(user_id):
+    """Invites a new user to create an account and set their own password."""
+    try:
+        user = User.query.filter_by(id=user_id).first()
+        if user is None:
+            raise ValueError("User not found.")
+        if user.password_hash is not None:
+            raise ValueError("User has already joined from invite.")
+        db_session.expunge(user)
+        send_join_from_invite_email(user)
+        return jsonify({}), 200
     except ValueError as e:
         return Response(str(e), 400)
 

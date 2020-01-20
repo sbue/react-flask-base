@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { get, delete_, post, privateRequest } from 'utils/request';
+import { get, delete_, post, put, privateRequest } from 'utils/request';
 import {adminUrl} from 'api';
 
 export default class Admin {
@@ -55,6 +55,15 @@ export default class Admin {
         email: payload.email,
         role: payload.role,
       })
+    );
+  }
+
+  /**
+   * @param {string} userID The identifier of the user to resend invite for
+   */
+  public static resendInvite(userID) {
+    return privateRequest(() =>
+      put(adminUrl(`/invite-user/resend-email/${userID}`, {}), {})
     );
   }
 }

@@ -15,7 +15,8 @@ import {selectAdmin} from 'admin/reducer';
 import fetchUsersSaga from 'admin/sagas/fetchUsers';
 import deleteUserSaga from 'admin/sagas/deleteUser';
 import updateUserSaga from 'admin/sagas/updateUser';
-import {fetchUsers, deleteUser, updateUser} from 'admin/actions';
+import resendInviteSaga from 'admin/sagas/resendInvite';
+import {fetchUsers, deleteUser, updateUser, resendInvite} from 'admin/actions';
 import {RoleTag, VerifiedEmailIcon} from 'admin/pages/ManageUsers/Tags';
 import './style.scss';
 
@@ -33,7 +34,7 @@ export default function ManageUser(props) {
 
   useInjectAdminReducer();
   useInjectMultipleSagas({ key: 'manageUser',
-    sagas: [fetchUsersSaga, deleteUserSaga, updateUserSaga] });
+    sagas: [fetchUsersSaga, deleteUserSaga, updateUserSaga, resendInviteSaga] });
 
   useEffect(() => {
     if (!user || adminState.stale) {
@@ -170,6 +171,12 @@ export default function ManageUser(props) {
         {editing && changes && <Button type="ghost" onClick={revertChanges} style={{marginLeft: '8px'}}>
           Revert Changes
         </Button>}
+        {user && user.allowResendInvite && <Button
+          type="ghost"
+          onClick={() => dispatch(resendInvite.request({userID}))}
+          style={{marginLeft: '8px'}}>
+            Resend Invite
+          </Button>}
       </Spin>
     </PageContent>
   );

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ContainerState, ContainerActions } from './types';
-import {fetchUsers, deleteUser, updateUser} from 'admin/actions';
+import {fetchUsers, deleteUser, updateUser, inviteUser} from 'admin/actions';
 
 export const initialState = {
   users: {},
@@ -25,6 +25,11 @@ export default function(state: ContainerState = initialState,
       return {
         ...state,
         users: {...state.users, ...{[userID]: user}},
+      };
+    case inviteUser.SUCCESS:
+      return {
+        ...state,
+        users: {...state.users, ...payload},
       };
     default:
       return state;
