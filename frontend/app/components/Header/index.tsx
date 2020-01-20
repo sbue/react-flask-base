@@ -1,6 +1,7 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {Col, Row, Tag, Menu, Icon} from 'antd';
+import {Menu, Icon} from 'antd';
+import {isMobile} from 'react-device-detect';
 
 import {SITE_NAME, PATHS} from 'config';
 import {selectIsAuthenticated, selectIsAdmin} from 'account/reducer';
@@ -24,17 +25,23 @@ export default function Header() {
             <h5>{SITE_NAME}</h5>
           </A>
         </Menu.Item>
-        {isAuthenticated && isAdmin && <Menu.Item key="admin-badge" className="right-menu">
-          <Tag color="purple">Admin</Tag>
-        </Menu.Item>}
         {isAuthenticated && <Menu.Item key="logout" className="right-menu">
           <A route={PATHS.Logout}>Logout</A>
         </Menu.Item>}
         {isAuthenticated && <Menu.Item key="settings" className="right-menu">
           <A route={PATHS.Settings}>Settings</A>
         </Menu.Item>}
+        {isAuthenticated && <Menu.Item key="user-dashboard" className="right-menu">
+          <A route={PATHS.UserDashboard}>{isAdmin ?
+            (<span>User {isMobile ? " Dashboard" : <Icon type="home" theme="twoTone" />}</span>) :
+            (<span>Dashboard {!isMobile && <Icon type="home" theme="twoTone" />}</span>)
+          }
+          </A>
+        </Menu.Item>}
         {isAuthenticated && isAdmin && <Menu.Item key="admin-dashboard" className="right-menu">
-          <A route={PATHS.AdminDashboard}>Dashboard</A>
+          <A route={PATHS.AdminDashboard}>Admin
+            {isMobile ? " Dashboard" : <Icon type="home" theme="twoTone" />}
+          </A>
         </Menu.Item>}
         {!isAuthenticated && <Menu.Item key="sign-up" className="right-menu">
           <A route={PATHS.SignUp}>Sign Up</A>

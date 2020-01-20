@@ -94,6 +94,7 @@
     "moment": "^2.24.0",
     "path-to-regexp": "^5.0.0",
     "react": "16.8.6",
+    "react-device-detect": "^1.11.14",
     "react-dom": "16.8.6",
     "react-helmet": "6.0.0-beta",
     "react-intl": "2.9.0",

@@ -80,9 +80,9 @@ def sign_up():
             raise ValueError("Email already in use.")
         else:
             user = User(**data)
+            db_session.expire_on_commit = False
             db_session.add(user)
-            db_session.flush()
-            db_session.expunge(user)
+            db_session.commit()
             send_confirm_email(user)
             resp = authenticate(user)
             return resp, 200
@@ -208,9 +208,9 @@ def change_email(current_user):
         else:
             current_user.email = data['new_email']
             current_user.verified_email = not current_user.is_admin()  # Don't lock out admins
+            db_session.expire_on_commit = False
             db_session.add(current_user)
-            db_session.flush()
-            db_session.expunge(current_user)
+            db_session.commit()
             send_change_email(current_user)
             # TODO: send email to old email notifying email change
             return jsonify({}), 200

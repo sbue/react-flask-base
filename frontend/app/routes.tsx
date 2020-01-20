@@ -1,11 +1,10 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import startCase from 'lodash/startCase';
 
 import { Home, NotFound } from 'site/pages';
 import { SignUp, Login, Logout, ForgotPassword, ResetPassword,
   PendingConfirmation, ConfirmEmail, Settings, ChangeEmail,
-  ChangePassword, JoinInvite,
+  ChangePassword, JoinInvite, UserDashboard,
 } from 'account/pages';
 import { AdminDashboard, ManageUsers, ManageUser, InviteUser } from 'admin/pages';
 import { PrivateRoute, PublicRoute, RestrictedPublicRoute,
@@ -20,8 +19,7 @@ import {PATHS} from 'config';
  *  - key: component class name
  *  - path: the path for the component (in react router notation)
  *  - component: The component to use
- *  - routeComponent: optional, AnonymousRoute, ProtectedRoute or Route (default: Route)
- *  - label: optional, label to use for links (default: startCase(key))
+ *  - routeComponent: PublicRoute, RestrictedPublicRoute, PrivateRoute, AdminRoute, or UnconfirmedEmailRoute
  */
 const routes = [
   {
@@ -30,55 +28,54 @@ const routes = [
     component: Home,
     routeComponent: PublicRoute,
   },
-  // AUTH
+  // Account
   {
     key: 'Login',
     path: PATHS.Login,
     component: Login,
     routeComponent: RestrictedPublicRoute,
-    label: 'Login',
-  },
-  {
-    key: 'Logout',
-    path: PATHS.Logout,
-    component: Logout,
-    routeComponent: PrivateRoute,
-    label: 'Logout',
-  },
-  {
-    key: 'SignUp',
-    path: PATHS.SignUp,
-    component: SignUp,
-    routeComponent: RestrictedPublicRoute,
-    label: 'Sign Up',
-  },
-  {
-    key: 'ForgotPassword',
-    path: PATHS.ForgotPassword,
-    component: ForgotPassword,
-    routeComponent: RestrictedPublicRoute,
-    label: 'Forgot password?',
-  },
-  {
-    key: 'PendingConfirmation',
-    path: PATHS.PendingConfirmation,
-    component: PendingConfirmation,
-    routeComponent: UnconfirmedEmailRoute,
-    label: 'Pending Confirm Email',
-  },
-  {
-    key: 'ConfirmEmail',
-    path: PATHS.ConfirmEmail,
-    component: ConfirmEmail,
-    routeComponent: UnconfirmedEmailRoute,
-    label: 'Confirm Email',
   },
   {
     key: 'ResetPassword',
     path: PATHS.ResetPassword,
     component: ResetPassword,
     routeComponent: RestrictedPublicRoute,
-    label: 'Reset Password',
+  },
+  {
+    key: 'ForgotPassword',
+    path: PATHS.ForgotPassword,
+    component: ForgotPassword,
+    routeComponent: RestrictedPublicRoute,
+  },
+  {
+    key: 'Logout',
+    path: PATHS.Logout,
+    component: Logout,
+    routeComponent: PrivateRoute,
+  },
+  {
+    key: 'SignUp',
+    path: PATHS.SignUp,
+    component: SignUp,
+    routeComponent: RestrictedPublicRoute,
+  },
+  {
+    key: 'JoinInvite',
+    path: PATHS.JoinInvite,
+    routeComponent: RestrictedPublicRoute,
+    component: JoinInvite,
+  },
+  {
+    key: 'PendingConfirmation',
+    path: PATHS.PendingConfirmation,
+    component: PendingConfirmation,
+    routeComponent: UnconfirmedEmailRoute,
+  },
+  {
+    key: 'ConfirmEmail',
+    path: PATHS.ConfirmEmail,
+    component: ConfirmEmail,
+    routeComponent: UnconfirmedEmailRoute,
   },
   {
     key: 'Settings',
@@ -99,39 +96,35 @@ const routes = [
     component: ChangePassword,
   },
   {
-    key: 'JoinInvite',
-    path: PATHS.JoinInvite,
-    routeComponent: RestrictedPublicRoute,
-    component: JoinInvite,
+    key: 'UserDashboard',
+    path: PATHS.UserDashboard,
+    routeComponent: PrivateRoute,
+    component: UserDashboard,
   },
-  // ADMIN
+  // Admin
   {
     key: 'AdminDashboard',
     path: PATHS.AdminDashboard,
     component: AdminDashboard,
     routeComponent: AdminRoute,
-    label: 'Admin Dashboard',
   },
   {
     key: 'ManageUsers',
     path: PATHS.ManageUsers,
     component: ManageUsers,
     routeComponent: AdminRoute,
-    label: 'Manage Users',
   },
   {
     key: 'ManageUser',
     path: PATHS.ManageUser,
     component: ManageUser,
     routeComponent: AdminRoute,
-    label: 'Manage User',
   },
   {
     key: 'InviteUser',
     path: PATHS.InviteUser,
     component: InviteUser,
     routeComponent: AdminRoute,
-    label: 'Invite User',
   },
 ];
 
@@ -140,7 +133,7 @@ const routes = [
  */
 export const ROUTE_MAP = {};
 routes.forEach((route) => {
-  const { component, key, label, path, routeComponent } = route;
+  const { component, key, path, routeComponent } = route;
 
   if (!component) {
     throw new Error(`component was not specified for the ${key} route!`);
@@ -153,7 +146,6 @@ routes.forEach((route) => {
     path,
     component,
     routeComponent: routeComponent || Route,
-    label: label || startCase(key),
   };
 });
 

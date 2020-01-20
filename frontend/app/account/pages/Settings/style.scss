@@ -1,8 +1,8 @@
 
 table.custom {
+  margin: 25px 5px;
   border-collapse: collapse;
   width: 100%;
-  display: table;
   border-spacing: 2px;
   border-color: gray;
   box-sizing: border-box;
@@ -14,8 +14,8 @@ table.custom td, table.custom th {
   text-align: left;
   padding: 16px 24px;
   line-height: 1.5;
+  white-space: nowrap;
 }
-
 table.custom th {
   color: rgba(0, 0, 0, 0.85);
   font-weight: bold;

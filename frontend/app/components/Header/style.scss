@@ -47,18 +47,17 @@
         font-size: 16px;
         float: right;
         text-decoration: none;
+
+        i {
+          line-height: 64px;
+          font-size: 18px;
+          vertical-align: top;
+          margin-left: 5px;
+          margin-top: -2px;
+        }
       }
       a:hover {
         color: rgb(25, 142, 251);
-      }
-      span {
-        // Vertically center the admin tag: https://www.w3schools.com/howto/howto_css_center-vertical.asp
-        font-size: 14px;
-        position: absolute;
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
-        top: 50%;
-        float: right;
       }
     }
   }

@@ -1,5 +1,6 @@
 export { default as CheckAuth } from './CheckAuth';
 export { default as ConfirmEmail } from './ConfirmEmail';
+export { default as UserDashboard } from './Dashboard';
 export { default as ForgotPassword } from './ForgotPassword';
 export { default as JoinInvite } from './JoinInvite';
 export { default as Login } from './Login';

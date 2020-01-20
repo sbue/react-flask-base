@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Icon, Modal, PageHeader, Spin, Popconfirm,
   Typography, Upload} from 'antd';
+import {isMobile} from 'react-device-detect';
 
 import A from 'components/A';
 import {PATHS} from 'config';
@@ -100,6 +101,11 @@ export default function Settings() {
     setProfilePhotoVisible(true);
   };
 
+  const tableStyle = (isMobile ? {
+    overflowX: "scroll",
+    display: "block",
+  } : {}) as React.CSSProperties;
+
   return (
     <PageContent>
       <Spin tip="Loading..." spinning={isLoading}>
@@ -112,7 +118,7 @@ export default function Settings() {
           subTitle="Manage your account information"
         >
         </PageHeader>
-        <table className="custom" style={{margin: '25px 5px'}}>
+        <table className="custom" style={tableStyle}>
           <tbody>
             <tr>
               <th>Profile Photo</th>

@@ -31,9 +31,9 @@ def invite_user():
             last_name=data['last_name'],
             email=data['email'],
         )
+        db_session.expire_on_commit = False
         db_session.add(user)
-        db_session.flush()
-        db_session.expunge(user)
+        db_session.commit()
         send_join_from_invite_email(user)
         return jsonify({'userID': user.id}), 200
     except ValueError as e:
