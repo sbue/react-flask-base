@@ -90,7 +90,7 @@
     "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "4.17.14",
-    "minimist": "1.2.0",
+    "minimist": "1.2.2",
     "moment": "^2.24.0",
     "path-to-regexp": "^5.0.0",
     "react": "16.8.6",
