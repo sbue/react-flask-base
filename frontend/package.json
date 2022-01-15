@@ -202,7 +202,7 @@
     "rimraf": "2.6.3",
     "s3-deploy": "^1.4.0",
     "sass-loader": "^8.0.0",
-    "shelljs": "^0.8.3",
+    "shelljs": "^0.8.5",
     "style-loader": "0.23.1",
     "stylelint": "10.1.0",
     "stylelint-config-recommended": "2.2.0",
